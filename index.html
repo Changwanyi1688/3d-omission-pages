@@ -80,6 +80,9 @@
   .zxCol th,.zxCol td{padding:3px 4px !important;font-size:11px !important}
   tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
   tr.mrow td:first-child{color:#a0670f}
+  /* 提高优先级，盖过 #zstTable tfoot td / #lmGrids td 等带 ID 的规则，确保和值/两码走势的 M差值 行也显示浅黄高亮 */
+  #zstTable tr.mrow td,#lmGrids tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
+  #zstTable tr.mrow td:first-child,#lmGrids tr.mrow td:first-child{color:#a0670f}
   .mdcell{background:#fdf6e3;font-weight:700}  /* M差值 单元格统一高亮（所有类目一致），数值正负表示方向 */
   #zxLmResult table{margin:0}
   #zxLmResult th,#zxLmResult td{border-bottom:1px solid #eef1f6;border-right:1px solid #eef1f6;padding:6px 10px;text-align:center;white-space:nowrap;font-size:13px}

@@ -1072,7 +1072,7 @@ function query1257(){
   const fy=fullYear1257Avg();
   // 最近五年（降序），用于表底逐行展示各年 M差值
   const allYears=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
-  const last5=allYears.slice(-5).reverse();
+  const last5=allYears.slice(-6,-1).reverse();
   function yearMDiff(year, set, avg){
     const per=D.filter(d=> Math.floor(d[0]/1000)===year);
     const st=build1257Stats(per, set);

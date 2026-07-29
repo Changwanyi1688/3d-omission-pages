@@ -85,7 +85,8 @@
   #zstTable tr.mrow td:first-child,#lmGrids tr.mrow td:first-child{color:#a0670f}
   .mdcell{background:#fdf6e3;font-weight:700}  /* M差值 单元格统一高亮（所有类目一致），数值正负表示方向 */
   /* 直组三码遗漏：四张表（直选三不同/对子 + 组六/组三）四列响应式网格 */
-  .zu3Grid{display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));gap:14px;margin-top:12px}
+  .zu3Grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
+  @media(max-width:760px){.zu3Grid{grid-template-columns:1fr}}
   .zu3Grid .hint{grid-column:1 / -1}
   .zu3Card{border:1px solid #d8e0ea;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(44,62,80,.08)}
   .zu3Title{background:linear-gradient(135deg,#3a5b78,#2c3e50);color:#fff;font-weight:600;text-align:center;padding:7px 0;font-size:13px;letter-spacing:1px}
@@ -1214,10 +1215,10 @@ function zhiZuSanQuery(){
     if(total===0) return {total:0,max:N,avg:N,prev:N,cur:N};
     let gaps=[],prev=-1;
     for(const i of arr){ gaps.push(i-prev-1); prev=i; }
-    const max=Math.max(...gaps);
+    const cur=N-1-prev;                  // 当前遗漏 = 范围末 - 最近一次出现索引 - 1
+    const max=Math.max(...gaps, cur);    // 最大遗漏含当前遗漏（当前遗漏可能已超过历史最大，避免“当前大、最大却小”的明显矛盾）
     const avg=Math.round(gaps.reduce((s,x)=>s+x,0)/gaps.length);
     const prevGap=gaps[gaps.length-1];   // 上一次遗漏期 = 最近一次开出前的遗漏段
-    const cur=N-1-prev;                  // 当前遗漏 = 范围末 - 最近一次出现索引 - 1
     return {total,max,avg,prev:prevGap,cur};
   }
   function buildRows(cands, occMap){
@@ -1228,13 +1229,13 @@ function zhiZuSanQuery(){
   }
   const cats=[
     {title:'直选三不同（前100）', cands:ZU3_DIRECT_SET,  occ:occ.directSet,  top:100},
-    {title:'直选对子（前50）',   cands:ZU3_DIRECT_PAIR, occ:occ.directPair, top:50},
+    {title:'直选对子（前100）',  cands:ZU3_DIRECT_PAIR, occ:occ.directPair, top:100},
     {title:'组六（前50）',       cands:ZU3_GROUP6,       occ:occ.group6,     top:50},
     {title:'组三（前50）',       cands:ZU3_GROUP3,       occ:occ.group3,     top:50},
   ];
   const yVal=parseInt(ySel.value,10);
   const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
-  $('mZu3Diff').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+N+' 期'+yearLabel+' ｜ 点击任意列标题的小三角(▲/▼)可切换升序/降序（默认「最大遗漏」降序，遗漏越大越靠前）｜ 「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）</div>';
+  $('mZu3Diff').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+N+' 期'+yearLabel+' ｜ 点击任意列标题的小三角(▲/▼)可切换升序/降序（默认「最大遗漏」降序，遗漏越大越靠前）｜ 「最大遗漏」已含当前遗漏（若当前遗漏已超过历史最大则取当前）｜ 「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）</div>';
   ZU3_DATA={N, s, e, yVal, yearLabel,
     cats:cats.map(cat=>({title:cat.title, top:cat.top, rows:buildRows(cat.cands, cat.occ)}))};
   renderZu3();

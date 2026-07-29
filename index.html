@@ -333,9 +333,9 @@
       <span class="lab">按年份</span>
       <select id="y1257Sel"></select>
       <span class="lab">期号范围</span>
-      <select id="s1257Sel"></select>
+      <input id="s1257Sel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
       <span class="lab">至</span>
-      <select id="e1257Sel"></select>
+      <input id="e1257Sel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
       <button class="btn sec" id="all1257Btn" type="button" style="padding:4px 12px">全部</button>
     </div>
     <div class="meta" id="m1257Diff"></div>
@@ -1042,14 +1042,10 @@ function fullYear1257Avg(){
 }
 function query1257(){
   const sSel=$('s1257Sel'), eSel=$('e1257Sel'), ySel=$('y1257Sel');
-  if(sSel.options.length<=1){   // 懒加载填充下拉（年份 + 全部期号）
+  if(!window.__1257init){   // 懒加载：年份下拉仅填一次；期号范围改为手动输入(默认首期~最新期)
+    window.__1257init=true;
     ySel.innerHTML='<option value="0">全部年份</option>';
     YEARS.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y+'年'; ySel.appendChild(o); });
-    sSel.innerHTML=''; eSel.innerHTML='';
-    D.forEach(d=>{
-      const o1=document.createElement('option'); o1.value=d[0]; o1.textContent='第 '+d[0]+' 期'; sSel.appendChild(o1);
-      const o2=document.createElement('option'); o2.value=d[0]; o2.textContent='第 '+d[0]+' 期'; eSel.appendChild(o2);
-    });
     sSel.value=D[0][0]; eSel.value=D[D.length-1][0];
     const rerun=()=>{ const a=parseInt(sSel.value,10), b=parseInt(eSel.value,10); if(a>b){const t=sSel.value;sSel.value=eSel.value;eSel.value=t;} query1257(); };
     ySel.onchange=()=>{
@@ -1063,6 +1059,8 @@ function query1257(){
     $('all1257Btn').onclick=()=>{ ySel.value='0'; sSel.value=D[0][0]; eSel.value=D[D.length-1][0]; query1257(); };
   }
   let s=parseInt(sSel.value,10), e=parseInt(eSel.value,10);
+  if(isNaN(s)) s=D[0][0];
+  if(isNaN(e)) e=D[D.length-1][0];
   if(s>e){ const t=s; s=e; e=t; }
   const period=D.filter(d=> d[0]>=s && d[0]<=e);
   const S1=new Set([1,2,5,7]), S2=new Set([1,3,6,8]);

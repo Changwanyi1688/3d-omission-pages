@@ -336,7 +336,7 @@
       <input id="s1257Sel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
       <span class="lab">至</span>
       <input id="e1257Sel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
-      <button class="btn sec" id="all1257Btn" type="button" style="padding:4px 12px">全部</button>
+      <button class="btn sec" id="query1257Btn" type="button" style="padding:4px 12px">查询</button>
     </div>
     <div class="meta" id="m1257Diff"></div>
     <div id="res1257" class="zxCols"></div>
@@ -1056,7 +1056,7 @@ function query1257(){
       query1257();
     };
     sSel.onchange=rerun; eSel.onchange=rerun;
-    $('all1257Btn').onclick=()=>{ ySel.value='0'; sSel.value=D[0][0]; eSel.value=D[D.length-1][0]; query1257(); };
+    $('query1257Btn').onclick=()=>{ query1257(); };
   }
   let s=parseInt(sSel.value,10), e=parseInt(eSel.value,10);
   if(isNaN(s)) s=D[0][0];
@@ -1070,8 +1070,18 @@ function query1257(){
   const ms=new Set(); period.forEach(d=>{const im=issueMonthOf(d[4]);ms.add(im.year*12+im.month);});
   const span=ms.size;
   const fy=fullYear1257Avg();
-  function table(name, stats, avg){
-    const d=stats.map(st=> Math.round(st.appear - avg[st.v]*(span/12)));   // 各出号数 M差值
+  // 最近五年（降序），用于表底逐行展示各年 M差值
+  const allYears=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const last5=allYears.slice(-5).reverse();
+  function yearMDiff(year, set, avg){
+    const per=D.filter(d=> Math.floor(d[0]/1000)===year);
+    const st=build1257Stats(per, set);
+    const ms=new Set(); per.forEach(d=>{const im=issueMonthOf(d[4]);ms.add(im.year*12+im.month);});
+    const sp=ms.size;
+    return st.map(s=> Math.round(s.appear - avg[s.v]*(sp/12)));
+  }
+  function table(name, stats, avg, set){
+    const d=stats.map(st=> Math.round(st.appear - avg[st.v]*(span/12)));   // 各出号数 M差值（当前筛选范围）
     let h='<div class="zxCol"><div class="zxColTitle">'+name+' 出号数（开奖号含本组数字个数，按位计）</div>';
     h+='<table><thead><tr><th>指标＼出号数</th><th>出号数0</th><th>出号数1</th><th>出号数2</th><th>出号数3</th></tr></thead><tbody>';
     // 行序：出现次数 → M差值 → 当前遗漏 → 历史最大遗漏 → 平均遗漏
@@ -1083,16 +1093,21 @@ function query1257(){
       ['平均遗漏',     stats.map(st=>st.avg===null?'—':st.avg)]
     ];
     rows.forEach(r=>{ h+='<tr><td><b>'+r[0]+'</b></td>'+r[1].map(x=>'<td>'+x+'</td>').join('')+'</tr>'; });
+    // 表底：最近五年 M差值（每年一行，年份置前）
+    last5.forEach(y=>{
+      const dp=yearMDiff(y, set, avg);
+      h+='<tr class="mrow"><td><b>'+y+' M差值</b></td>'+dp.map(x=>{const c=x>0?'mk-pos':(x<0?'mk-neg':'');return '<td class="'+c+'">'+x+'</td>';}).join('')+'</tr>';
+    });
     h+='</tbody></table></div>';
     return h;
   }
-  let html=table('1257', s1, fy.a1)+table('1368', s2, fy.a2);
+  let html=table('1257', s1, fy.a1, S1)+table('1368', s2, fy.a2, S2);
   // 汇总 meta：范围、覆盖月份、各出号数合计的 M差值（总 M差值 = 各出号数 M差值之和）
   const yVal=parseInt(ySel.value,10);
   const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
-  const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×('+span+'/12)（表内 M差值 行：红=高于/蓝=低于）</div>';
+  const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×(覆盖月份/12)（表内 M差值 行及底部各年份 M差值：红=高于/蓝=低于）</div>';
   $('m1257Diff').innerHTML=mHtml;
-  $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝范围内该出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期是偏多(红)还是偏少(蓝)；表内每行末 M差值 即对应各出号数。</div>';
+  $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝该范围内出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期偏多(红)或偏少(蓝)。表底另列最近五年的逐年 M差值（年份置前），逐年与完整年基准比较。</div>';
 }
 
 /* ===== 模式：直选两码（100种有序组合，三位置左→右两两排列合并统计） ===== */

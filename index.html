@@ -84,6 +84,18 @@
   #zstTable tr.mrow td,#lmGrids tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
   #zstTable tr.mrow td:first-child,#lmGrids tr.mrow td:first-child{color:#a0670f}
   .mdcell{background:#fdf6e3;font-weight:700}  /* M差值 单元格统一高亮（所有类目一致），数值正负表示方向 */
+  /* 直组三码遗漏：四张表（直选三不同/对子 + 组六/组三）四列响应式网格 */
+  .zu3Grid{display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));gap:14px;margin-top:12px}
+  .zu3Grid .hint{grid-column:1 / -1}
+  .zu3Card{border:1px solid #d8e0ea;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(44,62,80,.08)}
+  .zu3Title{background:linear-gradient(135deg,#3a5b78,#2c3e50);color:#fff;font-weight:600;text-align:center;padding:7px 0;font-size:13px;letter-spacing:1px}
+  .zu3Scroll{max-height:560px;overflow:auto}
+  .zu3Card table{border-collapse:collapse;width:100%;font-size:12px}
+  .zu3Card th,.zu3Card td{border:1px solid #e3e7ee;padding:3px 5px;text-align:center;white-space:nowrap}
+  .zu3Card thead th{position:sticky;top:0;background:#34495e;color:#fff;z-index:2}
+  .zu3Card td.rank{color:#9aa4b2}
+  .zu3Card td.num{font-weight:700;color:#2c3e50;background:#f7f9fc}
+  .zu3Card tbody tr:hover td{background:#f0f5ff}
   #zxLmResult table{margin:0}
   #zxLmResult th,#zxLmResult td{border-bottom:1px solid #eef1f6;border-right:1px solid #eef1f6;padding:6px 10px;text-align:center;white-space:nowrap;font-size:13px}
   #zxLmResult thead th{background:#3b536b;color:#fff;position:sticky;top:0;z-index:2}
@@ -217,6 +229,7 @@
       <div class="cat-btn" id="modeZx2">直选两码</div>
       <div class="cat-btn" id="modeZxGroup">组选两码</div>
       <div class="cat-btn" id="mode1257">1257&amp;1368</div>
+      <div class="cat-btn" id="modeZu3">直组三码遗漏</div>
     </div>
   </div>
 
@@ -344,6 +357,21 @@
     </div>
     <div class="meta" id="m1257Diff"></div>
     <div id="res1257" class="zxCols"></div>
+  </div>
+
+  <!-- 模式七：直组三码遗漏（直选三不同/对子 + 组六/组三，按最大遗漏排名） -->
+  <div class="panel" id="panelZu3" style="display:none">
+    <div class="row">
+      <span class="lab">按年份</span>
+      <select id="yZu3Sel"></select>
+      <span class="lab">期号范围</span>
+      <input id="sZu3Sel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <span class="lab">至</span>
+      <input id="eZu3Sel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <button class="btn sec" id="queryZu3Btn" type="button" style="padding:4px 12px">查询</button>
+    </div>
+    <div class="meta" id="mZu3Diff"></div>
+    <div id="resZu3" class="zu3Grid"></div>
   </div>
 </div>
 
@@ -785,6 +813,7 @@ function setMode(m){
   $('modeZxLm').classList.toggle('on', m==='zxlm');
   $('modeZxGroup').classList.toggle('on', m==='zxgroup');
   $('mode1257').classList.toggle('on', m==='1257');
+  $('modeZu3').classList.toggle('on', m==='zu3');
   $('modeZx2').classList.toggle('on', m==='zx2');
   $('omissionCtl').style.display = (m==='omission')?'':'none';
   $('resPanel').style.display     = (m==='omission')?'':'none';
@@ -796,12 +825,14 @@ function setMode(m){
   $('zx2Panel').style.display      = (m==='zx2')?'':'none';
   $('zxGroupPanel').style.display  = (m==='zxgroup')?'':'none';
   $('panel1257').style.display     = (m==='1257')?'':'none';
+  $('panelZu3').style.display      = (m==='zu3')?'':'none';
   if(m==='hezhi'){ hezhiQuery(); }
   if(m==='lm'){ lmQuery(); }
   if(m==='zxlm'){ zxLmQuery(); }
   if(m==='zx2'){ zxDirectQuery(); }
   if(m==='zxgroup'){ zxGroupQuery(); }
   if(m==='1257'){ query1257(); }
+  if(m==='zu3'){ zhiZuSanQuery(); }
 }
 
 /* ===== 模式四：直选定位两码（每位置100种） ===== */
@@ -1119,6 +1150,99 @@ function query1257(){
   const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×(覆盖月份/12)（表内 M差值 行及底部各年份 M差值：数值为正=高于历史同期、为负=低于，颜色统一为同色高亮）</div>';
   $('m1257Diff').innerHTML=mHtml;
   $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝该范围内出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期偏多(正值)或偏少(负值)；所有 M差值 行统一用同色高亮，数值正负表示方向。表底另列最近五年的逐年 M差值（年份置前），逐年与完整年基准比较。</div>';
+}
+
+/* ===== 模式七：直组三码遗漏（直选三不同/对子 + 组六/组三，按最大遗漏排名） ===== */
+const ZU3_DIRECT_SET=[];   // 直选三不同：三位全不同，720 种，形如 "123"
+for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++){ if(a!==b&&b!==c&&a!==c) ZU3_DIRECT_SET.push(''+a+b+c); }
+const ZU3_DIRECT_PAIR=[];  // 直选对子：恰两位相同（不含豹子），270 种，形如 "112"
+for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++){ const s=new Set([a,b,c]); if(s.size===2) ZU3_DIRECT_PAIR.push(''+a+b+c); }
+const ZU3_GROUP6=[];       // 组六：三不同组合（无序），120 种，形如 "1-2-3"
+for(let a=0;a<10;a++)for(let b=a+1;b<10;b++)for(let c=b+1;c<10;c++) ZU3_GROUP6.push(''+a+'-'+b+'-'+c);
+const ZU3_GROUP3=(function(){   // 组三：一对加一单（无序，不含豹子），90 种，键与出现统计一致（开奖号排序后的多重集，如 "0-1-1"）
+  const seen=new Set();
+  for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++){
+    const s3=new Set([a,b,c]);
+    if(s3.size===2) seen.add([a,b,c].sort((x,y)=>x-y).join('-'));
+  }
+  return [...seen];
+})();
+
+function zhiZuSanQuery(){
+  const sSel=$('sZu3Sel'), eSel=$('eZu3Sel'), ySel=$('yZu3Sel');
+  if(!window.__zu3init){   // 懒加载：年份下拉仅填一次；期号范围默认首期~最新期
+    window.__zu3init=true;
+    ySel.innerHTML='<option value="0">全部年份</option>';
+    YEARS.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y+'年'; ySel.appendChild(o); });
+    sSel.value=D[0][0]; eSel.value=D[D.length-1][0];
+    const rerun=()=>{ const a=parseInt(sSel.value,10), b=parseInt(eSel.value,10); if(a>b){const t=sSel.value;sSel.value=eSel.value;eSel.value=t;} zhiZuSanQuery(); };
+    ySel.onchange=()=>{
+      if(ySel.value!=='0'){
+        const ys=D.filter(d=> Math.floor(d[0]/1000)===parseInt(ySel.value,10));
+        if(ys.length){ sSel.value=ys[0][0]; eSel.value=ys[ys.length-1][0]; }
+      } else { sSel.value=D[0][0]; eSel.value=D[D.length-1][0]; }
+      zhiZuSanQuery();
+    };
+    sSel.onchange=rerun; eSel.onchange=rerun;
+    $('queryZu3Btn').onclick=()=>{ zhiZuSanQuery(); };
+  }
+  let s=parseInt(sSel.value,10), e=parseInt(eSel.value,10);
+  if(isNaN(s)) s=D[0][0];
+  if(isNaN(e)) e=D[D.length-1][0];
+  if(s>e){ const t=s; s=e; e=t; }
+  const period=D.filter(d=> d[0]>=s && d[0]<=e);
+  if(period.length===0){ $('mZu3Diff').innerHTML='<div class="meta">该筛选条件下无数据，请扩大期号/年份范围。</div>'; $('resZu3').innerHTML=''; return; }
+  const N=period.length;
+  // 统计每个候选在 period 内的出现位置（0-based 索引）
+  const occ={directSet:{},directPair:{},group6:{},group3:{}};
+  period.forEach((d,i)=>{
+    const a=d[1],b=d[2],c=d[3], s3=new Set([a,b,c]);
+    if(s3.size===3){ // 组六 + 直选三不同
+      const g6=[a,b,c].sort((x,y)=>x-y).join('-');
+      (occ.group6[g6]=occ.group6[g6]||[]).push(i);
+      (occ.directSet[''+a+b+c]=occ.directSet[''+a+b+c]||[]).push(i);
+    } else if(s3.size===2){ // 组三 + 直选对子（不含豹子）
+      const g3=[a,b,c].sort((x,y)=>x-y).join('-');
+      (occ.group3[g3]=occ.group3[g3]||[]).push(i);
+      (occ.directPair[''+a+b+c]=occ.directPair[''+a+b+c]||[]).push(i);
+    }
+  });
+  function statsOf(idxs){
+    const arr=[...idxs].sort((a,b)=>a-b), total=arr.length;
+    if(total===0) return {total:0,max:N,avg:N,prev:N};
+    let gaps=[],prev=-1;
+    for(const i of arr){ gaps.push(i-prev-1); prev=i; }
+    const max=Math.max(...gaps);
+    const avg=Math.round(gaps.reduce((s,x)=>s+x,0)/gaps.length);
+    const prevGap=gaps[gaps.length-1];   // 上一次遗漏期 = 最近一次开出前的遗漏段
+    return {total,max,avg,prev:prevGap};
+  }
+  function buildRows(cands, occMap, factor){
+    return cands.map(cand=>{
+      const st=statsOf(occMap[cand]||[]);
+      return {num:cand, total:st.total, theo:+(N*factor/1000).toFixed(1), max:st.max, avg:st.avg, prev:st.prev};
+    }).sort((x,y)=> y.max-x.max || y.avg-x.avg || y.total-x.total || (x.num<y.num?-1:1));
+  }
+  const cats=[
+    {title:'直选三不同（前100）', cands:ZU3_DIRECT_SET,  occ:occ.directSet,  factor:1, top:100},
+    {title:'直选对子（前50）',   cands:ZU3_DIRECT_PAIR, occ:occ.directPair, factor:1, top:50},
+    {title:'组六（前50）',       cands:ZU3_GROUP6,       occ:occ.group6,     factor:6, top:50},
+    {title:'组三（前50）',       cands:ZU3_GROUP3,       occ:occ.group3,     factor:3, top:50},
+  ];
+  let html='';
+  cats.forEach(cat=>{
+    const rows=buildRows(cat.cands, cat.occ, cat.factor).slice(0,cat.top);
+    let h='<div class="zu3Card"><div class="zu3Title">'+cat.title+'</div><div class="zu3Scroll"><table><thead><tr><th>排名</th><th>号码</th><th>总出次数</th><th>理论次数</th><th>最大遗漏</th><th>平均遗漏</th><th>上一次遗漏</th></tr></thead><tbody>';
+    rows.forEach((r,i)=>{
+      h+='<tr><td class="rank">'+(i+1)+'</td><td class="num">'+r.num+'</td><td>'+r.total+'</td><td>'+r.theo+'</td><td>'+r.max+'</td><td>'+r.avg+'</td><td>'+r.prev+'</td></tr>';
+    });
+    h+='</tbody></table></div></div>';
+    html+=h;
+  });
+  const yVal=parseInt(ySel.value,10);
+  const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
+  $('mZu3Diff').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+N+' 期'+yearLabel+' ｜ 理论次数 = 期数 × 形态概率（直选 1/1000、组六 6/1000、组三 3/1000）｜ 排名按「最大遗漏」降序（遗漏越大越靠前；同值按平均/总次数/号码排序）</div>';
+  $('resZu3').innerHTML=html+'<div class="hint">说明：本页统计四类号码在所选范围内的遗漏情况，按「最大遗漏」降序取前 N 名。直选三不同=三位数字全不同（如 123，共720种）；直选对子=恰两位相同（如 112，共270种，不含豹子）；组六=三不同数字组合（如 1-2-3，共120种）；组三=一对加一单（如 1-1-2，共90种，不含豹子）。「总出次数」=该号码在范围内实际出现期数；「理论次数」=按概率推算的期望出现次数；「最大遗漏」=历史最长未出间隔；「平均遗漏」=各次遗漏段均值（不含当前进行中）；「上一次遗漏」=最近一次开出前的遗漏期数。</div>';
 }
 
 /* ===== 模式：直选两码（100种有序组合，三位置左→右两两排列合并统计） ===== */
@@ -1545,6 +1669,7 @@ $('modeZxLm').onclick=()=>setMode('zxlm');
 $('modeZx2').onclick=()=>setMode('zx2');
 $('modeZxGroup').onclick=()=>setMode('zxgroup');
 $('mode1257').onclick=()=>setMode('1257');
+$('modeZu3').onclick=()=>setMode('zu3');
 
 /* ---------- 初始化 ---------- */
 curCat='多码任意组合';

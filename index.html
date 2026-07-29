@@ -210,6 +210,7 @@
       <div class="cat-btn" id="modeZxLm">直选定位两码</div>
       <div class="cat-btn" id="modeZx2">直选两码</div>
       <div class="cat-btn" id="modeZxGroup">组选两码</div>
+      <div class="cat-btn" id="mode1257">1257&amp;1368</div>
     </div>
   </div>
 
@@ -322,6 +323,18 @@
   <div class="panel" id="zxGroupPanel" style="display:none">
     <div class="resTitle">组选两码（共 55 种两码组合）｜ 不计位置，按当前遗漏降序排列</div>
     <div id="zxGroupResult" class="zxCols"></div>
+  </div>
+
+  <!-- 模式六：1257&1368 出号数分档统计 -->
+  <div class="panel" id="panel1257" style="display:none">
+    <div class="row">
+      <span class="lab">按年份</span>
+      <select id="y1257Sel"></select>
+      <span class="lab">按期号</span>
+      <select id="i1257Sel"></select>
+    </div>
+    <div class="meta" id="m1257Diff"></div>
+    <div id="res1257" class="zxCols"></div>
   </div>
 </div>
 
@@ -755,6 +768,7 @@ function setMode(m){
   $('modeLm').classList.toggle('on', m==='lm');
   $('modeZxLm').classList.toggle('on', m==='zxlm');
   $('modeZxGroup').classList.toggle('on', m==='zxgroup');
+  $('mode1257').classList.toggle('on', m==='1257');
   $('modeZx2').classList.toggle('on', m==='zx2');
   $('omissionCtl').style.display = (m==='omission')?'':'none';
   $('resPanel').style.display     = (m==='omission')?'':'none';
@@ -765,11 +779,13 @@ function setMode(m){
   $('zxLmPanel').style.display    = (m==='zxlm')?'':'none';
   $('zx2Panel').style.display      = (m==='zx2')?'':'none';
   $('zxGroupPanel').style.display  = (m==='zxgroup')?'':'none';
+  $('panel1257').style.display     = (m==='1257')?'':'none';
   if(m==='hezhi'){ hezhiQuery(); }
   if(m==='lm'){ lmQuery(); }
   if(m==='zxlm'){ zxLmQuery(); }
   if(m==='zx2'){ zxDirectQuery(); }
   if(m==='zxgroup'){ zxGroupQuery(); }
+  if(m==='1257'){ query1257(); }
 }
 
 /* ===== 模式四：直选定位两码（每位置100种） ===== */
@@ -970,6 +986,94 @@ function zxGroupQuery(){
   html+='</tbody></table></div>';
   html+='<div class="hint" style="flex-basis:100%">组选两码：不计位置，只看某两个数字是否同时出现在开奖号中（如开奖 5-9-1 命中两码 59/51/19；开奖 5-5-1 命中 55/51）。共 55 种组合（相同两码 00~99 共10种 + 不同两码 C(10,2)=45种），全部列出按当前遗漏降序。『平均遗漏』＝每次遗漏期数之和 ÷ 出现次数（每段遗漏以一次开出结束，不含当前进行中的遗漏；除不尽四舍五入取整）。『历史最大遗漏』为该组合在全部历史中曾达到的最大遗漏期数（不含当前进行中遗漏）；从未开出的组合记为「—」。『上次遗漏值』= 该组合最近一次开出前所经历的遗漏期数（仅出现≥2次的组合有值，否则记「—」）。<b>红底★</b>：当前遗漏 > 历史最大遗漏。</div>';
   $('zxGroupResult').innerHTML=html;
+}
+
+/* ===== 模式六：1257&1368 出号数分档统计 ===== */
+function cntOf(arr, set){ let n=0; for(const x of arr){ if(set.has(x)) n++; } return n; }
+function build1257Stats(period, set){
+  // 对筛选范围内每期算出号数(0~3)，再按档位 v 统计：出现次数/当前遗漏/平均遗漏/历史最大遗漏
+  const N=period.length;
+  const hits=period.map(d=> cntOf([d[1],d[2],d[3]], set));
+  const stats=[];
+  for(let v=0; v<=3; v++){
+    const idx=[];
+    for(let i=0;i<N;i++) if(hits[i]===v) idx.push(i);
+    const appear=idx.length;
+    let curGap=0, maxGap=null, sumGaps=0;
+    if(appear>0){
+      curGap=(N-1)-idx[idx.length-1];                 // 末尾进行中遗漏
+      sumGaps=idx[idx.length-1]-(idx.length-1);        // 每次遗漏段之和（首段+相邻段，不含末尾）
+      let mx=idx[0];
+      for(let j=0;j<idx.length-1;j++){ const g=idx[j+1]-idx[j]-1; if(g>mx)mx=g; }
+      maxGap=mx;
+    }
+    const avg = appear>0 ? Math.round(sumGaps/appear) : null;
+    stats.push({v, appear, curGap, avg, maxGap});
+  }
+  return stats;
+}
+function query1257(){
+  const ySel=$('y1257Sel'), iSel=$('i1257Sel');
+  if(ySel.options.length<=1){   // 懒加载填充下拉
+    ySel.innerHTML='<option value="0">全部年份</option>';
+    YEARS.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y+'年';ySel.appendChild(o);});
+    iSel.innerHTML='<option value="0">全部期号</option>';
+    D.forEach(d=>{const o=document.createElement('option');o.value=d[0];o.textContent='第 '+d[0]+' 期';iSel.appendChild(o);});
+    ySel.onchange=()=>{ iSel.value=0; query1257(); };
+    iSel.onchange=query1257;
+  }
+  const y=parseInt(ySel.value,10);
+  const iVal=parseInt(iSel.value,10);
+  let period=D.filter(d=> y===0 || Math.floor(d[0]/1000)===y);
+  const S1=new Set([1,2,5,7]), S2=new Set([1,3,6,8]);
+  const s1=build1257Stats(period, S1);
+  const s2=build1257Stats(period, S2);
+  // 按期号定位
+  let loc1, loc2, locHtml='';
+  if(iVal!==0){
+    const rec=D.find(d=>d[0]===iVal);
+    if(rec){
+      loc1=cntOf([rec[1],rec[2],rec[3]], S1);
+      loc2=cntOf([rec[1],rec[2],rec[3]], S2);
+      locHtml='<div class="meta">第 '+rec[0]+' 期 开奖 '+rec[1]+'-'+rec[2]+'-'+rec[3]+' ｜ 1257出号数=<b class="hl">'+loc1+'</b> ｜ 1368出号数=<b class="hl">'+loc2+'</b>（高亮对应档位）</div>';
+    }
+  }
+  function table(name, stats, loc){
+    let h='<div class="zxCol"><div class="zxColTitle">'+name+' 出号数（开奖号含本组数字个数，按位计）</div>';
+    h+='<table><thead><tr><th>出号数</th><th>出现次数</th><th>当前遗漏</th><th>平均遗漏</th><th>历史最大遗漏</th></tr></thead><tbody>';
+    stats.forEach(st=>{
+      const hi=(loc!==undefined && loc===st.v)?' style="background:#fff3cd;outline:2px solid #e67e22"':'';
+      h+='<tr'+hi+'><td><b>'+st.v+'</b></td><td>'+st.appear+'</td><td>'+st.curGap+'</td><td>'+(st.avg===null?'—':st.avg)+'</td><td>'+(st.maxGap===null?'—':st.maxGap)+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    return h;
+  }
+  let html=table('1257', s1, loc1)+table('1368', s2, loc2);
+  // M差值：仅按年份筛选(单年)时显示
+  let mHtml='';
+  if(y!==0){
+    let maxRec=null; period.forEach(d=>{ if(!maxRec||d[0]>maxRec[0]) maxRec=d; });
+    const im=issueMonthOf(maxRec[4]); const M=im.month;
+    const aggYear={}; const yearMonths={};
+    D.forEach(d=>{
+      const yy=Math.floor(d[0]/1000);
+      (yearMonths[yy]||(yearMonths[yy]=new Set())).add(issueMonthOf(d[4]).month);
+      const o=aggYear[yy]||(aggYear[yy]={c1:0,c2:0});
+      o.c1+=cntOf([d[1],d[2],d[3]], S1);
+      o.c2+=cntOf([d[1],d[2],d[3]], S2);
+    });
+    const isFullYear=yy=>{ const ms=yearMonths[yy]; return ms&&ms.has(1)&&ms.has(12); };
+    const yearList=Object.keys(aggYear).map(Number).filter(yy=>yy!==y&&isFullYear(yy));
+    const cur=aggYear[y]||{c1:0,c2:0};
+    const mean1=yearList.length?yearList.reduce((s,yy)=>s+aggYear[yy].c1,0)/yearList.length:0;
+    const mean2=yearList.length?yearList.reduce((s,yy)=>s+aggYear[yy].c2,0)/yearList.length:0;
+    const d1=Math.round(cur.c1-mean1*(M/12));
+    const d2=Math.round(cur.c2-mean2*(M/12));
+    const mc=x=>x>0?'mk-pos':(x<0?'mk-neg':'');
+    mHtml='<div class="meta">M差值 = '+im.year+'年总出号数 − 完整年平均数 × '+im.month+'/12（红=高于/蓝=低于）｜ <b class="'+mc(d1)+'">1257：'+d1+'</b> ｜ <b class="'+mc(d2)+'">1368：'+d2+'</b></div>';
+  }
+  $('m1257Diff').innerHTML=mHtml;
+  $('res1257').innerHTML=locHtml+html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。两表各按出号数 0/1/2/3 分档，列=出现次数/当前遗漏/平均遗漏/历史最大遗漏。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。选「按年份」显示当年M差值；选「按期号」高亮该期对应档位。</div>';
 }
 
 /* ===== 模式：直选两码（100种有序组合，三位置左→右两两排列合并统计） ===== */
@@ -1385,6 +1489,7 @@ $('modeLm').onclick=()=>setMode('lm');
 $('modeZxLm').onclick=()=>setMode('zxlm');
 $('modeZx2').onclick=()=>setMode('zx2');
 $('modeZxGroup').onclick=()=>setMode('zxgroup');
+$('mode1257').onclick=()=>setMode('1257');
 
 /* ---------- 初始化 ---------- */
 curCat='多码任意组合';

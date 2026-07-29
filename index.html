@@ -78,8 +78,8 @@
   .zxColTitle{background:linear-gradient(135deg,#3a5b78,#2c3e50);color:#fff;font-weight:600;text-align:center;padding:8px 0;font-size:13px;letter-spacing:1px}
   .zxCol table{width:100%;border-collapse:collapse}
   .zxCol th,.zxCol td{padding:3px 4px !important;font-size:11px !important}
-  .zxCol tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
-  .zxCol tr.mrow td:first-child{color:#a0670f}
+  tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
+  tr.mrow td:first-child{color:#a0670f}
   .mdcell{background:#fdf6e3;font-weight:700}  /* M差值 单元格统一高亮（所有类目一致），数值正负表示方向 */
   #zxLmResult table{margin:0}
   #zxLmResult th,#zxLmResult td{border-bottom:1px solid #eef1f6;border-right:1px solid #eef1f6;padding:6px 10px;text-align:center;white-space:nowrap;font-size:13px}
@@ -641,40 +641,42 @@ function lmQuery(){
   // ===== M差值：仅「按年份筛查」(单年) 时显示 =====
   // 当前年份 Y；本月 M = 该年最新一期所在月份；
   // M差值(二码v) = 当前年份命中总次数(v) − 完整年平均数(v) × ( M / 12 )，四舍五入
-  let mDiff=null;
-  if(y!==0){
-    const Y=y;
-    let maxIssue=0, maxRec=null; period.forEach(d=>{ if(d[0]>maxIssue){maxIssue=d[0]; maxRec=d;} });
-    const M=issueMonthOf(maxRec[4]).month;
-    // 按年份聚合每个二码命中次数：aggYear[year][gi][hitIndex]=count
-    const aggYear={};
-    D.forEach(d=>{
-      const yy=Math.floor(d[0]/1000);
-      const rec=LM_MAP[d[0]];
-      const a=aggYear[yy]||(aggYear[yy]=[{},{}]);
-      lmGrids.forEach((g,gi)=>{
-        const hits=rec?rec[1+gi]:[];
-        const o=a[gi];
-        hits.forEach(v=>{ o[v]=(o[v]||0)+1; });
-      });
-    });
-    // 完整年：1月与12月均有数据
-    const yearMonths={};
-    D.forEach(d=>{ const yy=Math.floor(d[0]/1000); const im=issueMonthOf(d[4]); (yearMonths[yy]||(yearMonths[yy]=new Set())).add(im.month); });
-    const isFullYear = yy => { const ms=yearMonths[yy]; return ms && ms.has(1) && ms.has(12); };
-    const yearList=Object.keys(aggYear).map(Number).filter(yy=> yy!==Y && isFullYear(yy));
-    const curYear=aggYear[Y]||[{},{}];
-    mDiff=lmGrids.map((g,gi)=>{
+  // ===== M差值：主行(单年模式) + 近五年(不含当年)行，始终显示 =====
+  // M差值(二码v) = 年份命中总次数(v) − 完整年平均数(v) × ( 该年最新月份/12 )，四舍五入
+  const lmAggYear={};
+  const lmYearMonths={};
+  D.forEach(d=>{
+    const yy=Math.floor(d[0]/1000);
+    const rec=LM_MAP[d[0]];
+    const a=lmAggYear[yy]||(lmAggYear[yy]=[{},{}]);
+    lmGrids.forEach((g,gi)=>{ (rec?rec[1+gi]:[]).forEach(v=>{ a[gi][v]=(a[gi][v]||0)+1; }); });
+    const im=issueMonthOf(d[4]);
+    (lmYearMonths[yy]||(lmYearMonths[yy]=new Set())).add(im.month);
+  });
+  const lmIsFull = yy=>{ const ms=lmYearMonths[yy]; return ms && ms.has(1) && ms.has(12); };
+  function lmYearMDiff(Y){
+    let mx=0, rec=null; D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){mx=d[0];rec=d;} });
+    const M = rec? issueMonthOf(rec[4]).month : 12;
+    const yearList=Object.keys(lmAggYear).map(Number).filter(yy=> yy!==Y && lmIsFull(yy));
+    const curYear=lmAggYear[Y]||[{},{}];
+    return lmGrids.map((g,gi)=>{
       const mean=Array(g.heads.length).fill(0);
-      yearList.forEach(yy=>{ const o=aggYear[yy][gi]; for(const k in o) mean[k]=(mean[k]||0)+o[k]; });
+      yearList.forEach(yy=>{ const o=lmAggYear[yy][gi]; for(const k in o) mean[k]+=o[k]; });
       for(let v=0;v<g.heads.length;v++) mean[v]= yearList.length? mean[v]/yearList.length : 0;
       const curArr=Array.from({length:g.heads.length},(_,v)=>curYear[gi][v]||0);
       return curArr.map((cnt,i)=> Math.round(cnt - mean[i]*(M/12)));
     });
   }
-  renderLm(shown, period, lmMetaBox, lmWarnBox, mDiff);
+  let mDiff=null;
+  if(y!==0){ mDiff=lmYearMDiff(y); }
+  // 近五年（不含当年=最新年份）年份列表：取最新年份之前最近 5 个完整年
+  const allYearsL=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const curYearL=allYearsL[allYearsL.length-1];
+  const last5L=allYearsL.filter(yy=> yy<curYearL && lmIsFull(yy)).slice(-5).reverse();
+  const lmYearRows=last5L.filter(yy=> yy!==y).map(yy=>({year:yy, vals:lmYearMDiff(yy)}));
+  renderLm(shown, period, lmMetaBox, lmWarnBox, mDiff, lmYearRows);
 }
-function renderLm(shown, all, metaEl, warnEl, mDiff){
+function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
   // 逐期遗漏（基于完整范围 all），按 issue 索引：omitByIssue[gi].get(issue)[v]
   const omitByIssue=lmGrids.map(()=>new Map());
   {
@@ -737,8 +739,8 @@ function renderLm(shown, all, metaEl, warnEl, mDiff){
     tbody+='</tbody>';
     // 表脚统计
     let tfoot='<tfoot>';
-    statNames.forEach(sn=>{
-      if(sn==='M差值' && !mDiff) return;   // 仅按年份筛查(单年)时显示
+    const rowStats=['出现次数','当前遗漏','最大遗漏','平均遗漏','最大连出'];
+    rowStats.forEach(sn=>{
       tfoot+='<tr><td class="footer-lab" colspan="2">'+sn+'</td>';
       for(let v=0;v<n;v++){
         const st=gridStats[gi];
@@ -748,22 +750,27 @@ function renderLm(shown, all, metaEl, warnEl, mDiff){
         else if(sn==='最大遗漏')val=st.maxGap[v];
         else if(sn==='平均遗漏')val=st.avgGap[v];
         else if(sn==='最大连出')val=st.maxCon[v];
-        else if(sn==='M差值'){ const x=(mDiff&&mDiff[gi][v]!==null)?mDiff[gi][v]:'—'; val=x;
-          if(x!=='—'){ cls=(v===0?' class="grp-sep mdcell"':' class="mdcell"'); } }
         tfoot+='<td'+cls+'>'+val+'</td>';
       }
       tfoot+='</tr>';
     });
+    // M差值 行：主行(单年模式) + 近五年(不含当年)行，统一 .mrow 同色高亮
+    function lmMDiffRow(label, arr){
+      if(!arr) return '';
+      let h='<tr class="mrow"><td class="footer-lab" colspan="2">'+label+'</td>';
+      for(let v=0;v<n;v++){ const x=(arr[v]!==null&&arr[v]!==undefined)?arr[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>'; }
+      return h+'</tr>';
+    }
+    if(mDiff) tfoot+=lmMDiffRow('M差值', mDiff[gi]);
+    (lmYearRows||[]).forEach(r=>{ tfoot+=lmMDiffRow(r.year+' M差值', r.vals[gi]); });
     tfoot+='</tfoot>';
     html+='<div class="lmGridBlock"><div class="resTitle">'+g.name+'（'+n+' 列）</div>'+thead+tbody+tfoot+'</table></div>';
   });
   $('lmGrids').innerHTML=html;
   metaEl.textContent='两码走势图（组三/六）｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）';
   let warn=(all.length>shown.length)?('提示：为便于观察，仅绘制最近 '+shown.length+' 期；表脚统计仍基于完整 '+all.length+' 期。'):'';
-  if(mDiff){
-    let maxRec=null; all.forEach(d=>{ if(!maxRec||d[0]>maxRec[0]) maxRec=d; });
-    const im=issueMonthOf(maxRec[4]);
-    warn+=' ｜ M差值 = '+im.year+'年总次数 − 完整年平均数 × '+im.month+'/12 (取整，数值正=高于/负=低于，统一同色高亮)';
+  if(mDiff || (lmYearRows&&lmYearRows.length)){
+    warn+=' ｜ M差值(v)=年份总次数(v)-完整年平均数(v)x(该年最新月份/12) 取整；主行为所选年份，表底另列近五年(不含当年)逐年份 M差值，统一同色高亮，数值正=高于/负=低于';
   }
   warnEl.textContent=warn;
 }
@@ -1315,55 +1322,52 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
   // 历史年平均数 = 不含当前年的所有历史年份该值出现次数之和 / 历史年数
   const yrs=new Set(all.map(d=>Math.floor(d[0]/1000)));
   const isYearMode = yrs.size===1;
-  let mDiff=null;
-  if(isYearMode){
-    const Y=[...yrs][0];
-    let maxIssue=0, maxRec=null; all.forEach(d=>{ if(d[0]>maxIssue){maxIssue=d[0]; maxRec=d;} });
-    const M=issueMonthOf(maxRec[4]).month;
-    // 按年份聚合：key=year -> {sum:{},tail:{},span:{}}；同时记录每年出现的月份用于判断“完整年”
-    const aggYear={};
-    const yearMonths={};
-    D.forEach(d=>{
-      const y=Math.floor(d[0]/1000);
-      const im=issueMonthOf(d[4]);
-      const a=d[1],b=d[2],c=d[3],s=a+b+c;
-      const o=aggYear[y]||(aggYear[y]={sum:{},tail:{},span:{}});
-      o.sum[s]=(o.sum[s]||0)+1;
-      const t=s%10; o.tail[t]=(o.tail[t]||0)+1;
-      const sp=Math.max(a,b,c)-Math.min(a,b,c); o.span[sp]=(o.span[sp]||0)+1;
-      (yearMonths[y]||(yearMonths[y]=new Set())).add(im.month);
-    });
-    // 完整年：该年 1 月与 12 月均有数据（部分年如当前年数据只到某月则不算）
-    const isFullYear = y => { const ms=yearMonths[y]; return ms && ms.has(1) && ms.has(12); };
-    const gfld=['sum','tail','span'];
-    const yearList=Object.keys(aggYear).map(Number).filter(y=> y!==Y && isFullYear(y)); // 仅完整历史年
+  // 按年份聚合（始终计算，供近五年行使用）
+  const aggYear={};
+  const yearMonths={};
+  D.forEach(d=>{
+    const y=Math.floor(d[0]/1000);
+    const im=issueMonthOf(d[4]);
+    const a=d[1],b=d[2],c=d[3],s=a+b+c;
+    const o=aggYear[y]||(aggYear[y]={sum:{},tail:{},span:{}});
+    o.sum[s]=(o.sum[s]||0)+1;
+    const t=s%10; o.tail[t]=(o.tail[t]||0)+1;
+    const sp=Math.max(a,b,c)-Math.min(a,b,c); o.span[sp]=(o.span[sp]||0)+1;
+    (yearMonths[y]||(yearMonths[y]=new Set())).add(im.month);
+  });
+  const isFullYear = y => { const ms=yearMonths[y]; return ms && ms.has(1) && ms.has(12); };
+  const gfld=['sum','tail','span'];
+  function hzYearMDiff(Y){
+    let mx=0, rec=null; D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){mx=d[0];rec=d;} });
+    const M = rec? issueMonthOf(rec[4]).month : 12;
+    const yearList=Object.keys(aggYear).map(Number).filter(y=> y!==Y && isFullYear(y));
     const curYear=aggYear[Y]||{sum:{},tail:{},span:{}};
-    // 总的出现数的年平均数(v) = 不含当前年且仅含完整年的历史年份该值出现次数之和 / 完整年数
-    const yearlyMean=grids.map((g,gi)=>{
+    return grids.map((g,gi)=>{
       const mean=Array(g.n).fill(0);
       yearList.forEach(y=>{ const o=aggYear[y]; if(!o)return;
         for(let v=0;v<g.n;v++) mean[v]+=(o[gfld[gi]][v]||0); });
       for(let v=0;v<g.n;v++) mean[v]= yearList.length? mean[v]/yearList.length : 0;
-      return mean;
-    });
-    mDiff=grids.map((g,gi)=>{
-      const mean=yearlyMean[gi];
       const curArr=Array.from({length:g.n},(_,v)=>curYear[gfld[gi]][v]||0);
       return curArr.map((cnt,i)=> Math.round(cnt - mean[i] * (M/12)));
     });
   }
-  const statNames=['出现次数','M差值','当前遗漏','最大遗漏','平均遗漏','最大连出'];
+  let mDiff=null;
+  const selY = isYearMode ? [...yrs][0] : null;
+  if(isYearMode){ mDiff=hzYearMDiff(selY); }
+  // 近五年（不含当年=最新年份）年份列表：取最新年份之前最近 5 个完整年
+  const allYearsH=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const curYearH=allYearsH[allYearsH.length-1];
+  const last5H=allYearsH.filter(y=> y<curYearH && isFullYear(y)).slice(-5).reverse();
+  const hzYearRows=last5H.filter(y=> y!==selY).map(y=>({year:y, vals:hzYearMDiff(y)}));
+  const statNames=['出现次数','当前遗漏','最大遗漏','平均遗漏','最大连出'];
   let tfoot='<tfoot>';
   statNames.forEach(sn=>{
-    if(sn==='M差值' && !isYearMode) return;   // 仅按年份筛查时显示
     tfoot+='<tr><td class="footer-lab" colspan="2">'+sn+'</td>';
     grids.forEach((g,gi)=>{
       const st=gridStats[gi];
       for(let v=0;v<g.n;v++){
         let val='—', cls=(v===0?' class="grp-sep"':'');
         if(sn==='出现次数')val=st.appear[v];
-        else if(sn==='M差值'){ const x=(mDiff&&mDiff[gi][v]!==null)?mDiff[gi][v]:'—'; val=x;
-          if(x!=='—'){ cls=(v===0?' class="grp-sep mdcell"':' class="mdcell"'); } }
         else if(sn==='当前遗漏')val=st.curGap[v];
         else if(sn==='最大遗漏')val=st.maxGap[v];
         else if(sn==='平均遗漏')val=st.avgGap[v];
@@ -1374,14 +1378,27 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
     cats.forEach(()=>{ tfoot+='<td></td>'; });
     tfoot+='</tr>';
   });
+  // M差值 行：主行(单年模式) + 近五年(不含当年)行，统一 .mrow 同色高亮
+  function zstMDiffRow(label, arr){
+    if(!arr) return '';
+    let h='<tr class="mrow"><td class="footer-lab" colspan="2">'+label+'</td>';
+    grids.forEach((g,gi)=>{
+      for(let v=0;v<g.n;v++){
+        const x=(arr[gi]&&arr[gi][v]!==null&&arr[gi][v]!==undefined)?arr[gi][v]:'—';
+        h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>';
+      }
+    });
+    cats.forEach(()=>{ h+='<td></td>'; });
+    return h+'</tr>';
+  }
+  if(isYearMode) tfoot+=zstMDiffRow('M差值', mDiff);
+  hzYearRows.forEach(r=>{ tfoot+=zstMDiffRow(r.year+' M差值', r.vals); });
   tfoot+='</tfoot>';
   $('zstTable').innerHTML=thead+tbody+tfoot;
   metaEl.textContent='和值走势图（带连线）｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ 连线：和值(红)/和尾(蓝)/跨度(绿)';
   let warn=(all.length>shown.length)?('提示：为便于观察连线，仅绘制最近 '+shown.length+' 期；表脚统计仍基于完整 '+all.length+' 期。'):'';
-  if(isYearMode){
-    let maxRec=null; all.forEach(d=>{ if(!maxRec||d[0]>maxRec[0]) maxRec=d; });
-    const im=issueMonthOf(maxRec[4]);
-    warn+=' ｜ M差值 = '+im.year+'年总次数 − 完整年平均数 × '+im.month+'/12 (取整，数值正=高于/负=低于，统一同色高亮)';
+  if(isYearMode || (hzYearRows&&hzYearRows.length)){
+    warn+=' ｜ M差值(v)=年份总次数(v)-完整年平均数(v)x(该年最新月份/12) 取整；主行为所选年份，表底另列近五年(不含当年)逐年份 M差值，统一同色高亮，数值正=高于/负=低于';
   }
   warnEl.textContent=warn;
   setTimeout(drawZstLines,30);

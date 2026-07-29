@@ -330,6 +330,8 @@
   <!-- 模式六：1257&1368 出号数分档统计 -->
   <div class="panel" id="panel1257" style="display:none">
     <div class="row">
+      <span class="lab">按年份</span>
+      <select id="y1257Sel"></select>
       <span class="lab">期号范围</span>
       <select id="s1257Sel"></select>
       <span class="lab">至</span>
@@ -1039,8 +1041,10 @@ function fullYear1257Avg(){
   return _1257_FY;
 }
 function query1257(){
-  const sSel=$('s1257Sel'), eSel=$('e1257Sel');
-  if(sSel.options.length<=1){   // 懒加载填充下拉（全部期号）
+  const sSel=$('s1257Sel'), eSel=$('e1257Sel'), ySel=$('y1257Sel');
+  if(sSel.options.length<=1){   // 懒加载填充下拉（年份 + 全部期号）
+    ySel.innerHTML='<option value="0">全部年份</option>';
+    YEARS.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y+'年'; ySel.appendChild(o); });
     sSel.innerHTML=''; eSel.innerHTML='';
     D.forEach(d=>{
       const o1=document.createElement('option'); o1.value=d[0]; o1.textContent='第 '+d[0]+' 期'; sSel.appendChild(o1);
@@ -1048,8 +1052,15 @@ function query1257(){
     });
     sSel.value=D[0][0]; eSel.value=D[D.length-1][0];
     const rerun=()=>{ const a=parseInt(sSel.value,10), b=parseInt(eSel.value,10); if(a>b){const t=sSel.value;sSel.value=eSel.value;eSel.value=t;} query1257(); };
+    ySel.onchange=()=>{
+      if(ySel.value!=='0'){
+        const ys=D.filter(d=> Math.floor(d[0]/1000)===parseInt(ySel.value,10));
+        if(ys.length){ sSel.value=ys[0][0]; eSel.value=ys[ys.length-1][0]; }
+      } else { sSel.value=D[0][0]; eSel.value=D[D.length-1][0]; }
+      query1257();
+    };
     sSel.onchange=rerun; eSel.onchange=rerun;
-    $('all1257Btn').onclick=()=>{ sSel.value=D[0][0]; eSel.value=D[D.length-1][0]; query1257(); };
+    $('all1257Btn').onclick=()=>{ ySel.value='0'; sSel.value=D[0][0]; eSel.value=D[D.length-1][0]; query1257(); };
   }
   let s=parseInt(sSel.value,10), e=parseInt(eSel.value,10);
   if(s>e){ const t=s; s=e; e=t; }
@@ -1082,7 +1093,9 @@ function query1257(){
   const tot1=s1.reduce((a,st)=>a+st.appear,0), tot2=s2.reduce((a,st)=>a+st.appear,0);
   const meanTot1=fy.a1.reduce((a,v)=>a+v,0), meanTot2=fy.a2.reduce((a,v)=>a+v,0);
   const d1=Math.round(tot1-meanTot1*(span/12)), d2=Math.round(tot2-meanTot2*(span/12));
-  const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个 ｜ M差值基准=完整年(含1&12月)各出号数均值 ×('+span+'/12)（红=高于/蓝=低于）｜ <b class="'+mc(d1)+'">1257总：'+d1+'</b> ｜ <b class="'+mc(d2)+'">1368总：'+d2+'</b></div>';
+  const yVal=parseInt(ySel.value,10);
+  const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
+  const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×('+span+'/12)（红=高于/蓝=低于）｜ <b class="'+mc(d1)+'">1257总：'+d1+'</b> ｜ <b class="'+mc(d2)+'">1368总：'+d2+'</b></div>';
   $('m1257Diff').innerHTML=mHtml;
   $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝范围内该出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期是偏多(红)还是偏少(蓝)；表内每行末 M差值 即对应各出号数。</div>';
 }

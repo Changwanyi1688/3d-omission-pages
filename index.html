@@ -1086,7 +1086,7 @@ function query1257(){
     h+='<table><thead><tr><th>指标＼出号数</th><th>出号数0</th><th>出号数1</th><th>出号数2</th><th>出号数3</th></tr></thead><tbody>';
     // 行序：出现次数 → M差值 → 当前遗漏 → 历史最大遗漏 → 平均遗漏
     h+='<tr><td><b>出现次数</b></td>'+stats.map(st=>'<td>'+st.appear+'</td>').join('')+'</tr>';
-    h+='<tr class="mrow"><td><b>M差值</b></td>'+d.map(x=>{const c=x>0?'mk-pos':(x<0?'mk-neg':'');return '<td class="'+c+'">'+x+'</td>';}).join('')+'</tr>';
+    h+='<tr class="mrow"><td><b>M差值</b></td>'+d.map(x=>'<td>'+x+'</td>').join('')+'</tr>';
     const rows=[
       ['当前遗漏',     stats.map(st=>st.curGap)],
       ['历史最大遗漏', stats.map(st=>st.maxGap===null?'—':st.maxGap)],
@@ -1096,7 +1096,7 @@ function query1257(){
     // 表底：最近五年 M差值（每年一行，年份置前）
     last5.forEach(y=>{
       const dp=yearMDiff(y, set, avg);
-      h+='<tr class="mrow"><td><b>'+y+' M差值</b></td>'+dp.map(x=>{const c=x>0?'mk-pos':(x<0?'mk-neg':'');return '<td class="'+c+'">'+x+'</td>';}).join('')+'</tr>';
+      h+='<tr class="mrow"><td><b>'+y+' M差值</b></td>'+dp.map(x=>'<td>'+x+'</td>').join('')+'</tr>';
     });
     h+='</tbody></table></div>';
     return h;
@@ -1105,9 +1105,9 @@ function query1257(){
   // 汇总 meta：范围、覆盖月份、各出号数合计的 M差值（总 M差值 = 各出号数 M差值之和）
   const yVal=parseInt(ySel.value,10);
   const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
-  const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×(覆盖月份/12)（表内 M差值 行及底部各年份 M差值：红=高于/蓝=低于）</div>';
+  const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×(覆盖月份/12)（表内 M差值 行及底部各年份 M差值：数值为正=高于历史同期、为负=低于，颜色统一为同色高亮）</div>';
   $('m1257Diff').innerHTML=mHtml;
-  $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝该范围内出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期偏多(红)或偏少(蓝)。表底另列最近五年的逐年 M差值（年份置前），逐年与完整年基准比较。</div>';
+  $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝该范围内出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期偏多(正值)或偏少(负值)；所有 M差值 行统一用同色高亮，数值正负表示方向。表底另列最近五年的逐年 M差值（年份置前），逐年与完整年基准比较。</div>';
 }
 
 /* ===== 模式：直选两码（100种有序组合，三位置左→右两两排列合并统计） ===== */

@@ -92,7 +92,9 @@
   .zu3Scroll{max-height:560px;overflow:auto}
   .zu3Card table{border-collapse:collapse;width:100%;font-size:12px}
   .zu3Card th,.zu3Card td{border:1px solid #e3e7ee;padding:3px 5px;text-align:center;white-space:nowrap}
-  .zu3Card thead th{position:sticky;top:0;background:#34495e;color:#fff;z-index:2}
+  .zu3Card thead th{position:sticky;top:0;background:#34495e;color:#fff;z-index:2;cursor:pointer;user-select:none}
+  .zu3Card thead th:hover{background:#3d5a73}
+  .zu3Card thead th .sort{font-style:normal;margin-left:3px}
   .zu3Card td.rank{color:#9aa4b2}
   .zu3Card td.num{font-weight:700;color:#2c3e50;background:#f7f9fc}
   .zu3Card tbody tr:hover td{background:#f0f5ff}
@@ -1209,40 +1211,84 @@ function zhiZuSanQuery(){
   });
   function statsOf(idxs){
     const arr=[...idxs].sort((a,b)=>a-b), total=arr.length;
-    if(total===0) return {total:0,max:N,avg:N,prev:N};
+    if(total===0) return {total:0,max:N,avg:N,prev:N,cur:N};
     let gaps=[],prev=-1;
     for(const i of arr){ gaps.push(i-prev-1); prev=i; }
     const max=Math.max(...gaps);
     const avg=Math.round(gaps.reduce((s,x)=>s+x,0)/gaps.length);
     const prevGap=gaps[gaps.length-1];   // 上一次遗漏期 = 最近一次开出前的遗漏段
-    return {total,max,avg,prev:prevGap};
+    const cur=N-1-prev;                  // 当前遗漏 = 范围末 - 最近一次出现索引 - 1
+    return {total,max,avg,prev:prevGap,cur};
   }
-  function buildRows(cands, occMap, factor){
+  function buildRows(cands, occMap){
     return cands.map(cand=>{
       const st=statsOf(occMap[cand]||[]);
-      return {num:cand, total:st.total, theo:+(N*factor/1000).toFixed(1), max:st.max, avg:st.avg, prev:st.prev};
-    }).sort((x,y)=> y.max-x.max || y.avg-x.avg || y.total-x.total || (x.num<y.num?-1:1));
+      return {num:cand, total:st.total, cur:st.cur, max:st.max, avg:st.avg, prev:st.prev};
+    });
   }
   const cats=[
-    {title:'直选三不同（前100）', cands:ZU3_DIRECT_SET,  occ:occ.directSet,  factor:1, top:100},
-    {title:'直选对子（前50）',   cands:ZU3_DIRECT_PAIR, occ:occ.directPair, factor:1, top:50},
-    {title:'组六（前50）',       cands:ZU3_GROUP6,       occ:occ.group6,     factor:6, top:50},
-    {title:'组三（前50）',       cands:ZU3_GROUP3,       occ:occ.group3,     factor:3, top:50},
+    {title:'直选三不同（前100）', cands:ZU3_DIRECT_SET,  occ:occ.directSet,  top:100},
+    {title:'直选对子（前50）',   cands:ZU3_DIRECT_PAIR, occ:occ.directPair, top:50},
+    {title:'组六（前50）',       cands:ZU3_GROUP6,       occ:occ.group6,     top:50},
+    {title:'组三（前50）',       cands:ZU3_GROUP3,       occ:occ.group3,     top:50},
   ];
+  const yVal=parseInt(ySel.value,10);
+  const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
+  $('mZu3Diff').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+N+' 期'+yearLabel+' ｜ 点击任意列标题的小三角(▲/▼)可切换升序/降序（默认「最大遗漏」降序，遗漏越大越靠前）｜ 「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）</div>';
+  ZU3_DATA={N, s, e, yVal, yearLabel,
+    cats:cats.map(cat=>({title:cat.title, top:cat.top, rows:buildRows(cat.cands, cat.occ)}))};
+  renderZu3();
+}
+// 直组三码遗漏：列定义（含可点击排序的小三角）
+const ZU3_COLS=[
+  {k:'num',  t:'号码',       str:true},
+  {k:'total',t:'总出次数',   num:true},
+  {k:'cur',  t:'当前遗漏',   num:true},
+  {k:'max',  t:'最大遗漏',   num:true},
+  {k:'avg',  t:'平均遗漏',   num:true},
+  {k:'prev', t:'上一次遗漏', num:true},
+];
+let ZU3_DATA=null, zu3SortKey='max', zu3SortDir='desc';
+function zu3Sort(k){
+  if(zu3SortKey===k){ zu3SortDir = (zu3SortDir==='asc')?'desc':'asc'; }
+  else { zu3SortKey=k; zu3SortDir='desc'; }   // 默认点列先倒序（遗漏越大越靠前）
+  renderZu3();
+}
+function renderZu3(){
+  if(!ZU3_DATA) return;
+  const {cats}=ZU3_DATA;
   let html='';
   cats.forEach(cat=>{
-    const rows=buildRows(cat.cands, cat.occ, cat.factor).slice(0,cat.top);
-    let h='<div class="zu3Card"><div class="zu3Title">'+cat.title+'</div><div class="zu3Scroll"><table><thead><tr><th>排名</th><th>号码</th><th>总出次数</th><th>理论次数</th><th>最大遗漏</th><th>平均遗漏</th><th>上一次遗漏</th></tr></thead><tbody>';
+    let rows=cat.rows.slice();
+    const col=ZU3_COLS.find(c=>c.k===zu3SortKey);
+    if(col){
+      rows.sort((a,b)=>{
+        if(col.num){
+          const na=+a[zu3SortKey], nb=+b[zu3SortKey];
+          if(na!==nb) return (zu3SortDir==='asc')?na-nb:nb-na;
+        } else {
+          const sa=a[zu3SortKey], sb=b[zu3SortKey];
+          const c=sa.localeCompare(sb,'zh');
+          if(c!==0) return (zu3SortDir==='asc')?c:-c;
+        }
+        return b.total-a.total;   // 同值按总出次数降序（tiebreak）
+      });
+    }
+    rows=rows.slice(0,cat.top);
+    let h='<div class="zu3Card"><div class="zu3Title">'+cat.title+'</div><div class="zu3Scroll"><table class="zu3Tbl"><thead><tr><th class="rankh">排名</th>';
+    ZU3_COLS.forEach(c=>{
+      const up=(zu3SortKey===c.k && zu3SortDir==='asc')?' on':'';
+      const dn=(zu3SortKey===c.k && zu3SortDir==='desc')?' on':'';
+      h+='<th data-k="'+c.k+'" onclick="zu3Sort(\''+c.k+'\')">'+c.t+'<span class="sort"><i class="up'+up+'">▲</i><i class="down'+dn+'">▼</i></span></th>';
+    });
+    h+='</tr></thead><tbody>';
     rows.forEach((r,i)=>{
-      h+='<tr><td class="rank">'+(i+1)+'</td><td class="num">'+r.num+'</td><td>'+r.total+'</td><td>'+r.theo+'</td><td>'+r.max+'</td><td>'+r.avg+'</td><td>'+r.prev+'</td></tr>';
+      h+='<tr><td class="rank">'+(i+1)+'</td><td class="num">'+r.num+'</td><td>'+r.total+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+r.avg+'</td><td>'+r.prev+'</td></tr>';
     });
     h+='</tbody></table></div></div>';
     html+=h;
   });
-  const yVal=parseInt(ySel.value,10);
-  const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
-  $('mZu3Diff').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+N+' 期'+yearLabel+' ｜ 理论次数 = 期数 × 形态概率（直选 1/1000、组六 6/1000、组三 3/1000）｜ 排名按「最大遗漏」降序（遗漏越大越靠前；同值按平均/总次数/号码排序）</div>';
-  $('resZu3').innerHTML=html+'<div class="hint">说明：本页统计四类号码在所选范围内的遗漏情况，按「最大遗漏」降序取前 N 名。直选三不同=三位数字全不同（如 123，共720种）；直选对子=恰两位相同（如 112，共270种，不含豹子）；组六=三不同数字组合（如 1-2-3，共120种）；组三=一对加一单（如 1-1-2，共90种，不含豹子）。「总出次数」=该号码在范围内实际出现期数；「理论次数」=按概率推算的期望出现次数；「最大遗漏」=历史最长未出间隔；「平均遗漏」=各次遗漏段均值（不含当前进行中）；「上一次遗漏」=最近一次开出前的遗漏期数。</div>';
+  $('resZu3').innerHTML=html+'<div class="hint">说明：本页统计四类号码在所选范围内的遗漏情况，按当前排序列（默认「最大遗漏」降序）取前 N 名。直选三不同=三位数字全不同（如 123，共720种）；直选对子=恰两位相同（如 112，共270种，不含豹子）；组六=三不同数字组合（如 1-2-3，共120种）；组三=一对加一单（如 1-1-2，共90种，不含豹子）。「总出次数」=该号码在范围内实际出现期数；「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）；「最大遗漏」=历史最长未出间隔；「平均遗漏」=各次遗漏段均值（不含当前进行中）；「上一次遗漏」=最近一次开出前的遗漏期数。点击任意列标题的小三角(▲/▼)可切换升序/降序排列。</div>';
 }
 
 /* ===== 模式：直选两码（100种有序组合，三位置左→右两两排列合并统计） ===== */

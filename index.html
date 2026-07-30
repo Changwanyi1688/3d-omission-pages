@@ -233,6 +233,10 @@
   #dashTop .fgrp .gh .om{color:#e11d48}
   #dashTop .muted{color:#94a3b8;font-size:13px}
   #dashTop .warn{color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:13px}
+  /* 组选类型标注：豹子红 / 组三蓝 / 组六绿 */
+  #dashTop .gbBao{color:#c0392b;font-weight:700;margin-left:2px}
+  #dashTop .gbZ3{color:#2980b9;font-weight:700;margin-left:2px}
+  #dashTop .gbZ6{color:#27ae60;font-weight:700;margin-left:2px}
 </style>
 </head>
 <body>
@@ -289,7 +293,7 @@
       <input id="fInput" class="fInp" placeholder="例：和值8 ｜ 跨度3 ｜ 全顺 ｜ 两码12 ｜ 大数和12 ｜ 选拆解输 321" />
       <button id="fBtn" class="fBtn">查相同遗漏</button>
     </div>
-    <div class="fbHint">写法：<code>和值8</code> <code>和值 8</code> <code>和值:8</code> ｜ <code>全顺</code> <code>上升</code> ｜ <code>两码12</code> ｜ <code>大数和12</code> ｜ 切到「开奖号拆解」输 <code>321</code> 看该号全部形态的并列遗漏</div>
+    <div class="fbHint">写法：<code>和值8</code> <code>和值 8</code> <code>和值:8</code> ｜ <code>全顺</code> <code>上升</code> ｜ <code>两码12</code> ｜ <code>大数和12</code> ｜ 切到「开奖号拆解」输 <code>321</code> 看该号全部形态的并列遗漏　｜　结果中已随项标注 <span class="gbBao">豹子</span> · <span class="gbZ3">组三</span> · <span class="gbZ6">组六</span></div>
     <div id="fResult" class="fResult"></div>
   </div>
 </div>
@@ -2152,13 +2156,24 @@ function fzAuto(raw){
   return null;
 }
 function fzEsc(s){return (''+s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+// 组选类型标注：把结果值换算成 豹子/组三/组六（无法判定返回 null）
+function fzGrp(name,val){
+  if(name==='组选类型') return val;                                   // 已是 豹子/组三/组六
+  if(name==='号码类型') return val==='豹子'?'豹子':(val==='组三'?'组三':'组六'); // 全顺/半顺/杂六均属组六
+  if(name==='两码') return null;                                      // 两码命中不限定组三/组六
+  if(name&&name.endsWith('码')) return '组六';                        // 三码及以上必为三不同 → 组六
+  const s=''+val;
+  if(/^\d{3}$/.test(s)){const a=+s[0],b=+s[1],c=+s[2];const u=new Set([a,b,c]);return u.size===1?'豹子':(u.size===2?'组三':'组六');}
+  return null;
+}
+function fzBadge(name,val){const g=fzGrp(name,val);if(!g)return '';const cls=g==='豹子'?'gbBao':(g==='组三'?'gbZ3':'gbZ6');return ' <span class="'+cls+'">'+g+'</span>';}
 function fzRenderOne(it,om){
   const comps=(fzOM[om]||[]).filter(x=>!(x.name===it.name&&x.val===it.val));
   comps.sort((a,b)=>(fzORD[a.name]??99)-(fzORD[b.name]??99)|| a.val.localeCompare(b.val,'zh'));
-  let h='<div class="fitem"><div class="fhead">解析：<b>'+fzEsc(it.name)+' · '+fzEsc(it.val)+'</b> ｜ 当前遗漏 <b class="om">'+om+'</b> 期</div>';
+  let h='<div class="fitem"><div class="fhead">解析：<b>'+fzEsc(it.name)+' · '+fzEsc(it.val)+'</b>'+fzBadge(it.name,it.val)+' ｜ 当前遗漏 <b class="om">'+om+'</b> 期</div>';
   h+='<div class="fsub">遗漏同为 <b>'+om+'</b> 期的指标共 <b>'+(comps.length+1)+'</b> 项（含本项），依次如下：</div><div class="flist">';
-  h+='<span class="chip"><b>'+fzEsc(it.name)+'</b> '+fzEsc(it.val)+'（本项）</span>';
-  comps.forEach(c=>{ h+='<span class="chip"><b>'+fzEsc(c.name)+'</b> '+fzEsc(c.val)+'</span>'; });
+  h+='<span class="chip"><b>'+fzEsc(it.name)+'</b> '+fzEsc(it.val)+fzBadge(it.name,it.val)+'（本项）</span>';
+  comps.forEach(c=>{ h+='<span class="chip"><b>'+fzEsc(c.name)+'</b> '+fzEsc(c.val)+fzBadge(c.name,c.val)+'</span>'; });
   h+='</div></div>'; return h;
 }
 function fzRenderDraw(digits,res){
@@ -2173,10 +2188,10 @@ function fzRenderDraw(digits,res){
   });
   const byOm={}; rows.forEach(r=>{(byOm[r.om]=byOm[r.om]||[]).push(r);});
   const oms=Object.keys(byOm).map(Number).sort((x,y)=>x-y);
-  let h='<div class="fitem"><div class="fhead">开奖号 <b>'+a+'-'+b+'-'+c+'</b> 拆解：共 '+rows.length+' 个形态/组合，按下遗漏分组（同组即相同遗漏的并列项）</div><div class="fdraw">';
+  let h='<div class="fitem"><div class="fhead">开奖号 <b>'+a+'-'+b+'-'+c+'</b>'+fzBadge('',a+''+b+c)+' 拆解：共 '+rows.length+' 个形态/组合，按下遗漏分组（同组即相同遗漏的并列项）</div><div class="fdraw">';
   oms.forEach(om=>{ const g=byOm[om]; g.sort((x,y)=>(fzORD[x.name]??99)-(fzORD[y.name]??99)||x.val.localeCompare(y.val,'zh'));
     h+='<div class="fgrp"><div class="gh">遗漏 <b class="om">'+om+'</b> 期（'+g.length+' 项）</div><div class="flist">';
-    g.forEach(r=>{ h+='<span class="chip"><b>'+fzEsc(r.name)+'</b> '+fzEsc(r.val)+'</span>'; });
+    g.forEach(r=>{ h+='<span class="chip"><b>'+fzEsc(r.name)+'</b> '+fzEsc(r.val)+fzBadge(r.name,r.val)+'</span>'; });
     h+='</div></div>'; });
   h+='</div></div>'; res.innerHTML=h;
 }

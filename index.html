@@ -293,7 +293,7 @@
       <input id="fInput" class="fInp" placeholder="例：和值8 ｜ 跨度3 ｜ 全顺 ｜ 两码12 ｜ 大数和12 ｜ 选拆解输 321" />
       <button id="fBtn" class="fBtn">查相同遗漏</button>
     </div>
-    <div class="fbHint">写法：<code>和值8</code> <code>和值 8</code> <code>和值:8</code> ｜ <code>全顺</code> <code>上升</code> ｜ <code>两码12</code> ｜ <code>大数和12</code> ｜ 切到「开奖号拆解」输 <code>321</code> 看该号全部形态的并列遗漏　｜　结果中已随项标注 <span class="gbBao">豹子</span> · <span class="gbZ3">组三</span> · <span class="gbZ6">组六</span></div>
+    <div class="fbHint">写法：<code>和值8</code> <code>和值 8</code> <code>和值:8</code> ｜ <code>全顺</code> <code>上升</code> ｜ <code>两码12</code> ｜ <code>大数和12</code> ｜ 自动识别下直接输 3 位号码（如 <code>299</code>/<code>321</code>）即拆解并标明 <span class="gbZ3">组三</span>/<span class="gbZ6">组六</span>/<span class="gbBao">豹子</span>，或切「开奖号拆解」输 <code>321</code> 看该号全部形态的并列遗漏　｜　任选组合(三码/四码…)不打组选徽标，只有「号码类型/组选类型」标本期形态</div>
     <div id="fResult" class="fResult"></div>
   </div>
 </div>
@@ -2142,6 +2142,7 @@ function fzMk(name,val){return {mode:'one',name,val};}
 function fzAuto(raw){
   fzBuildInd();
   raw=raw.replace(/[:：]/g,'');
+  if(/^\d{3}$/.test(raw)) return {mode:'draw3', val:raw}; // 直接输 3 位号码（含重号如 299/111）即拆解该号，标其组选类型
   for(const ind of fzIND){
     if(ind.name.endsWith('数和')){ if(raw.startsWith(ind.name)){let r=raw.slice(ind.name.length); if(/^\d+$/.test(r))return fzMk(ind.name,''+(+r)); } }
     else if(raw.startsWith(ind.name)){ let r=raw.slice(ind.name.length); if(ind.vals.includes(r))return fzMk(ind.name,r); }
@@ -2191,7 +2192,7 @@ function fzRenderDraw(digits,res){
   let h='<div class="fitem"><div class="fhead">开奖号 <b>'+a+'-'+b+'-'+c+'</b>'+fzBadge('',a+''+b+c)+' 拆解：共 '+rows.length+' 个形态/组合，按下遗漏分组（同组即相同遗漏的并列项）</div><div class="fdraw">';
   oms.forEach(om=>{ const g=byOm[om]; g.sort((x,y)=>(fzORD[x.name]??99)-(fzORD[y.name]??99)||x.val.localeCompare(y.val,'zh'));
     h+='<div class="fgrp"><div class="gh">遗漏 <b class="om">'+om+'</b> 期（'+g.length+' 项）</div><div class="flist">';
-    g.forEach(r=>{ h+='<span class="chip"><b>'+fzEsc(r.name)+'</b> '+fzEsc(r.val)+fzBadge(r.name,r.val)+'</span>'; });
+    g.forEach(r=>{ const b=(r.name==='号码类型'||r.name==='组选类型')?fzBadge(r.name,r.val):''; h+='<span class="chip"><b>'+fzEsc(r.name)+'</b> '+fzEsc(r.val)+b+'</span>'; });
     h+='</div></div>'; });
   h+='</div></div>'; res.innerHTML=h;
 }
@@ -2207,6 +2208,7 @@ function fzRun(){
   else { const ind=fzIND.find(x=>x.name===cat); if(!ind){res.innerHTML='<div class="warn">未知类别</div>';return;} let v=raw.replace(/[:：]/g,''); if(ind.name.endsWith('码'))v=v.split('').sort().join(''); if(/^\d+$/.test(v))v=''+(+v); if(ind.vals.includes(v))r=fzMk(ind.name,v); else r={mode:'bad',name:ind.name,val:v}; }
   if(!r){res.innerHTML='<div class="warn">无法解析「'+fzEsc(raw)+'」。试试：和值8 / 跨度3 / 全顺 / 两码12 / 三码123 / 大数和12，或选「开奖号拆解」输入 321。</div>';return;}
   if(r.mode==='bad'){res.innerHTML='<div class="warn">「'+fzEsc(r.val)+'」不在「'+r.name+'」的取值范围内。</div>';return;}
+  if(r.mode==='draw3'){ fzRenderDraw(r.val,res); return; }
   if(r.mode==='list'){ let h=''; r.items.forEach(it=>h+=fzRenderOne(it,fzGetOmit(it.name,it.val))); res.innerHTML=h; return; }
   res.innerHTML=fzRenderOne(r,fzGetOmit(r.name,r.val));
 }

@@ -207,6 +207,32 @@
   #dashTop .heroTrial{display:flex;align-items:stretch}
   #dashTop .heroPlan2{display:flex;align-items:stretch}
   #dashTop .vsep{flex:0 0 auto;width:1px;align-self:stretch;background:linear-gradient(to bottom,transparent,#cbd5e1 16%,#cbd5e1 84%,transparent);margin:2px 0}
+  #dashTop .filterBox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);margin-top:14px}
+  #dashTop .fbTitle{font-size:15px;font-weight:700;color:#1f2933;margin-bottom:4px}
+  #dashTop .fbDesc{font-size:12.5px;color:var(--sub);margin-bottom:10px;line-height:1.5}
+  #dashTop .fbDesc strong{color:#e11d48}
+  #dashTop .fbRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  #dashTop .fSel{padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font-size:13px;color:#1f2933}
+  #dashTop .fInp{flex:1;min-width:280px;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;color:#1f2933}
+  #dashTop .fInp:focus{outline:2px solid #c7d2fe;border-color:#4f46e5}
+  #dashTop .fBtn{padding:8px 16px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-weight:700;font-size:13px;cursor:pointer}
+  #dashTop .fBtn:hover{background:#4338ca}
+  #dashTop .fbHint{font-size:12px;color:#6b7785;margin-top:8px}
+  #dashTop .fbHint code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;padding:1px 6px;margin:0 2px;font-size:11.5px;color:#334155}
+  #dashTop .fResult{margin-top:12px}
+  #dashTop .fitem{background:#f8fafc;border:1px solid #eef2f7;border-radius:10px;padding:12px 14px;margin-bottom:10px}
+  #dashTop .fhead{font-size:14px;color:#1f2933}
+  #dashTop .fhead .om{color:#e11d48}
+  #dashTop .fsub{font-size:12.5px;color:#6b7785;margin:6px 0}
+  #dashTop .flist{display:flex;flex-wrap:wrap;gap:6px}
+  #dashTop .chip{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:3px 9px;font-size:12.5px;color:#334155}
+  #dashTop .chip b{color:#4f46e5;font-weight:700}
+  #dashTop .fdraw{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  #dashTop .fgrp{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px}
+  #dashTop .fgrp .gh{font-size:13px;font-weight:700;color:#1f2933;margin-bottom:6px}
+  #dashTop .fgrp .gh .om{color:#e11d48}
+  #dashTop .muted{color:#94a3b8;font-size:13px}
+  #dashTop .warn{color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:13px}
 </style>
 </head>
 <body>
@@ -229,6 +255,42 @@
         <div class="heroPlan2" id="hPlan2"></div>
       </div>
     </div>
+  </div>
+  <div class="filterBox" id="filterBox">
+    <div class="fbTitle">🔎 相同遗漏筛选器</div>
+    <div class="fbDesc">输入任意<strong>形态</strong>或<strong>号码</strong>，直接列出<strong>当前遗漏期数相同</strong>的所有形态/号码，依次呈现。数据随开奖实时更新，无需联网。</div>
+    <div class="fbRow">
+      <select id="fCat" class="fSel">
+        <option value="自动">自动识别</option>
+        <option value="和值">和值</option>
+        <option value="合值">合值</option>
+        <option value="跨度">跨度</option>
+        <option value="号码类型">号码类型</option>
+        <option value="号码形态">号码形态</option>
+        <option value="组选类型">组选类型</option>
+        <option value="大小">大小（逐位）</option>
+        <option value="奇偶">奇偶（逐位）</option>
+        <option value="质合">质合（逐位）</option>
+        <option value="阴阳">阴阳（逐位）</option>
+        <option value="大中小">大中小（逐位）</option>
+        <option value="012路">012路（逐位）</option>
+        <option value="波色">波色（逐位）</option>
+        <option value="两码">两码组合</option>
+        <option value="三码">三码组合</option>
+        <option value="四码">四码组合</option>
+        <option value="五码">五码组合</option>
+        <option value="六码">六码组合</option>
+        <option value="七码">七码组合</option>
+        <option value="八码">八码组合</option>
+        <option value="九码">九码组合</option>
+        <option value="数和">数和（大数和/奇数和…）</option>
+        <option value="开奖号拆解">开奖号拆解（输3位）</option>
+      </select>
+      <input id="fInput" class="fInp" placeholder="例：和值8 ｜ 跨度3 ｜ 全顺 ｜ 两码12 ｜ 大数和12 ｜ 选拆解输 321" />
+      <button id="fBtn" class="fBtn">查相同遗漏</button>
+    </div>
+    <div class="fbHint">写法：<code>和值8</code> <code>和值 8</code> <code>和值:8</code> ｜ <code>全顺</code> <code>上升</code> ｜ <code>两码12</code> ｜ <code>大数和12</code> ｜ 切到「开奖号拆解」输 <code>321</code> 看该号全部形态的并列遗漏</div>
+    <div id="fResult" class="fResult"></div>
   </div>
 </div>
 </div>
@@ -2030,6 +2092,110 @@ function renderHero(){
   document.getElementById('hPlan2').innerHTML=plan2Html;
   document.getElementById('hSum').innerHTML=`形态 ${m.group} 和值 ${m.sum} 跨度 ${m.span} 属性 ${occ}、${scc}、${pcc}`;
 }
+// ===== 相同遗漏筛选器（顶部看板下一个框）=====
+// 复用页面已有 attr/typeFull/formFull/hitOf/combos 等函数，保证口径与看板一致
+const fzCAT=['大小','奇偶','质合','阴阳','大中小','012路','波色','和值','合值','跨度','号码类型','号码形态','组选类型','两码','三码','四码','五码','六码','七码','八码','九码','大数和','小数和','奇数和','偶数和','质数和','合数和','阴数和','阳数和','大中和','中数和','小中和','0路数和','1路数和','2路数和','红波数和','蓝波数和','绿波数和'];
+const fzORD={}; fzCAT.forEach((n,i)=>fzORD[n]=i);
+const fzCN={2:'两码',3:'三码',4:'四码',5:'五码',6:'六码',7:'七码',8:'八码',9:'九码'};
+function fzBose(x){return [1,2,7,8].includes(x)?'红':([0,3,4,9].includes(x)?'蓝':'绿');}
+function fzSumOf(d,fn){let t=0;for(let i=1;i<=3;i++)if(fn(d[i]))t+=d[i];return t;}
+const fzInBig=x=>x>=5,fzInSmall=x=>x<=4,fzInOdd=x=>x%2===1,fzInEven=x=>x%2===0;
+const fzInPrime=x=>[1,2,3,5,7].includes(x),fzInComp=x=>![1,2,3,5,7].includes(x);
+const fzInYin=x=>[0,3,4,6,7].includes(x),fzInYang=x=>[1,2,5,8,9].includes(x);
+const fzInDzxBig=x=>x>=7,fzInDzxMid=x=>x>=3&&x<=6,fzInDzxSmall=x=>x<=2;
+const fzInRoad0=x=>x%3===0,fzInRoad1=x=>x%3===1,fzInRoad2=x=>x%3===2;
+const fzInRed=x=>[1,2,7,8].includes(x),fzInBlue=x=>[0,3,4,9].includes(x),fzInGreen=x=>[5,6].includes(x);
+let fzIND=[];
+function fzBuildInd(){
+  if(fzIND.length)return;
+  const per3=(cat)=>{const chars={大小:['小','大'],奇偶:['奇','偶'],质合:['质','合'],阴阳:['阴','阳'],大中小:['小','中','大'],'012路':['0','1','2'],波色:['红','蓝','绿']}[cat];
+    const vals=[];for(const x of chars)for(const y of chars)for(const z of chars)vals.push(x+y+z);
+    let get; if(cat==='波色')get=d=>[fzBose(d[1]),fzBose(d[2]),fzBose(d[3])].join(''); else get=d=>attr(cat,'',d);
+    fzIND.push({name:cat,vals,get,hit:(d,v)=>get(d)===v});};
+  ['大小','奇偶','质合','阴阳','大中小','012路','波色'].forEach(per3);
+  const mkW=(name,max,fn)=>{const vals=Array.from({length:max+1},(_,i)=>''+i);const get=d=>fn(d);fzIND.push({name,vals,get,hit:(d,v)=>get(d)===+v});};
+  mkW('和值',27,d=>d[1]+d[2]+d[3]);
+  mkW('合值',9,d=>(d[1]+d[2]+d[3])%10);
+  mkW('跨度',9,d=>Math.max(d[1],d[2],d[3])-Math.min(d[1],d[2],d[3]));
+  fzIND.push({name:'号码类型',vals:['豹子','组三','全顺','半顺','杂六'],get:d=>typeFull(d[1],d[2],d[3]),hit:(d,v)=>typeFull(d[1],d[2],d[3])===v});
+  fzIND.push({name:'号码形态',vals:['平行','上升','下降','凸起','凹下'],get:d=>formFull(d[1],d[2],d[3]),hit:(d,v)=>formFull(d[1],d[2],d[3])===v});
+  const zx=d=>{const s=new Set([d[1],d[2],d[3]]);return s.size===1?'豹子':(s.size===2?'组三':'组六');};
+  fzIND.push({name:'组选类型',vals:['豹子','组三','组六'],get:zx,hit:(d,v)=>zx(d)===v});
+  const comboInd=(k)=>{const list=combos([0,1,2,3,4,5,6,7,8,9],k);const vals=list.map(c=>c.join(''));const get=d=>list.filter(c=>hitOf(c,d)).map(c=>c.join(''));fzIND.push({name:fzCN[k],vals,get,hit:(d,v)=>hitOf(v.split('').map(Number),d)});};
+  [2,3,4,5,6,7,8,9].forEach(comboInd);
+  const shu=[['大数和',27,fzInBig],['小数和',12,fzInSmall],['奇数和',27,fzInOdd],['偶数和',24,fzInEven],['质数和',21,fzInPrime],['合数和',27,fzInComp],['阴数和',21,fzInYin],['阳数和',27,fzInYang],['大中和',27,fzInDzxBig],['中数和',18,fzInDzxMid],['小中和',6,fzInDzxSmall],['0路数和',27,fzInRoad0],['1路数和',21,fzInRoad1],['2路数和',24,fzInRoad2],['红波数和',24,fzInRed],['蓝波数和',27,fzInBlue],['绿波数和',18,fzInGreen]];
+  shu.forEach(([nm,mx,fn])=>{const vals=Array.from({length:mx+1},(_,i)=>''+i);const get=d=>''+fzSumOf(d,fn);fzIND.push({name:nm,vals,get,hit:(d,v)=>fzSumOf(d,fn)===+v});});
+}
+let fzOM=null,fzOMR=null;
+function fzBuildOM(){
+  fzBuildInd(); if(fzOM)return;
+  const map={},rev={};
+  fzIND.forEach(ind=>{ ind.vals.forEach(v=>{ let cur=0; for(let i=D.length-1;i>=0;i--){ if(ind.hit(D[i],v))break; cur++; } (map[cur]=map[cur]||[]).push({name:ind.name,val:v}); rev[ind.name+'|'+v]=cur; }); });
+  fzOM=map; fzOMR=rev;
+}
+function fzGetOmit(name,val){ fzBuildOM(); return fzOMR[name+'|'+val]; }
+function fzMk(name,val){return {mode:'one',name,val};}
+function fzAuto(raw){
+  fzBuildInd();
+  raw=raw.replace(/[:：]/g,'');
+  for(const ind of fzIND){
+    if(ind.name.endsWith('数和')){ if(raw.startsWith(ind.name)){let r=raw.slice(ind.name.length); if(/^\d+$/.test(r))return fzMk(ind.name,''+(+r)); } }
+    else if(raw.startsWith(ind.name)){ let r=raw.slice(ind.name.length); if(ind.vals.includes(r))return fzMk(ind.name,r); }
+  }
+  const exact=fzIND.filter(ind=>ind.vals.includes(raw));
+  if(exact.length) return {mode:'list',items:exact.map(h=>fzMk(h.name,raw))};
+  if(/^[小大奇偶质合阴阳中0127红蓝绿]{3}$/.test(raw)){
+    const hits=fzIND.filter(ind=>ind.vals.includes(raw));
+    if(hits.length) return {mode:'list',items:hits.map(h=>fzMk(h.name,raw))};
+  }
+  if(/^\d{2,9}$/.test(raw)){ const sorted=raw.split('').sort().join(''); const name=fzCN[raw.length]; const ind=fzIND.find(x=>x.name===name); if(ind&&ind.vals.includes(sorted))return fzMk(name,sorted); }
+  return null;
+}
+function fzEsc(s){return (''+s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function fzRenderOne(it,om){
+  const comps=(fzOM[om]||[]).filter(x=>!(x.name===it.name&&x.val===it.val));
+  comps.sort((a,b)=>(fzORD[a.name]??99)-(fzORD[b.name]??99)|| a.val.localeCompare(b.val,'zh'));
+  let h='<div class="fitem"><div class="fhead">解析：<b>'+fzEsc(it.name)+' · '+fzEsc(it.val)+'</b> ｜ 当前遗漏 <b class="om">'+om+'</b> 期</div>';
+  h+='<div class="fsub">遗漏同为 <b>'+om+'</b> 期的指标共 <b>'+(comps.length+1)+'</b> 项（含本项），依次如下：</div><div class="flist">';
+  h+='<span class="chip"><b>'+fzEsc(it.name)+'</b> '+fzEsc(it.val)+'（本项）</span>';
+  comps.forEach(c=>{ h+='<span class="chip"><b>'+fzEsc(c.name)+'</b> '+fzEsc(c.val)+'</span>'; });
+  h+='</div></div>'; return h;
+}
+function fzRenderDraw(digits,res){
+  const a=+digits[0],b=+digits[1],c=+digits[2]; const d=[0,a,b,c];
+  const rows=[];
+  fzIND.forEach(ind=>{
+    if(ind.name.endsWith('码')&&ind.name!=='两码'&&ind.name!=='三码')return;
+    if(ind.name.endsWith('数和'))return;
+    const v=ind.get(d); if(v==null)return;
+    const arr=Array.isArray(v)?v:[v];
+    arr.forEach(val=>{ const om=fzGetOmit(ind.name,val); if(om!=null)rows.push({name:ind.name,val,om}); });
+  });
+  const byOm={}; rows.forEach(r=>{(byOm[r.om]=byOm[r.om]||[]).push(r);});
+  const oms=Object.keys(byOm).map(Number).sort((x,y)=>x-y);
+  let h='<div class="fitem"><div class="fhead">开奖号 <b>'+a+'-'+b+'-'+c+'</b> 拆解：共 '+rows.length+' 个形态/组合，按下遗漏分组（同组即相同遗漏的并列项）</div><div class="fdraw">';
+  oms.forEach(om=>{ const g=byOm[om]; g.sort((x,y)=>(fzORD[x.name]??99)-(fzORD[y.name]??99)||x.val.localeCompare(y.val,'zh'));
+    h+='<div class="fgrp"><div class="gh">遗漏 <b class="om">'+om+'</b> 期（'+g.length+' 项）</div><div class="flist">';
+    g.forEach(r=>{ h+='<span class="chip"><b>'+fzEsc(r.name)+'</b> '+fzEsc(r.val)+'</span>'; });
+    h+='</div></div>'; });
+  h+='</div></div>'; res.innerHTML=h;
+}
+function fzRun(){
+  fzBuildOM();
+  const cat=$('fCat').value, raw=$('fInput').value.trim();
+  const res=$('fResult');
+  if(!raw){res.innerHTML='<div class="muted">请输入形态或号码，例如「和值8」「全顺」「两码12」「大数和12」，或选「开奖号拆解」输入 321。</div>';return;}
+  if(cat==='开奖号拆解'){ const dg=raw.replace(/\D/g,''); if(dg.length!==3){res.innerHTML='<div class="warn">开奖号拆解需输入 3 位数字（如 321）</div>';return;} fzRenderDraw(dg,res); return; }
+  let r;
+  if(cat==='数和'){ const ind=fzIND.find(x=>x.name.endsWith('数和')&&raw.startsWith(x.name)); if(ind){let v=raw.slice(ind.name.length).replace(/[:：]/,''); if(/^\d+$/.test(v)){res.innerHTML=fzRenderOne(fzMk(ind.name,''+(+v)),fzGetOmit(ind.name,''+(+v)));return;}} res.innerHTML='<div class="warn">「'+fzEsc(raw)+'」写法不对，数和请写为「大数和12 / 奇数和5」等。</div>';return; }
+  if(cat==='自动') r=fzAuto(raw);
+  else { const ind=fzIND.find(x=>x.name===cat); if(!ind){res.innerHTML='<div class="warn">未知类别</div>';return;} let v=raw.replace(/[:：]/g,''); if(ind.name.endsWith('码'))v=v.split('').sort().join(''); if(/^\d+$/.test(v))v=''+(+v); if(ind.vals.includes(v))r=fzMk(ind.name,v); else r={mode:'bad',name:ind.name,val:v}; }
+  if(!r){res.innerHTML='<div class="warn">无法解析「'+fzEsc(raw)+'」。试试：和值8 / 跨度3 / 全顺 / 两码12 / 三码123 / 大数和12，或选「开奖号拆解」输入 321。</div>';return;}
+  if(r.mode==='bad'){res.innerHTML='<div class="warn">「'+fzEsc(r.val)+'」不在「'+r.name+'」的取值范围内。</div>';return;}
+  if(r.mode==='list'){ let h=''; r.items.forEach(it=>h+=fzRenderOne(it,fzGetOmit(it.name,it.val))); res.innerHTML=h; return; }
+  res.innerHTML=fzRenderOne(r,fzGetOmit(r.name,r.val));
+}
+(function(){ const btn=document.getElementById('fBtn'); if(btn&&btn.addEventListener)btn.addEventListener('click',fzRun); const inp=document.getElementById('fInput'); if(inp&&inp.addEventListener)inp.addEventListener('keydown',e=>{if(e.key==='Enter')fzRun();}); })();
 fillLmYear();
 lmFrom.value=FIRST; lmTo.value=LAST; lmWin.value=200;
 renderHero(); updateClock();

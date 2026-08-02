@@ -244,13 +244,32 @@
   /* 历史最大遗漏标注 */
   #dashTop .fhead .omx{color:#b45309;font-weight:700;margin-left:6px}
   #dashTop .omx{color:#b45309;font-size:11.5px;font-weight:700;margin-left:4px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:0 5px}
+  #dashTop header .titleWrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  #dashTop header h1{margin:0}
+  #dashTop .lotterySel{position:relative;display:inline-block}
+  #dashTop .lotterySel select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background:#fff;border:1px solid #cbd5e1;border-radius:9px;padding:7px 32px 7px 14px;font-size:15px;font-weight:700;color:#1f2d3d;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  #dashTop .lotterySel select:hover{border-color:#94a3b8}
+  #dashTop .lotterySel select:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+  #dashTop .lotterySel::after{content:'';position:absolute;right:13px;top:50%;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #64748b;transform:translateY(-50%);pointer-events:none}
+  #dashTop .lotteryNotice{margin-top:8px;font-size:13px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px}
 </style>
 </head>
 <body>
 <div id="dashTop">
 <header>
-  <h1>🎯 福彩3D · 数据看板</h1>
+  <div class="titleWrap">
+    <h1>🎯 P3D · 数据看板</h1>
+    <div class="lotterySel">
+      <select id="lotterySel" aria-label="选择彩种">
+        <option value="p3">排三</option>
+        <option value="3d" selected>3D</option>
+        <option value="p5">排五</option>
+        <option value="kl8">快乐8</option>
+      </select>
+    </div>
+  </div>
   <div class="meta" id="meta"></div>
+  <div class="lotteryNotice" id="lotteryNotice" style="display:none"></div>
 </header>
 <div class="wrap">
   <div class="hero">
@@ -2279,6 +2298,19 @@ function fzRun(){
 fillLmYear();
 lmFrom.value=FIRST; lmTo.value=LAST; lmWin.value=200;
 renderHero(); updateClock();
+(function(){
+  const sel=document.getElementById('lotterySel');
+  const note=document.getElementById('lotteryNotice');
+  if(!sel||!sel.addEventListener)return; // 浏览器环境才绑定；Node 校验桩无 addEventListener 直接跳过
+  const names={p3:'排三',p5:'排五',kl8:'快乐8','3d':'3D'};
+  function apply(){
+    const v=sel.value;
+    if(v==='3d'){ if(note){note.style.display='none';note.textContent='';} }
+    else { if(note){note.style.display='';note.textContent='「'+(names[v]||v)+'」数据建设中，当前数据看板仅支持 福彩3D（P3D）。';} }
+  }
+  sel.addEventListener('change',apply);
+  apply();
+})();
 if (typeof process === 'undefined') setInterval(updateClock,1000); // 仅浏览器启动定时刷新；Node 测试环境跳过以免进程挂起
 setMode('omission');
 </script>

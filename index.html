@@ -2155,7 +2155,7 @@ function renderHero(){
     }
   }
   document.getElementById('hNums').innerHTML =
-    `<div class="grp"><span class="lab"><span class="issue" id="hIssue">${(isP3 ? '体彩排三 ' : '')}第 ${L.issue} 期</span>开奖号码</span><div class="balls"><div class="num">${L.a}</div><div class="num s">${L.b}</div><div class="num">${L.c}</div></div></div>`;
+    `<div class="grp"><span class="lab"><span class="issue" id="hIssue">${(isP3 ? '体彩排三 ' : '福彩3D ')}第 ${L.issue} 期</span>开奖号码</span><div class="balls"><div class="num">${L.a}</div><div class="num s">${L.b}</div><div class="num">${L.c}</div></div></div>`;
   document.getElementById('hTrial').innerHTML = p1Html;
   // ===== 方案二（按彩种：排三→17500 pl3；3D→17500 3d；均含开机/试机/金码/关注/对应）=====
   const P2 = isP3 ? SIM_TOP.plan2_p3Latest : SIM_TOP.plan2Latest;

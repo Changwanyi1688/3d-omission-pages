@@ -1018,7 +1018,7 @@ function fYin(d){ return ([0,3,4,6,7].includes(d)?'阴':'阳'); }// 阴阳：阴
 function fDz(d){ return (d>=7?'大':(d<=2?'小':'中')); }        // 大中小：大789 中3456 小012
 function f012(d){ return String(d%3); }                       // 012路：0:0369 1:147 2:258（仅数字，去"路"）
 // 各指标「值 → 当前遗漏」映射（基于全量历史，与合并表口径一致）：用于合并三位组合表九列括号内展示
-const ZX_OM=(function(){
+function buildZXOM(){
   const N=D.length;
   const mk=getter=>{ const last={}; D.forEach((d,i)=>{ const v=getter(d[1],d[2],d[3]); last[v]=i; }); const om={}; for(const k in last) om[k]=(N-1)-last[k]; return om; };
   return {
@@ -1032,7 +1032,8 @@ const ZX_OM=(function(){
     dz:   mk((a,b,c)=>fDz(a)+fDz(b)+fDz(c)),
     l0:   mk((a,b,c)=>f012(a)+f012(b)+f012(c)),
   };
-})();
+}
+let ZX_OM=buildZXOM();
 function omOf(m,v){ return (v in m)? m[v] : D.length; } // 从未出现过的指标值 → 当前遗漏=总期数
 function zxLmBuild(){
   // 对每个分组计算 100 个位置两码组合的 当前遗漏/历史最大遗漏/上次遗漏值/出现次数
@@ -2346,6 +2347,7 @@ function setLottery(key){
   LAST  = isP3 ? LAST_P3  : 2026203;
   for(const k in LM_MAP) delete LM_MAP[k];  // 清空两码命中；3D 时重建，P3 暂空（待补充）
   if(!isP3) lmRebuild();
+  ZX_CACHE=null; ZX2_CACHE=null; ZXG_CACHE=null; ZX_OM=buildZXOM();  // 失效直选定位/直选/组选两码缓存，按新数据集重建（修复切彩种显示对方数据的串台 bug）
   fzOM=null; fzOMR=null;                     // 强制筛选器引擎按新数据集重建
   renderAll();
   try{ localStorage.setItem('p3d_lottery', key); }catch(e){}

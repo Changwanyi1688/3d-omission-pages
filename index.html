@@ -259,7 +259,6 @@
       <div class="heroRow">
         <div class="heroLeft">
           <div class="nums" id="hNums"></div>
-          <div class="sum" id="hSum"></div>
         </div>
         <div class="heroTrial" id="hTrial"></div>
         <div class="vsep"></div>
@@ -2046,11 +2045,6 @@ fillHzGrp(); fillHzYear();
 hzFrom.value=FIRST; hzTo.value=LAST; hzWin.value=200;
 // 初始化两码走势查询面板（独立顶栏）
 // ===== 顶部概览（照搬 dashboard 前两行：数据看板 + 最新开奖/模拟号）=====
-function heroM(d){
-  const a=d.a,b=d.b,c=d.c, sum=a+b+c, mx=Math.max(a,b,c), mn=Math.min(a,b,c), span=mx-mn;
-  const group=(a===b&&b===c)?'豹子':((a===b||b===c||a===c)?'组三':'组六');
-  return {sum,span,group};
-}
 const DRAW_HOUR=21, DRAW_MIN=15;
 function updateClock(){
   const p=n=>String(n).padStart(2,'0');
@@ -2067,7 +2061,6 @@ function updateClock(){
 function renderHero(){
   const last=D[D.length-1];
   const L={issue:last[0],date:last[4],a:last[1],b:last[2],c:last[3]};
-  const m=heroM(L);
   document.getElementById('meta').textContent=`共 ${D.length} 期 · 更新：${new Date().toLocaleString('zh-CN')}`;
   const now0=new Date();
   const wd=['周日','周一','周二','周三','周四','周五','周六'][now0.getDay()];
@@ -2092,8 +2085,6 @@ function renderHero(){
       +`<div class="subline"><span class="slab">开机号</span>${openSub}</div>`
       +`<div class="subline"><span class="na">试机号 暂无（每日17:30后更新）</span></div></div>`;
   }
-  const chO=n=>n%2===0?'偶':'奇', chS=n=>n<=4?'小':'大', chP=n=>[1,2,3,5,7].includes(n)?'质':'合';
-  const occ=[L.a,L.b,L.c].map(chO).join(''), scc=[L.a,L.b,L.c].map(chS).join(''), pcc=[L.a,L.b,L.c].map(chP).join('');
   document.getElementById('hNums').innerHTML=
     `<div class="grp"><span class="lab"><span class="issue" id="hIssue">第 ${L.issue} 期</span>开奖号码</span><div class="balls"><div class="num">${L.a}</div><div class="num s">${L.b}</div><div class="num">${L.c}</div></div></div>`;
   document.getElementById('hTrial').innerHTML=tryHtml;
@@ -2120,7 +2111,6 @@ function renderHero(){
       +`<div class="subline"><span class="na">暂无（数据爬取自 pinble.com）</span></div></div>`;
   }
   document.getElementById('hPlan3').innerHTML=plan3Html;
-  document.getElementById('hSum').innerHTML=`形态 ${m.group} 和值 ${m.sum} 跨度 ${m.span} 属性 ${occ}、${scc}、${pcc}`;
 }
 // ===== 相同遗漏筛选器（顶部看板下一个框）=====
 // 复用页面已有 attr/typeFull/formFull/hitOf/combos 等函数，保证口径与看板一致

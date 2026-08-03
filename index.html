@@ -204,6 +204,8 @@
   #dashTop .grp.plan3 .lab{color:#7c3aed}
   #dashTop .grp.plan3 .snum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#f5f0ff;color:#7c3aed;border:1px solid #ddd6fe}
   #dashTop .grp.plan3 .slab{color:#7c3aed;background:#f5f0ff;border-color:#ddd6fe}
+  #dashTop .grp.plan3 .p3iss{font-style:normal;font-size:11px;font-weight:700;margin-left:6px;padding:1px 6px;border-radius:6px;background:#f5f0ff;color:#7c3aed;border:1px solid #ddd6fe}
+  #dashTop .grp.plan3 .p3iss.stale{background:#fff1f2;color:#be123c;border-color:#fecdd3}
   #dashTop .num{width:28px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;background:var(--brand)}
   #dashTop .num.s{background:var(--brand2)}
   #dashTop .heroRow{display:flex;gap:24px;flex-wrap:wrap;align-items:stretch;margin-top:6px}
@@ -2175,7 +2177,13 @@ function renderHero(){
   const P3 = isP3 ? SIM_TOP.plan3Latest : SIM_TOP.plan3_3dLatest;
   let plan3Html;
   if (P3) {
-    plan3Html = `<div class="grp plan3"><span class="lab">方案三<i>（模拟号.非官方）</i></span>`
+    // 标注方案三自身期号；若落后于方案一/二则明示未更新（pinble 已隐藏开机号/模拟试机号两列）
+    const refIssue = Math.max(
+      (isP3 && SIM_TOP.plan1_p3Latest ? (SIM_TOP.plan1_p3Latest.issue || 0) : 0),
+      (P2 ? (P2.issue || 0) : 0));
+    const staleP3 = !!(refIssue && P3.issue && P3.issue < refIssue);
+    plan3Html = `<div class="grp plan3"><span class="lab">方案三<i>（模拟号.非官方）</i>`
+      + `<em class="p3iss${staleP3 ? ' stale' : ''}">第 ${P3.issue} 期${staleP3 ? '·未更新' : ''}</em></span>`
       + p2row('开机号', P3.open) + p2row('模拟试机号', P3.try) + p2row('关注码', P3.focus) + `</div>`;
   } else {
     plan3Html = naBox('plan3', '方案三', '暂无（数据爬取自 pinble.com）');

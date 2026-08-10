@@ -266,6 +266,12 @@
   #dashTop .matchFocus .mf-chip.mf-hot i{color:#dc2626}
   #dashTop .matchFocus .mf-best{margin-top:8px;font-size:12px;color:#64748b;line-height:1.7}
   #dashTop .matchFocus .mf-best b{color:#334155}
+  #dashTop .heroFormYear{flex:0 0 auto;display:flex;align-items:stretch}
+  #dashTop .formYearLink{display:flex;flex-direction:column;justify-content:center;gap:5px;text-decoration:none;background:#fff;border:1px solid #22c55e;border-left:4px solid #22c55e;border-radius:12px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:158px;transition:background .15s}
+  #dashTop .formYearLink:hover{background:#f0fdf4}
+  #dashTop .formYearLink .lab{font-size:13.5px;font-weight:700;color:#166534;display:flex;align-items:center;gap:4px}
+  #dashTop .formYearLink .fy-sub{font-size:11.5px;color:#16a34a}
+  #dashTop .formYearLink .fy-arrow{font-weight:700}
 </style>
 </head>
 <body>
@@ -296,6 +302,7 @@
         <div class="heroTrial" id="hTrial"></div>
         <div class="vsep"></div>
         <div class="heroPlan2" id="hPlan2"></div>
+        <div class="heroFormYear" id="hFormYear"></div>
       </div>
     </div>
       <div id="pl3Stamp" class="pl3Stamp"></div>
@@ -2173,6 +2180,15 @@ function renderHero(){
     p2Html = naBox('plan2', '方案二', '暂无（开机号 9:00 / 试机号·金码·关注码·对应码 17:00 后更新，来源 17500.cn）');
   }
   document.getElementById('hPlan2').innerHTML = p2Html;
+  // ===== 组三/组六逐年统计（点击查看，链接随彩种切换 3D/排三）=====
+  const fyFile = isP3 ? 'analyze_form_year_p3.html' : 'analyze_form_year_3d.html';
+  const fyLot = isP3 ? '体彩排三' : '福彩3D';
+  const fyEl = document.getElementById('hFormYear');
+  if (fyEl) {
+    fyEl.innerHTML = `<a class="formYearLink" href="${fyFile}" target="_blank" rel="noopener">`
+      + `<span class="lab">📊 组三/组六逐年统计</span>`
+      + `<span class="fy-sub">${fyLot} · 点击查看 <span class="fy-arrow">→</span></span></a>`;
+  }
   renderMatch();   // 顶部嵌入「关联匹配·综合重点号单」（随彩种切换同步刷新）
   // 方案三（pinble）已下线，不再展示
 }

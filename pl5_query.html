@@ -32,6 +32,8 @@ table.hzg thead th{background:#1e293b;color:#cbd5e1;font-weight:600;padding:3px 
 table.hzg thead tr:first-child th{position:sticky;top:0;z-index:3}
 table.hzg thead tr:nth-child(2) th{position:sticky;top:23px;z-index:3}
 table.hzg tbody tr:nth-child(even){background:#172033}
+#hzgTable{position:relative}
+svg.hzline{position:absolute;left:0;top:0;pointer-events:none;z-index:4;overflow:visible}
 td.hzcell{position:relative;height:22px;line-height:22px}
 td.hzcell.ball{background:#3b2f1f}
 td.hzcell .ball{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -272,7 +274,6 @@ function filtered(){
 }
 
 var HZG = (function(){
-  var CELLW=22, ROWH=22;
   function isHzPrime(v){ return [2,3,5,7,11,13,17,19,23,29,31,37,41,43].indexOf(v)>=0; }
   var GROUPS=[
     {name:'大小',cats:['大','小'],f:function(v){return v>=23?'大':'小';}},
@@ -318,11 +319,7 @@ var HZG = (function(){
       for(var k=0;k<46;k++){
         var om=(lastHz[k]<0)?(idx+1):(idx-lastHz[k]);
         if(k===v){
-          var dir=(prevV==null)?0:(prevV<v?-1:(prevV>v?1:0));
-          var svg='';
-          if(dir!==0){ var x1=(dir<0)?0:CELLW; var x2=CELLW/2,y=ROWH/2;
-            svg='<svg class="ln" width="'+CELLW+'" height="'+ROWH+'"><line x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'" stroke="#f59e0b" stroke-width="1.6"/></svg>'; }
-          cells+='<td class="hzcell ball"><span class="ball">'+v+'</span>'+svg+'</td>';
+          cells+='<td class="hzcell ball"><span class="ball">'+v+'</span></td>';
         } else {
           cells+='<td class="hzcell omit">'+om+'</td>';
         }
@@ -353,6 +350,7 @@ var HZG = (function(){
     cg+='</colgroup>';
     document.getElementById('hzgTable').innerHTML=
       '<table class="hzg">'+cg+'<thead><tr>'+h1+'</tr><tr>'+h2+'</tr></thead><tbody>'+rows+'</tbody></table>';
+    drawLine();
     renderStats();
   }
   function initYears(){
@@ -366,6 +364,41 @@ var HZG = (function(){
   }
   return {render:render, initYears:initYears};
 })();
+
+function drawLine(){
+  var box=document.getElementById('hzgTable');
+  if(!box) return;
+  var old=box.querySelector('svg.hzline'); if(old) old.parentNode.removeChild(old);
+  var tbl=box.querySelector('table.hzg'); if(!tbl) return;
+  var cells=tbl.querySelectorAll('td.hzcell.ball');
+  if(cells.length<2) return;
+  if(!cells[0].getBoundingClientRect) return; // 无头桩环境跳过
+  var cr=box.getBoundingClientRect();
+  var pts=[];
+  for(var i=0;i<cells.length;i++){
+    var rc=cells[i].getBoundingClientRect();
+    pts.push([ rc.left-cr.left + cells[i].offsetWidth/2,
+               rc.top-cr.top + cells[i].offsetHeight/2 ]);
+  }
+  var w=tbl.scrollWidth||tbl.offsetWidth, h=tbl.scrollHeight||tbl.offsetHeight;
+  var ns='http://www.w3.org/2000/svg';
+  var svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('class','hzline');
+  svg.setAttribute('width',w); svg.setAttribute('height',h);
+  svg.setAttribute('viewBox','0 0 '+w+' '+h);
+  var pl=document.createElementNS(ns,'polyline');
+  pl.setAttribute('points', pts.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' '));
+  pl.setAttribute('fill','none');
+  pl.setAttribute('stroke','#f59e0b');
+  pl.setAttribute('stroke-width','1.6');
+  svg.appendChild(pl);
+  pts.forEach(function(p){
+    var c=document.createElementNS(ns,'circle');
+    c.setAttribute('cx',p[0].toFixed(1)); c.setAttribute('cy',p[1].toFixed(1)); c.setAttribute('r','1.8');
+    c.setAttribute('fill','#f59e0b'); svg.appendChild(c);
+  });
+  box.appendChild(svg);
+}
 
 function renderStats(){
   var box=document.getElementById('hzgStats');

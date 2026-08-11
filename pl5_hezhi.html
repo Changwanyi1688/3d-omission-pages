@@ -48,12 +48,21 @@ table.hzstats tr.mrow td{background:#fdf6e3;color:#b45309;font-weight:700}
 table.hzstats tr.mrow td.metric{background:#fdf6e3;color:#b45309}
 table.hzstats td.blank,table.hzstats th.blank{border-color:transparent;background:transparent}
 .hzstats .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 8px}
+.hzcatwrap{margin-top:10px;border:1px solid #334155;border-radius:8px;background:#0f172a;padding:10px 12px}
+.hzcatwrap .cz{font-size:13px;color:#e2e8f0;margin:8px 0 6px;font-weight:700}
+.hzcatwrap .cz:first-child{margin-top:0}
+table.hzcat{border-collapse:collapse;font-size:12px;color:#cbd5e1;width:100%;margin-bottom:4px}
+table.hzcat th,table.hzcat td{border:1px solid #2a3a52;padding:3px 6px;text-align:center}
+table.hzcat th{background:#1e293b;color:#cbd5e1;font-weight:600}
+table.hzcat td.cat{background:#172033;color:#e2e8f0;font-weight:600;text-align:left;white-space:nowrap}
+table.hzcat td.val{color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums}
+.hzcatwrap .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 2px 0}
 
 __HERO_CSS__
 </style></head><body><div class="wrap">
 <h1>排列五 · 和值走势图<span class="tag">含7项比例列</span></h1>
 
-<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 00:42</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>6</b><b>5</b><b>7</b><b>9</b><b>0</b></div><div class="meta">开机 期号 2026213 · 2026-08-11 22:22</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>7</b><b>5</b><b>6</b><b>6</b><b>4</b></div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">金码</div><div class="val">4</div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">关注码</div><div class="code">67808</div></div><div class="blk"><div class="lab">对应码</div><div class="code">18439</div></div></div>
+<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 00:46</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>6</b><b>5</b><b>7</b><b>9</b><b>0</b></div><div class="meta">开机 期号 2026213 · 2026-08-11 22:22</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>7</b><b>5</b><b>6</b><b>6</b><b>4</b></div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">金码</div><div class="val">4</div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">关注码</div><div class="code">67808</div></div><div class="blk"><div class="lab">对应码</div><div class="code">18439</div></div></div>
 
 <div class="panel">
   <h3>和值走势图（0-45 走势格 · 仿17500结构）</h3>
@@ -77,6 +86,7 @@ __HERO_CSS__
   </div>
   <div class="hzgwrap"><div id="hzgTable"></div></div>
   <div id="hzgStats"></div>
+  <div id="hzgCatStats"></div>
 </div>
 
 <div class="panel">
@@ -335,28 +345,28 @@ function filtered(){
   return d;
 }
 
+function isHzPrime(v){ return [2,3,5,7,11,13,17,19,23,29,31,37,41,43].indexOf(v)>=0; }
+var GROUPS=[
+  {name:'大小',cats:['大','小'],f:function(v){return v>=23?'大':'小';}},
+  {name:'奇偶',cats:['奇','偶'],f:function(v){return (v%2)?'奇':'偶';}},
+  {name:'质合',cats:['质','合'],f:function(v){return isHzPrime(v)?'质':'合';}},
+  {name:'大中小',cats:['大','中','小'],f:function(v){return v<=15?'小':(v<=30?'中':'大');}},
+  {name:'升平降',cats:['升','平','降'],f:function(v,p){return p==null?'平':(v>p?'升':(v<p?'降':'平'));}},
+  {name:'012路',cats:['0','1','2'],f:function(v){return ''+(v%3);}}
+];
+function ratios(digs){
+  function cnt(fn){var c=0;digs.forEach(function(d){if(fn(d))c++;});return c;}
+  var n=digs.length;
+  var b=cnt(function(d){return d>=5;}),s=n-b;
+  var o=cnt(function(d){return d%2===1;}),e=n-o;
+  var z=cnt(function(d){return d===1||d===2||d===3||d===5||d===7;}),h=n-z;
+  var yin=cnt(function(d){return d===0||d===3||d===4||d===6||d===7;}),yang=n-yin;
+  var r0=cnt(function(d){return d%3===0;}),r1=cnt(function(d){return d%3===1;}),r2=cnt(function(d){return d%3===2;});
+  var bg=cnt(function(d){return d>=7;}),mid=cnt(function(d){return d>2&&d<7;}),sm=cnt(function(d){return d<=2;});
+  var rd=cnt(function(d){return d===1||d===2||d===7||d===8;}),bl=cnt(function(d){return d===0||d===3||d===4||d===9;}),gr=cnt(function(d){return d===5||d===6;});
+  return [b+':'+s,o+':'+e,z+':'+h,yin+':'+yang,r0+':'+r1+':'+r2,bg+':'+mid+':'+sm,rd+':'+bl+':'+gr];
+}
 var HZG = (function(){
-  function isHzPrime(v){ return [2,3,5,7,11,13,17,19,23,29,31,37,41,43].indexOf(v)>=0; }
-  var GROUPS=[
-    {name:'大小',cats:['大','小'],f:function(v){return v>=23?'大':'小';}},
-    {name:'奇偶',cats:['奇','偶'],f:function(v){return (v%2)?'奇':'偶';}},
-    {name:'质合',cats:['质','合'],f:function(v){return isHzPrime(v)?'质':'合';}},
-    {name:'大中小',cats:['大','中','小'],f:function(v){return v<=15?'小':(v<=30?'中':'大');}},
-    {name:'升平降',cats:['升','平','降'],f:function(v,p){return p==null?'平':(v>p?'升':(v<p?'降':'平'));}},
-    {name:'012路',cats:['0','1','2'],f:function(v){return ''+(v%3);}}
-  ];
-  function ratios(digs){
-    function cnt(fn){var c=0;digs.forEach(function(d){if(fn(d))c++;});return c;}
-    var n=digs.length;
-    var b=cnt(function(d){return d>=5;}),s=n-b;
-    var o=cnt(function(d){return d%2===1;}),e=n-o;
-    var z=cnt(function(d){return d===1||d===2||d===3||d===5||d===7;}),h=n-z;
-    var yin=cnt(function(d){return d===0||d===3||d===4||d===6||d===7;}),yang=n-yin;
-    var r0=cnt(function(d){return d%3===0;}),r1=cnt(function(d){return d%3===1;}),r2=cnt(function(d){return d%3===2;});
-    var bg=cnt(function(d){return d>=7;}),mid=cnt(function(d){return d>2&&d<7;}),sm=cnt(function(d){return d<=2;});
-    var rd=cnt(function(d){return d===1||d===2||d===7||d===8;}),bl=cnt(function(d){return d===0||d===3||d===4||d===9;}),gr=cnt(function(d){return d===5||d===6;});
-    return [b+':'+s,o+':'+e,z+':'+h,yin+':'+yang,r0+':'+r1+':'+r2,bg+':'+mid+':'+sm,rd+':'+bl+':'+gr];
-  }
   function render(){
     var data = filtered();
     // 表头
@@ -414,6 +424,7 @@ var HZG = (function(){
       '<table class="hzg">'+cg+'<thead><tr>'+h1+'</tr><tr>'+h2+'</tr></thead><tbody>'+rows+'</tbody></table>';
     drawLine();
     renderStats();
+    renderCatStats();
   }
   function initYears(){
     var sel=document.getElementById('hzgYear');
@@ -526,6 +537,66 @@ function renderStats(){
   for(var i=0;i<22;i++) hh+='<th class="blank"></th>';
   box.innerHTML='<table class="hzstats">'+cg+'<thead><tr>'+hh+'</tr></thead><tbody>'+rows+'</tbody></table>'
     +'<div class="note">M差值(v)=年份总次数(v)−完整年平均数(v)×(该年最新月份/12)，取整；正值=高于历史同期、负值=低于。其余 5 项指标按当前筛选范围（'+N+' 期）实时计算。</div>';
+}
+
+function renderCatStats(){
+  var box=document.getElementById('hzgCatStats');
+  if(!box) return;
+  var data=filtered();
+  var N=data.length;
+  if(N===0){ box.innerHTML='<div class="note">当前筛选无数据。</div>'; return; }
+  var recs=[]; var prevV=null;
+  data.forEach(function(r){
+    var digs=[r[2],r[3],r[4],r[5],r[6]];
+    var v=digs[0]+digs[1]+digs[2]+digs[3]+digs[4];
+    var gcat={}; GROUPS.forEach(function(g){ gcat[g.name]=g.f(v,prevV); });
+    recs.push({gcat:gcat, rr:ratios(digs)});
+    prevV=v;
+  });
+  function computeCol(valueOf){
+    var idxByVal={}, gapsByVal={}, conByVal={}, maxConByVal={}, appearByVal={}, order=[];
+    recs.forEach(function(rec,i){
+      var val=valueOf(rec);
+      if(!(val in idxByVal)){ idxByVal[val]=-1; gapsByVal[val]=[]; conByVal[val]=0; maxConByVal[val]=0; appearByVal[val]=0; order.push(val); }
+      if(idxByVal[val]>=0) gapsByVal[val].push(i-idxByVal[val]-1);
+      idxByVal[val]=i; appearByVal[val]++;
+      for(var k in conByVal){ if(k===val) conByVal[k]++; else conByVal[k]=0; if(conByVal[k]>maxConByVal[k]) maxConByVal[k]=conByVal[k]; }
+    });
+    var out={};
+    order.forEach(function(val){
+      var last=idxByVal[val];
+      var curOmit=(last>=0)?(N-1-last):N;
+      var gaps=gapsByVal[val];
+      var maxGap, avgGap;
+      if(gaps.length){ maxGap=Math.max.apply(null,gaps.concat([curOmit])); avgGap=Math.round(gaps.reduce(function(a,b){return a+b;},0)/gaps.length); }
+      else { maxGap=(last>=0)?0:N; avgGap=0; }
+      out[val]={appear:appearByVal[val], curOmit:curOmit, avgOmit:avgGap, maxOmit:maxGap, maxCon:maxConByVal[val]};
+    });
+    return {order:order, stats:out};
+  }
+  function rowHtml(cat,val,s){
+    return '<tr><td class="cat">'+cat+'</td><td class="val">'+val+'</td>'
+      +'<td>'+s.appear+'</td><td>'+s.curOmit+'</td><td>'+s.avgOmit+'</td><td>'+s.maxOmit+'</td><td>'+s.maxCon+'</td></tr>';
+  }
+  var groupsHtml='';
+  GROUPS.forEach(function(g){
+    var cs=computeCol(function(rec){return rec.gcat[g.name];});
+    cs.order.forEach(function(val){ groupsHtml+=rowHtml(g.name,val,cs.stats[val]); });
+  });
+  var RATIO_NAMES=['大小比','奇偶比','质合比','阴阳比','012路比','大中小比','波色比'];
+  var ratiosHtml='';
+  RATIO_NAMES.forEach(function(rn,ri){
+    var cs=computeCol(function(rec){return rec.rr[ri];});
+    cs.order.forEach(function(val){ ratiosHtml+=rowHtml(rn,val,cs.stats[val]); });
+  });
+  var head='<th>类别</th><th>值</th><th>出现次数</th><th>当前遗漏</th><th>平均遗漏</th><th>最大遗漏</th><th>最大连出</th>';
+  box.innerHTML='<div class="hzcatwrap">'
+    +'<h4 class="cz">分类列统计（大小 / 奇偶 / 质合 / 大中小 / 升平降 / 012路）</h4>'
+    +'<table class="hzcat"><thead><tr>'+head+'</tr></thead><tbody>'+groupsHtml+'</tbody></table>'
+    +'<h4 class="cz">比例列统计（大小比 / 奇偶比 / 质合比 / 阴阳比 / 012路比 / 大中小比 / 波色比）</h4>'
+    +'<table class="hzcat"><thead><tr>'+head+'</tr></thead><tbody>'+ratiosHtml+'</tbody></table>'
+    +'<div class="note">以上均为当前筛选范围（'+N+' 期）实时计算；分类列每期恰有 1 个命中值，比例列为各期实际比值。切换筛选会自动重算。</div>'
+    +'</div>';
 }
 
 (function(){

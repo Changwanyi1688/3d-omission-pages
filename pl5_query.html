@@ -39,9 +39,29 @@ table.cmp th,table.cmp td{border:1px solid #334155;padding:4px 6px;text-align:ce
 table.cmp th{background:#1e293b;color:#cbd5e1}
 table.cmp tr.sel td{background:#3b2f4f;color:#fde68a;font-weight:700}
 
+
+.hzgwrap{overflow:auto;max-height:580px;border:1px solid #334155;border-radius:8px;background:#0f172a}
+table.hzg{border-collapse:collapse;font-size:10px;white-space:nowrap;color:#cbd5e1}
+table.hzg th,table.hzg td{border:1px solid #2a3a52;padding:0;text-align:center}
+table.hzg thead th{background:#1e293b;color:#cbd5e1;font-weight:600;padding:3px 2px}
+table.hzg thead tr:first-child th{position:sticky;top:0;z-index:3}
+table.hzg thead tr:nth-child(2) th{position:sticky;top:23px;z-index:3}
+table.hzg tbody tr:nth-child(even){background:#172033}
+td.hzcell{position:relative;width:22px;height:22px;line-height:22px}
+td.hzcell.ball{background:#3b2f1f}
+td.hzcell .ball{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:16px;height:16px;line-height:16px;border-radius:50%;background:#dc2626;color:#fff;font-size:9px;font-weight:700}
+svg.ln{position:absolute;left:0;top:0;pointer-events:none}
+td.hzcell.omit{color:#5b6b82;font-size:9px}
+td.gcell{width:20px;height:22px}
+td.gcell.ball2{background:#6366f1;color:#fff;font-weight:700}
+td.gcell.omit{color:#5b6b82;font-size:9px}
+td.rcell{width:36px;color:#7dd3fc;font-weight:600}
+td.nums .d{display:inline-block;width:16px;height:16px;line-height:16px;border-radius:50%;background:#334155;color:#e2e8f0;margin:0 1px;font-size:10px}
+
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
-<div class="sub">生成时间 2026-08-11 22:34 · 数据源 3d_acs.db(pl5_data) 共 7688 期 · 最新 2026213 2026-08-11 74071 · 每日随开奖与模拟号更新</div>
+<div class="sub">生成时间 2026-08-11 23:17 · 数据源 3d_acs.db(pl5_data) 共 7688 期 · 最新 2026213 2026-08-11 74071 · 每日随开奖与模拟号更新</div>
 
 <div class="panel">
   <h3>模拟号面板（开机 / 试机 / 金码 / 关注 / 对应）</h3>
@@ -80,6 +100,26 @@ table.cmp tr.sel td{background:#3b2f4f;color:#fde68a;font-weight:700}
   <div id="hzChart"></div>
   <div id="hzCompare"></div>
   <div class="note" id="hzNote"></div>
+</div>
+
+<div class="panel">
+  <h3>和值走势图（0-45 走势格 · 仿17500结构）</h3>
+  <div class="filters">
+    <div class="frow"><label>显示期数：</label>
+      <select id="hzgRows">
+        <option value="50">近50期</option>
+        <option value="100" selected>近100期</option>
+        <option value="200">近200期</option>
+        <option value="0">全部</option>
+      </select>
+    </div>
+  </div>
+  <div class="hzgwrap"><div id="hzgTable"></div></div>
+  <div class="note">结构照搬 17500 排五和值走势图：<b>和值(0-45)</b> 每格标记该和值落点并以橙色连线串联（格内数字为该项「当前遗漏」），
+  其后 <b>大小/奇偶/质合/大中小/升平降/012路</b> 为按和值归类的走势（彩色格=本期归类，其余为该类别当前遗漏）。
+  <b>已剔除</b> 原 17500 的「余数4-9」(6组)与「3-9分区」(7组) 共14列；
+  <b>新增</b> 按开奖号码逐位统计的 7 项比例列（与3D/排三同口径）：大小比(大5-9:小0-4)、奇偶比、质合比(质12357:合04689)、
+  阴阳比(阴03467:阳12589)、012路比(0路0369:1路147:2路258)、大中小比(大789:中3456:小012)、波色比(红1278:蓝0349:绿56)。</div>
 </div>
 
 <div class="panel">
@@ -353,6 +393,98 @@ function renderYear(){
   document.getElementById('hzYearBtn').onclick=renderYear;
   document.getElementById('hzResetBtn').onclick=renderDefault;
   renderDefault();
+})();
+
+</script>
+<script>
+
+var HZG = (function(){
+  var CELLW=22, ROWH=22;
+  function isHzPrime(v){ return [2,3,5,7,11,13,17,19,23,29,31,37,41,43].indexOf(v)>=0; }
+  var GROUPS=[
+    {name:'大小',cats:['大','小'],f:function(v){return v>=23?'大':'小';}},
+    {name:'奇偶',cats:['奇','偶'],f:function(v){return (v%2)?'奇':'偶';}},
+    {name:'质合',cats:['质','合'],f:function(v){return isHzPrime(v)?'质':'合';}},
+    {name:'大中小',cats:['大','中','小'],f:function(v){return v<=15?'小':(v<=30?'中':'大');}},
+    {name:'升平降',cats:['升','平','降'],f:function(v,p){return p==null?'平':(v>p?'升':(v<p?'降':'平'));}},
+    {name:'012路',cats:['0','1','2'],f:function(v){return ''+(v%3);}}
+  ];
+  function ratios(digs){
+    function cnt(fn){var c=0;digs.forEach(function(d){if(fn(d))c++;});return c;}
+    var n=digs.length;
+    var b=cnt(function(d){return d>=5;}),s=n-b;
+    var o=cnt(function(d){return d%2===1;}),e=n-o;
+    var z=cnt(function(d){return d===1||d===2||d===3||d===5||d===7;}),h=n-z;
+    var yin=cnt(function(d){return d===0||d===3||d===4||d===6||d===7;}),yang=n-yin;
+    var r0=cnt(function(d){return d%3===0;}),r1=cnt(function(d){return d%3===1;}),r2=cnt(function(d){return d%3===2;});
+    var bg=cnt(function(d){return d>=7;}),mid=cnt(function(d){return d>2&&d<7;}),sm=cnt(function(d){return d<=2;});
+    var rd=cnt(function(d){return d===1||d===2||d===7||d===8;}),bl=cnt(function(d){return d===0||d===3||d===4||d===9;}),gr=cnt(function(d){return d===5||d===6;});
+    return [b+':'+s,o+':'+e,z+':'+h,yin+':'+yang,r0+':'+r1+':'+r2,bg+':'+mid+':'+sm,rd+':'+bl+':'+gr];
+  }
+  function render(){
+    var sel=document.getElementById('hzgRows');
+    var N = sel?parseInt(sel.value,10):100;
+    if(!N||N<=0) N=DP5.length;
+    var data = DP5.slice(-N);
+    // 表头
+    var h1='<th rowspan="2">期号</th><th rowspan="2">奖号</th>';
+    h1+='<th colspan="46">和值(0-45)</th>';
+    GROUPS.forEach(function(g){ h1+='<th colspan="'+g.cats.length+'">'+g.name+'</th>'; });
+    h1+='<th rowspan="2">大小比</th><th rowspan="2">奇偶比</th><th rowspan="2">质合比</th>'
+       +'<th rowspan="2">阴阳比</th><th rowspan="2">012路比</th><th rowspan="2">大中小比</th><th rowspan="2">波色比</th>';
+    var h2='';
+    for(var v=0;v<46;v++) h2+='<th>'+v+'</th>';
+    GROUPS.forEach(function(g){ g.cats.forEach(function(c){ h2+='<th>'+c+'</th>'; }); });
+    // 表体
+    var rows='';
+    var lastHz=new Array(46).fill(-1);
+    var lastG={}; GROUPS.forEach(function(g){ lastG[g.name]=g.cats.map(function(){return -1;}); });
+    var prevV=null;
+    data.forEach(function(r,idx){
+      var digs=[r[2],r[3],r[4],r[5],r[6]];
+      var v=digs[0]+digs[1]+digs[2]+digs[3]+digs[4];
+      // 和值遗漏
+      var cells='';
+      for(var k=0;k<46;k++){
+        var om=(lastHz[k]<0)?(idx+1):(idx-lastHz[k]);
+        if(k===v){
+          var dir=(prevV==null)?0:(prevV<v?-1:(prevV>v?1:0));
+          var svg='';
+          if(dir!==0){ var x1=(dir<0)?0:CELLW; var x2=CELLW/2,y=ROWH/2;
+            svg='<svg class="ln" width="'+CELLW+'" height="'+ROWH+'"><line x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'" stroke="#f59e0b" stroke-width="1.6"/></svg>'; }
+          cells+='<td class="hzcell ball"><span class="ball">'+v+'</span>'+svg+'</td>';
+        } else {
+          cells+='<td class="hzcell omit">'+om+'</td>';
+        }
+      }
+      lastHz[v]=idx;
+      // 和值归类走势
+      var ghtml='';
+      GROUPS.forEach(function(g){
+        var actual=g.f(v,prevV);
+        g.cats.forEach(function(c,ci){
+          var cur=(lastG[g.name][ci]<0)?(idx+1):(idx-lastG[g.name][ci]);
+          if(c===actual){ ghtml+='<td class="gcell ball2">'+c+'</td>'; }
+          else { ghtml+='<td class="gcell omit">'+cur+'</td>'; }
+        });
+        var ai=g.cats.indexOf(actual); lastG[g.name][ai]=idx;
+      });
+      // 7 项比例
+      var rr=ratios(digs);
+      var rhtml=rr.map(function(x){return '<td class="rcell">'+x+'</td>';}).join('');
+      var balls=digs.map(function(d){return '<b class="d">'+d+'</b>';}).join('');
+      rows+='<tr><td>'+r[0]+'</td><td class="nums">'+balls+'</td>'+cells+ghtml+rhtml+'</tr>';
+      prevV=v;
+    });
+    document.getElementById('hzgTable').innerHTML=
+      '<table class="hzg"><thead><tr>'+h1+'</tr><tr>'+h2+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  return {render:render};
+})();
+(function(){
+  var sel=document.getElementById('hzgRows');
+  if(sel){ sel.onchange=HZG.render; }
+  HZG.render();
 })();
 
 </script>

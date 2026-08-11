@@ -57,12 +57,14 @@ table.hzcat th{background:#1e293b;color:#cbd5e1;font-weight:600}
 table.hzcat td.cat{background:#172033;color:#e2e8f0;font-weight:600;text-align:left;white-space:nowrap}
 table.hzcat td.val{color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums}
 .hzcatwrap .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 2px 0}
+table.hzcat td.mk-pos{color:#f87171;font-weight:700}
+table.hzcat td.mk-neg{color:#4ade80;font-weight:700}
 
 __HERO_CSS__
 </style></head><body><div class="wrap">
 <h1>排列五 · 和值走势图<span class="tag">含7项比例列</span></h1>
 
-<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 00:46</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>6</b><b>5</b><b>7</b><b>9</b><b>0</b></div><div class="meta">开机 期号 2026213 · 2026-08-11 22:22</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>7</b><b>5</b><b>6</b><b>6</b><b>4</b></div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">金码</div><div class="val">4</div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">关注码</div><div class="code">67808</div></div><div class="blk"><div class="lab">对应码</div><div class="code">18439</div></div></div>
+<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 00:51</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>6</b><b>5</b><b>7</b><b>9</b><b>0</b></div><div class="meta">开机 期号 2026213 · 2026-08-11 22:22</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>7</b><b>5</b><b>6</b><b>6</b><b>4</b></div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">金码</div><div class="val">4</div><div class="meta">试机/金码/关注/对应 期号 2026213 · 2026-08-11 22:20</div></div><div class="blk"><div class="lab">关注码</div><div class="code">67808</div></div><div class="blk"><div class="lab">对应码</div><div class="code">18439</div></div></div>
 
 <div class="panel">
   <h3>和值走势图（0-45 走势格 · 仿17500结构）</h3>
@@ -366,6 +368,24 @@ function ratios(digs){
   var rd=cnt(function(d){return d===1||d===2||d===7||d===8;}),bl=cnt(function(d){return d===0||d===3||d===4||d===9;}),gr=cnt(function(d){return d===5||d===6;});
   return [b+':'+s,o+':'+e,z+':'+h,yin+':'+yang,r0+':'+r1+':'+r2,bg+':'+mid+':'+sm,rd+':'+bl+':'+gr];
 }
+var RATIO_NAMES=['大小比','奇偶比','质合比','阴阳比','012路比','大中小比','波色比'];
+
+// 理论期望基准：全量数据中各类别/比例的出现频率（令“理论期望 = 全量频率 × 当前期数”）
+var THEORY=null;
+function computeTheory(){
+  if(THEORY) return THEORY;
+  var N=DP5.length, frac={}, prevV=null;
+  DP5.forEach(function(r){
+    var digs=[r[2],r[3],r[4],r[5],r[6]];
+    var v=digs[0]+digs[1]+digs[2]+digs[3]+digs[4];
+    GROUPS.forEach(function(g){ var val=g.f(v,prevV); if(val==null) return; var k=g.name+'|'+val; frac[k]=(frac[k]||0)+1; });
+    var rr=ratios(digs);
+    for(var ri=0;ri<rr.length;ri++){ var k2=RATIO_NAMES[ri]+'|'+rr[ri]; frac[k2]=(frac[k2]||0)+1; }
+    prevV=v;
+  });
+  var out={}; for(var k in frac) out[k]=frac[k]/N;
+  THEORY=out; return THEORY;
+}
 var HZG = (function(){
   function render(){
     var data = filtered();
@@ -553,7 +573,8 @@ function renderCatStats(){
     recs.push({gcat:gcat, rr:ratios(digs)});
     prevV=v;
   });
-  function computeCol(valueOf){
+  computeTheory();
+  function computeCol(name, valueOf){
     var idxByVal={}, gapsByVal={}, conByVal={}, maxConByVal={}, appearByVal={}, order=[];
     recs.forEach(function(rec,i){
       var val=valueOf(rec);
@@ -570,32 +591,38 @@ function renderCatStats(){
       var maxGap, avgGap;
       if(gaps.length){ maxGap=Math.max.apply(null,gaps.concat([curOmit])); avgGap=Math.round(gaps.reduce(function(a,b){return a+b;},0)/gaps.length); }
       else { maxGap=(last>=0)?0:N; avgGap=0; }
-      out[val]={appear:appearByVal[val], curOmit:curOmit, avgOmit:avgGap, maxOmit:maxGap, maxCon:maxConByVal[val]};
+      var frac=THEORY[name+'|'+val]||0;
+      var theory=Math.round(frac*N);
+      var dev=appearByVal[val]-theory;
+      out[val]={appear:appearByVal[val], theory:theory, dev:dev, curOmit:curOmit, avgOmit:avgGap, maxOmit:maxGap, maxCon:maxConByVal[val]};
     });
     return {order:order, stats:out};
   }
   function rowHtml(cat,val,s){
+    var dcls = s.dev>0?'mk-pos':(s.dev<0?'mk-neg':'');
+    var dsign = s.dev>0?'+':'';
     return '<tr><td class="cat">'+cat+'</td><td class="val">'+val+'</td>'
-      +'<td>'+s.appear+'</td><td>'+s.curOmit+'</td><td>'+s.avgOmit+'</td><td>'+s.maxOmit+'</td><td>'+s.maxCon+'</td></tr>';
+      +'<td>'+s.appear+'</td><td>'+s.theory+'</td>'
+      +'<td class="'+dcls+'">'+dsign+s.dev+'</td>'
+      +'<td>'+s.curOmit+'</td><td>'+s.avgOmit+'</td><td>'+s.maxOmit+'</td><td>'+s.maxCon+'</td></tr>';
   }
   var groupsHtml='';
   GROUPS.forEach(function(g){
-    var cs=computeCol(function(rec){return rec.gcat[g.name];});
+    var cs=computeCol(g.name, function(rec){return rec.gcat[g.name];});
     cs.order.forEach(function(val){ groupsHtml+=rowHtml(g.name,val,cs.stats[val]); });
   });
-  var RATIO_NAMES=['大小比','奇偶比','质合比','阴阳比','012路比','大中小比','波色比'];
   var ratiosHtml='';
   RATIO_NAMES.forEach(function(rn,ri){
-    var cs=computeCol(function(rec){return rec.rr[ri];});
+    var cs=computeCol(rn, function(rec){return rec.rr[ri];});
     cs.order.forEach(function(val){ ratiosHtml+=rowHtml(rn,val,cs.stats[val]); });
   });
-  var head='<th>类别</th><th>值</th><th>出现次数</th><th>当前遗漏</th><th>平均遗漏</th><th>最大遗漏</th><th>最大连出</th>';
+  var head='<th>类别</th><th>值</th><th>出现次数</th><th>理论期望</th><th>偏差(实−期)</th><th>当前遗漏</th><th>平均遗漏</th><th>最大遗漏</th><th>最大连出</th>';
   box.innerHTML='<div class="hzcatwrap">'
     +'<h4 class="cz">分类列统计（大小 / 奇偶 / 质合 / 大中小 / 升平降 / 012路）</h4>'
     +'<table class="hzcat"><thead><tr>'+head+'</tr></thead><tbody>'+groupsHtml+'</tbody></table>'
     +'<h4 class="cz">比例列统计（大小比 / 奇偶比 / 质合比 / 阴阳比 / 012路比 / 大中小比 / 波色比）</h4>'
     +'<table class="hzcat"><thead><tr>'+head+'</tr></thead><tbody>'+ratiosHtml+'</tbody></table>'
-    +'<div class="note">以上均为当前筛选范围（'+N+' 期）实时计算；分类列每期恰有 1 个命中值，比例列为各期实际比值。切换筛选会自动重算。</div>'
+    +'<div class="note">理论期望 = 全量历史出现频率 × 当前筛选期数；偏差(实−期) = 出现次数 − 理论期望（红=高于预期、绿=低于预期）。以上均按当前筛选范围（'+N+' 期）实时计算，切换筛选会自动重算。</div>'
     +'</div>';
 }
 

@@ -85,11 +85,43 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 .hzall td.mk{background:#fdf6e3;color:#b45309;font-weight:700}
 .hzall .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 2px 0}
 
-__HERO_CSS__
+
+.hero{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px 18px;margin:6px 0 12px}
+.hero .topLine{width:100%;font-size:12px;color:#94a3b8;display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:2px}
+.hero .today{color:#cbd5e1}
+.hero .clock{color:#7dd3fc;font-variant-numeric:tabular-nums;font-weight:600}
+.hero .countdown{color:#f87171;font-variant-numeric:tabular-nums;font-weight:600}
+.hero .upd{color:#64748b}
+.hero .heroRow{display:flex;gap:16px;flex-wrap:wrap;align-items:stretch}
+.hero .grp{display:flex;flex-direction:column;gap:6px;border-radius:14px;padding:10px 14px;border:1px solid #334155;background:#0f172a}
+.hero .grp .lab{font-size:12px;color:#94a3b8;font-weight:600}
+.hero .grp .lab i{font-style:normal;font-size:10px;opacity:.75;margin-left:4px}
+.hero .grp .balls{display:flex;gap:6px;align-items:center;flex-wrap:nowrap}
+.hero .grp .num{width:28px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;background:#e11d48;flex:0 0 auto}
+.hero .grp .num.s{background:#4f46e5}
+.hero .grp.open{background:#0b1220;border-color:#475569}
+.hero .grp.open .lab{color:#e2e8f0}
+.hero .grp.try{background:#1c1410;border-color:#7c2d12}
+.hero .grp.try .lab{color:#fdba74}
+.hero .grp.try .snum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#2a1d12;color:#fdba74;border:1px solid #7c2d12;flex:0 0 auto}
+.hero .grp.plan2{background:#0f2018;border-color:#065f46}
+.hero .grp.plan2 .lab{color:#34d399}
+.hero .grp.plan2 .snum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#0d2920;color:#34d399;border:1px solid #065f46;flex:0 0 auto}
+.hero .snum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#1e293b;color:#e2e8f0;border:1px solid #334155;flex:0 0 auto}
+.hero .subline{display:flex;align-items:center;gap:8px}
+.hero .slab{font-size:11px;font-weight:600;background:#0f172a;border:1px solid #334155;border-radius:6px;padding:1px 7px;white-space:nowrap}
+.hero .try .slab{color:#fdba74}
+.hero .plan2 .slab{color:#34d399}
+.hero .extras{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.hero .tag{font-size:11px;color:#94a3b8;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:2px 9px;white-space:nowrap}
+.hero .tag b{color:#f87171;font-weight:700;margin-right:5px}
+.hero .issue{font-size:13px;color:#f87171;font-weight:700;margin-right:8px}
+.hero .na{font-size:12px;color:#64748b}
+
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-12 23:02</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="heroLeft"><div class="nums"><div class="grp"><span class="lab"><span class="issue">排列五 第 2026214 期</span>开奖号码</span><div class="balls"><div class="num">0</div><div class="num">1</div><div class="num s">4</div><div class="num">9</div><div class="num">0</div></div></div></div></div><div class="heroTrial"><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">0</div><div class="snum">5</div><div class="snum">3</div><div class="snum">6</div><div class="snum">4</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">0</div><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>3</span><span class="tag"><b>关注码</b>23693</span></div></div></div><div class="vsep"></div><div class="heroPlan2"><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">0</div><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div></div></div><div class="subline"><span class="slab">金码</span><div class="balls"><div class="snum">3</div></div></div><div class="subline"><span class="slab">关注码</span><div class="balls"><div class="snum">2</div><div class="snum">3</div><div class="snum">6</div><div class="snum">9</div><div class="snum">3</div></div></div><div class="subline"><span class="slab">对应码</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">7</div><div class="snum">2</div><div class="snum">8</div></div></div></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-12 23:08</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026214 期</span>开奖号码</span><div class="balls"><div class="num">0</div><div class="num">1</div><div class="num s">4</div><div class="num">9</div><div class="num">0</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">0</div><div class="snum">5</div><div class="snum">3</div><div class="snum">6</div><div class="snum">4</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">0</div><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>3</span><span class="tag"><b>关注码</b>23693</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">0</div><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div></div></div><div class="subline"><span class="slab">金码</span><div class="balls"><div class="snum">3</div></div></div><div class="subline"><span class="slab">关注码</span><div class="balls"><div class="snum">2</div><div class="snum">3</div><div class="snum">6</div><div class="snum">9</div><div class="snum">3</div></div></div><div class="subline"><span class="slab">对应码</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">7</div><div class="snum">2</div><div class="snum">8</div></div></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>

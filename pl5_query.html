@@ -86,7 +86,7 @@ __HERO_CSS__
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 22:22</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>0</b><b>5</b><b>3</b><b>6</b><b>4</b></div><div class="meta">开机 期号 2026214 · 2026-08-12 20:21</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>4</b><b>0</b><b>8</b><b>0</b><b>5</b></div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">金码</div><div class="val">3</div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">关注码</div><div class="code">23693</div></div><div class="blk"><div class="lab">对应码</div><div class="code">80728</div></div></div>
+<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 22:30</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>0</b><b>5</b><b>3</b><b>6</b><b>4</b></div><div class="meta">开机 期号 2026214 · 2026-08-12 20:21</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>4</b><b>0</b><b>8</b><b>0</b><b>5</b></div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">金码</div><div class="val">3</div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">关注码</div><div class="code">23693</div></div><div class="blk"><div class="lab">对应码</div><div class="code">80728</div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
@@ -688,19 +688,20 @@ function renderAllTable(){
   });
   var part1='<h4 class="cz">每年出现次数</h4><table><thead><tr>'+h1+'</tr></thead><tbody>'+rows1+'</tbody></table>';
   // Part2：全周期统计
-  var h2='<th class="cat">类别</th><th>全周期次数</th><th>最大遗漏</th><th>最大连出</th><th>平均遗漏</th><th>M差值('+curYear+')</th><th>当前遗漏</th>';
+  var h2='<th class="cat">类别</th><th>全周期次数</th><th>最大遗漏</th><th>最大连出</th><th>平均遗漏</th><th>年均出现次数</th><th>M差值('+curYear+')</th><th>当前遗漏</th>';
   var rows2='';
   ALLCATS.forEach(function(c){
     var os=omitStats(occ[c.name]);
-    var md=Math.round((cy[c.name][''+curYear]||0) - baseMean(c.name)*(M/12));
-    rows2+='<tr><td class="cat">'+c.name+'</td><td>'+os.total+'</td><td>'+os.maxOmit+'</td><td>'+os.maxCon+'</td><td>'+os.avgOmit+'</td><td class="mk">'+md+'</td><td>'+os.curOmit+'</td></tr>';
+    var bm=baseMean(c.name);
+    var md=Math.round((cy[c.name][''+curYear]||0) - bm*(M/12));
+    rows2+='<tr><td class="cat">'+c.name+'</td><td>'+os.total+'</td><td>'+os.maxOmit+'</td><td>'+os.maxCon+'</td><td>'+os.avgOmit+'</td><td>'+bm.toFixed(1)+'</td><td class="mk">'+md+'</td><td>'+os.curOmit+'</td></tr>';
   });
   var part2='<h4 class="cz">全周期统计（最大遗漏/最大连出/平均遗漏为全周期口径；M差值与当前遗漏为当年）</h4>'
     +'<table><thead><tr>'+h2+'</tr></thead><tbody>'+rows2+'</tbody></table>';
   box.innerHTML='<div class="hzall">'
     +'<h4 class="cz">全量表 · 15 类「5位同属性」每年出现次数与全周期统计</h4>'
     + part1 + part2
-    +'<div class="note">各类=五位开奖数字全部属于该集合：5大(56789)=五位均∈{5,6,7,8,9}；5小(01234)=五位均∈{0,1,2,3,4}；5奇=五位全奇数；5偶=五位全偶数；5阴=五位均∈{0,3,4,6,7}；5阳=五位均∈{1,2,5,8,9}；5大(789)=五位均∈{7,8,9}；5中(3456)=五位均∈{3,4,5,6}；5小(012)=五位均∈{0,1,2}；5红=五位均∈{1,2,7,8}；5蓝=五位均∈{0,3,4,9}；5绿=五位均∈{5,6}；5个0路=五位均∈{0,3,6,9}；5个1路=五位均∈{1,4,7}；5个2路=五位均∈{2,5,8}。全周期统计基于全部 '+N+' 期；M差值=当年次数−完整年均值×(当年月份/12)；当前遗漏为当年至今未出的期数。</div>'
+    +'<div class="note">各类=五位开奖数字全部属于该集合：5大(56789)=五位均∈{5,6,7,8,9}；5小(01234)=五位均∈{0,1,2,3,4}；5奇=五位全奇数；5偶=五位全偶数；5阴=五位均∈{0,3,4,6,7}；5阳=五位均∈{1,2,5,8,9}；5大(789)=五位均∈{7,8,9}；5中(3456)=五位均∈{3,4,5,6}；5小(012)=五位均∈{0,1,2}；5红=五位均∈{1,2,7,8}；5蓝=五位均∈{0,3,4,9}；5绿=五位均∈{5,6}；5个0路=五位均∈{0,3,6,9}；5个1路=五位均∈{1,4,7}；5个2路=五位均∈{2,5,8}。全周期统计基于全部 '+N+' 期；年均出现次数=完整年(含1月&12月)平均每年出现次数，与M差值基准一致；M差值=当年次数−完整年均值×(当年月份/12)；当前遗漏为当年至今未出的期数。</div>'
     +'</div>';
 }
 

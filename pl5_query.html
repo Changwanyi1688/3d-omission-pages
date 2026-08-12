@@ -3,7 +3,7 @@
 <title>排列五 数据看板</title>
 <style>
 body{font-family:-apple-system,"Microsoft YaHei",sans-serif;margin:0;background:#0f172a;color:#e2e8f0;font-size:14px}
-.wrap{width:100%;max-width:2000px;margin:18px auto;padding:0 16px}
+.wrap{width:100%;max-width:none;margin:0;padding:0}
 h1{font-size:20px;margin:6px 0 2px}
 h4{font-size:13px;margin:0 0 6px;color:#cbd5e1;text-align:center}
 .sub{color:#94a3b8;font-size:12px;margin-bottom:12px}
@@ -62,12 +62,31 @@ table.hzcat td.val{color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nu
 .hzcatwrap .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 2px 0}
 table.hzcat td.mk-pos{color:#f87171;font-weight:700}
 table.hzcat td.mk-neg{color:#4ade80;font-weight:700}
+/* 转置后的分类/比例表：横向滚动 + 粘性首列 */
+.hzcat-scroll{overflow-x:auto;padding-bottom:4px}
+table.hzcat.tp{table-layout:auto;width:auto;min-width:100%;font-size:11px}
+table.hzcat.tp th.metric,table.hzcat.tp td.metric{position:sticky;left:0;z-index:2;background:#1e293b;color:#e2e8f0;font-weight:700;text-align:left;white-space:nowrap;min-width:66px}
+table.hzcat.tp th{background:#1e293b;color:#cbd5e1;font-weight:600;white-space:nowrap}
+table.hzcat.tp td{white-space:nowrap;padding:2px 5px}
+table.hzcat td.mk{background:#fdf6e3;color:#b45309;font-weight:700}
+table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
+/* 全量表 */
+.hzall{margin-top:10px;border:1px solid #334155;border-radius:8px;background:#0f172a;padding:10px 12px;overflow-x:auto}
+.hzall .cz{font-size:13px;color:#e2e8f0;margin:8px 0 6px;font-weight:700}
+.hzall .cz:first-child{margin-top:0}
+.hzall table{border-collapse:collapse;font-size:12px;color:#cbd5e1;width:100%;margin-bottom:6px}
+.hzall th,.hzall td{border:1px solid #2a3a52;padding:3px 6px;text-align:center}
+.hzall th{background:#1e293b;color:#cbd5e1;font-weight:600}
+.hzall td.cat{background:#172033;color:#e2e8f0;font-weight:600;text-align:left;white-space:nowrap}
+.hzall td.cur{background:#3b2f1f;color:#fbbf24;font-weight:700}
+.hzall td.mk{background:#fdf6e3;color:#b45309;font-weight:700}
+.hzall .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 2px 0}
 
 __HERO_CSS__
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 21:25</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>0</b><b>5</b><b>3</b><b>6</b><b>4</b></div><div class="meta">开机 期号 2026214 · 2026-08-12 20:21</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>4</b><b>0</b><b>8</b><b>0</b><b>5</b></div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">金码</div><div class="val">3</div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">关注码</div><div class="code">23693</div></div><div class="blk"><div class="lab">对应码</div><div class="code">80728</div></div></div>
+<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 21:30</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>0</b><b>5</b><b>3</b><b>6</b><b>4</b></div><div class="meta">开机 期号 2026214 · 2026-08-12 20:21</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>4</b><b>0</b><b>8</b><b>0</b><b>5</b></div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">金码</div><div class="val">3</div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">关注码</div><div class="code">23693</div></div><div class="blk"><div class="lab">对应码</div><div class="code">80728</div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
@@ -101,6 +120,7 @@ __HERO_CSS__
   <div class="hzgwrap"><div id="hzgTable"></div></div>
   <div id="hzgStats"></div>
   <div id="hzgCatStats"></div>
+  <div id="hzgAll"></div>
 </div>
 
 <div class="panel">
@@ -300,6 +320,34 @@ function ratios(digs){
 }
 var RATIO_NAMES=['大小比','奇偶比','质合比','阴阳比','012路比','大中小比','波色比'];
 
+// ===== 分类列 / 比例列 的逐年出现次数（供 M差值 计算）=====
+var _CATY={};
+(function(){
+  var prevV2=null;
+  DP5.forEach(function(r){
+    var yr=parseInt((''+r[1]).slice(0,4),10);
+    var digs=[r[2],r[3],r[4],r[5],r[6]];
+    var v=digs[0]+digs[1]+digs[2]+digs[3]+digs[4];
+    GROUPS.forEach(function(g){ var val=g.f(v,prevV2); if(val==null) return; var k=g.name+'|'+val; _CATY[k]=_CATY[k]||{}; _CATY[k][yr]=(_CATY[k][yr]||0)+1; });
+    var rr=ratios(digs);
+    for(var ri=0;ri<rr.length;ri++){ var k2=RATIO_NAMES[ri]+'|'+rr[ri]; _CATY[k2]=_CATY[k2]||{}; _CATY[k2][yr]=(_CATY[k2][yr]||0)+1; }
+    prevV2=v;
+  });
+})();
+function _catMeanExcl(name,val,year){
+  var key=name+'|'+val;
+  var years=Object.keys(_AGGY).map(Number).filter(function(z){return z!==year && _isFull(z);});
+  if(!years.length) return 0;
+  var s=0; years.forEach(function(z){ var yc=_CATY[key]; s += (yc&&yc[z])?yc[z]:0; });
+  return s/years.length;
+}
+function _catMDiff(name,val,year){
+  var yc=_CATY[name+'|'+val]; var cnt=yc&&yc[year]?yc[year]:0;
+  var mean=_catMeanExcl(name,val,year);
+  var ms=_YMON[year]; var M=ms?Math.max.apply(null,Array.from(ms)):12;
+  return Math.round(cnt - mean*(M/12));
+}
+
 // 理论期望基准：全量数据中各类别/比例的出现频率（令“理论期望 = 全量频率 × 当前期数”）
 var THEORY=null;
 function computeTheory(){
@@ -375,6 +423,7 @@ var HZG = (function(){
     drawLine();
     renderStats();
     renderCatStats();
+    renderAllTable();
   }
   function initYears(){
     var sel=document.getElementById('hzgYear');
@@ -503,7 +552,14 @@ function renderCatStats(){
     recs.push({gcat:gcat, rr:ratios(digs)});
     prevV=v;
   });
-  computeTheory();
+  // 是否按年份筛选
+  var yrEl=document.getElementById('hzgYear');
+  var fromEl=document.getElementById('hzgFrom'), toEl=document.getElementById('hzgTo');
+  var yrVal=yrEl?yrEl.value:'0';
+  var fv=fromEl?parseInt(fromEl.value,10):NaN, tv=toEl?parseInt(toEl.value,10):NaN;
+  var isYearMode=(!fv && !tv && yrVal && yrVal!=='0');
+  var anchorYear=isYearMode?parseInt(yrVal,10):null;
+
   function computeCol(name, valueOf){
     var idxByVal={}, gapsByVal={}, conByVal={}, maxConByVal={}, appearByVal={}, order=[];
     recs.forEach(function(rec,i){
@@ -521,38 +577,121 @@ function renderCatStats(){
       var maxGap, avgGap;
       if(gaps.length){ maxGap=Math.max.apply(null,gaps.concat([curOmit])); avgGap=Math.round(gaps.reduce(function(a,b){return a+b;},0)/gaps.length); }
       else { maxGap=(last>=0)?0:N; avgGap=0; }
-      var frac=THEORY[name+'|'+val]||0;
-      var theory=Math.round(frac*N);
-      var dev=appearByVal[val]-theory;
-      out[val]={appear:appearByVal[val], theory:theory, dev:dev, curOmit:curOmit, avgOmit:avgGap, maxOmit:maxGap, maxCon:maxConByVal[val]};
+      out[val]={appear:appearByVal[val], curOmit:curOmit, avgOmit:avgGap, maxOmit:maxGap, maxCon:maxConByVal[val]};
     });
     return {order:order, stats:out};
   }
-  function rowHtml(cat,val,s){
-    var dcls = s.dev>0?'mk-pos':(s.dev<0?'mk-neg':'');
-    var dsign = s.dev>0?'+':'';
-    return '<tr><td class="cat">'+cat+'</td><td class="val">'+val+'</td>'
-      +'<td>'+s.appear+'</td><td>'+s.theory+'</td>'
-      +'<td class="'+dcls+'">'+dsign+s.dev+'</td>'
-      +'<td>'+s.curOmit+'</td><td>'+s.avgOmit+'</td><td>'+s.maxOmit+'</td><td>'+s.maxCon+'</td></tr>';
+  function buildCols(name, valueOf){
+    var cs=computeCol(name, valueOf);
+    return cs.order.map(function(val){ return {name:name, val:val, s:cs.stats[val]}; });
   }
-  var groupsHtml='';
-  GROUPS.forEach(function(g){
-    var cs=computeCol(g.name, function(rec){return rec.gcat[g.name];});
-    cs.order.forEach(function(val){ groupsHtml+=rowHtml(g.name,val,cs.stats[val]); });
-  });
-  var ratiosHtml='';
-  RATIO_NAMES.forEach(function(rn,ri){
-    var cs=computeCol(rn, function(rec){return rec.rr[ri];});
-    cs.order.forEach(function(val){ ratiosHtml+=rowHtml(rn,val,cs.stats[val]); });
-  });
-  var head='<th>类别</th><th>值</th><th>出现次数</th><th>理论期望</th><th>偏差(实−期)</th><th>当前遗漏</th><th>平均遗漏</th><th>最大遗漏</th><th>最大连出</th>';
-  box.innerHTML='<div class="hzcatwrap">'
+  var gCols=[];
+  GROUPS.forEach(function(g){ gCols=gCols.concat(buildCols(g.name, function(rec){return rec.gcat[g.name];})); });
+  var rCols=[];
+  RATIO_NAMES.forEach(function(rn,ri){ rCols=rCols.concat(buildCols(rn, function(rec){return rec.rr[ri];})); });
+
+  // 转置：行=指标，列=(类别-值)
+  function metricTable(cols, title){
+    var head='<th class="metric">指标 ＼ '+title+'</th>';
+    cols.forEach(function(c){ head+='<th>'+c.name+'<br>'+c.val+'</th>'; });
+    function rowHtml(label, fn, cellCls){
+      var h='<tr><td class="metric">'+label+'</td>';
+      cols.forEach(function(c){ h+='<td'+(cellCls?' class="'+cellCls+'"':'')+'>'+fn(c)+'</td>'; });
+      return h+'</tr>';
+    }
+    var rows='';
+    rows+=rowHtml('出现次数', function(c){return c.s.appear;});
+    rows+=rowHtml('当前遗漏', function(c){return c.s.curOmit;});
+    if(anchorYear!=null){
+      rows+=rowHtml('M差值('+anchorYear+')', function(c){return _catMDiff(c.name,c.val,anchorYear);}, 'mk');
+    }
+    rows+=rowHtml('平均遗漏', function(c){return c.s.avgOmit;});
+    rows+=rowHtml('最大遗漏', function(c){return c.s.maxOmit;});
+    rows+=rowHtml('最大连出', function(c){return c.s.maxCon;});
+    return '<table class="hzcat tp"><thead><tr>'+head+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+
+  box.innerHTML='<div class="hzcat-scroll">'
     +'<h4 class="cz">分类列统计（大小 / 奇偶 / 质合 / 大中小 / 升平降 / 012路）</h4>'
-    +'<table class="hzcat"><thead><tr>'+head+'</tr></thead><tbody>'+groupsHtml+'</tbody></table>'
+    + metricTable(gCols, '分类列')
     +'<h4 class="cz">比例列统计（大小比 / 奇偶比 / 质合比 / 阴阳比 / 012路比 / 大中小比 / 波色比）</h4>'
-    +'<table class="hzcat"><thead><tr>'+head+'</tr></thead><tbody>'+ratiosHtml+'</tbody></table>'
-    +'<div class="note">理论期望 = 全量历史出现频率 × 当前筛选期数；偏差(实−期) = 出现次数 − 理论期望（红=高于预期、绿=低于预期）。以上均按当前筛选范围（'+N+' 期）实时计算，切换筛选会自动重算。</div>'
+    + metricTable(rCols, '比例列')
+    +'<div class="note">以上均按当前筛选范围（'+N+' 期）实时计算；出现次数/遗漏/连出为当前范围内统计，M差值仅按年份筛选时显示（当年次数−完整年均值×(当年月份/12)，黄底=当年偏离）。切换筛选会自动重算。</div>'
+    +'</div>';
+}
+
+// ===== 全量表：5大/5小/5奇/5偶/5阴/5阳 的每年出现次数 + 全周期统计 =====
+var ALLCATS=[
+  {name:'5大', set:[5,6,7,8,9]},
+  {name:'5小', set:[0,1,2,3,4]},
+  {name:'5奇', set:[1,3,5,7,9]},
+  {name:'5偶', set:[0,2,4,6,8]},
+  {name:'5阴', set:[0,3,4,6,7]},
+  {name:'5阳', set:[1,2,5,8,9]}
+];
+function isAll(digs,set){ for(var i=0;i<digs.length;i++){ if(set.indexOf(digs[i])<0) return false; } return true; }
+
+function renderAllTable(){
+  var box=document.getElementById('hzgAll');
+  if(!box) return;
+  var N=DP5.length;
+  var yset={}; DP5.forEach(function(r){ yset[(''+r[1]).slice(0,4)]=1; });
+  var years=Object.keys(yset).sort();
+  var curYear=parseInt(years[years.length-1],10);
+  // 各分类在全量序列中的命中下标
+  var occ={}; ALLCATS.forEach(function(c){ occ[c.name]=[]; });
+  DP5.forEach(function(r,i){
+    var digs=[r[2],r[3],r[4],r[5],r[6]];
+    ALLCATS.forEach(function(c){ if(isAll(digs,c.set)) occ[c.name].push(i); });
+  });
+  // 各 (分类,年份) 出现次数
+  var cy={}; ALLCATS.forEach(function(c){ cy[c.name]={}; });
+  DP5.forEach(function(r){
+    var yr=(''+r[1]).slice(0,4);
+    var digs=[r[2],r[3],r[4],r[5],r[6]];
+    ALLCATS.forEach(function(c){ if(isAll(digs,c.set)){ cy[c.name][yr]=(cy[c.name][yr]||0)+1; } });
+  });
+  function baseMean(name){
+    var ys=years.filter(function(y){return _isFull(parseInt(y,10));});
+    if(!ys.length) return 0;
+    var s=0; ys.forEach(function(y){ s += cy[name][y]||0; });
+    return s/ys.length;
+  }
+  function omitStats(idxs){
+    if(!idxs.length) return {total:0,maxOmit:N,avgOmit:0,maxCon:0,curOmit:N};
+    var gaps=[]; for(var k=1;k<idxs.length;k++) gaps.push(idxs[k]-idxs[k-1]-1);
+    var curOmit=N-1-idxs[idxs.length-1]; gaps.push(curOmit);
+    var maxOmit=Math.max.apply(null,gaps);
+    var avgOmit=Math.round(gaps.reduce(function(a,b){return a+b;},0)/gaps.length);
+    var con=0,maxCon=0;
+    for(var k=1;k<idxs.length;k++){ if(idxs[k]-idxs[k-1]===1){con++; if(con>maxCon)maxCon=con;} else con=0; }
+    return {total:idxs.length,maxOmit:maxOmit,avgOmit:avgOmit,maxCon:maxCon,curOmit:curOmit};
+  }
+  var ms=_YMON[curYear]; var M=ms?Math.max.apply(null,Array.from(ms)):12;
+  // Part1：每年出现次数矩阵（行=分类，列=年份）
+  var h1='<th class="cat">类别 ＼ 年份</th>';
+  years.forEach(function(y){ h1+='<th'+(parseInt(y,10)===curYear?' class="cur"':'')+'>'+y+'</th>'; });
+  var rows1='';
+  ALLCATS.forEach(function(c){
+    var r='<tr><td class="cat">'+c.name+'</td>';
+    years.forEach(function(y){ r+='<td'+(parseInt(y,10)===curYear?' class="cur"':'')+'>'+(cy[c.name][y]||0)+'</td>'; });
+    rows1+=r+'</tr>';
+  });
+  var part1='<h4 class="cz">每年出现次数</h4><table><thead><tr>'+h1+'</tr></thead><tbody>'+rows1+'</tbody></table>';
+  // Part2：全周期统计
+  var h2='<th class="cat">类别</th><th>全周期次数</th><th>最大遗漏</th><th>最大连出</th><th>平均遗漏</th><th>M差值('+curYear+')</th><th>当前遗漏</th>';
+  var rows2='';
+  ALLCATS.forEach(function(c){
+    var os=omitStats(occ[c.name]);
+    var md=Math.round((cy[c.name][''+curYear]||0) - baseMean(c.name)*(M/12));
+    rows2+='<tr><td class="cat">'+c.name+'</td><td>'+os.total+'</td><td>'+os.maxOmit+'</td><td>'+os.maxCon+'</td><td>'+os.avgOmit+'</td><td class="mk">'+md+'</td><td>'+os.curOmit+'</td></tr>';
+  });
+  var part2='<h4 class="cz">全周期统计（最大遗漏/最大连出/平均遗漏为全周期口径；M差值与当前遗漏为当年）</h4>'
+    +'<table><thead><tr>'+h2+'</tr></thead><tbody>'+rows2+'</tbody></table>';
+  box.innerHTML='<div class="hzall">'
+    +'<h4 class="cz">全量表 · 5大(56789)/5小(01234)/5奇/5偶/5阴/5阳 每年出现与全周期统计</h4>'
+    + part1 + part2
+    +'<div class="note">5大=五位均∈{5,6,7,8,9}；5小=五位均∈{0,1,2,3,4}；5奇=五位全奇数；5偶=五位全偶数；5阴=五位均∈{0,3,4,6,7}；5阳=五位均∈{1,2,5,8,9}。全周期统计基于全部 '+N+' 期；M差值=当年次数−完整年均值×(当年月份/12)。</div>'
     +'</div>';
 }
 

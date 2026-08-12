@@ -19,8 +19,8 @@ tbody tr:nth-child(even){background:#172033}
 .tag{display:inline-block;background:#27272a;border:1px solid #f59e0b;color:#fbbf24;border-radius:5px;padding:1px 6px;font-size:11px;margin-left:6px}
 a{color:#7dd3fc}
 
-.hzgwrap{overflow-x:hidden;overflow-y:auto;max-height:640px;border:1px solid #334155;border-radius:8px;background:#0f172a}
-table.hzg{border-collapse:collapse;font-size:12px;white-space:nowrap;color:#cbd5e1;width:100%;table-layout:fixed}
+.hzgwrap{overflow-x:auto;overflow-y:auto;max-height:640px;border:1px solid #334155;border-radius:8px;background:#0f172a}
+table.hzg{border-collapse:collapse;font-size:12px;white-space:nowrap;color:#cbd5e1;width:100%;min-width:1370px;table-layout:fixed}
 table.hzg th,table.hzg td{border:1px solid #2a3a52;padding:0;text-align:center;overflow:hidden}
 table.hzg thead th{background:#1e293b;color:#cbd5e1;font-weight:600;padding:3px 2px}
 table.hzg thead tr:first-child th{position:sticky;top:0;z-index:3}
@@ -39,8 +39,8 @@ td.gcell.ball2{background:#6366f1;color:#fff;font-weight:700}
 td.gcell.omit{color:#5b6b82;font-size:10px}
 td.rcell{color:#7dd3fc;font-weight:600;font-size:11px}
 td.nums .d{display:inline-block;width:16px;height:16px;line-height:16px;border-radius:50%;background:#334155;color:#e2e8f0;margin:0 1px;font-size:11px}
-.hzstats{margin-top:10px;border:1px solid #334155;border-radius:8px;overflow-x:hidden;background:#0f172a}
-table.hzstats{border-collapse:collapse;font-size:12px;white-space:nowrap;color:#cbd5e1;width:100%;table-layout:fixed}
+.hzstats{margin-top:10px;border:1px solid #334155;border-radius:8px;overflow-x:auto;background:#0f172a}
+table.hzstats{border-collapse:collapse;font-size:12px;white-space:nowrap;color:#cbd5e1;width:100%;min-width:1370px;table-layout:fixed}
 table.hzstats th,table.hzstats td{height:22px;line-height:22px;border:1px solid #2a3a52;padding:0;text-align:center;overflow:hidden}
 table.hzstats th{background:#1e293b;color:#cbd5e1;font-weight:600;padding:3px 2px}
 table.hzstats td.metric{background:#1e293b;color:#e2e8f0;font-weight:700;text-align:left;padding:3px 6px;white-space:nowrap}
@@ -83,7 +83,7 @@ __HERO_CSS__
 </style></head><body><div class="wrap">
 <h1>排列五 · 和值走势图<span class="tag">含7项比例列</span></h1>
 
-<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 21:30</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>0</b><b>5</b><b>3</b><b>6</b><b>4</b></div><div class="meta">开机 期号 2026214 · 2026-08-12 20:21</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>4</b><b>0</b><b>8</b><b>0</b><b>5</b></div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">金码</div><div class="val">3</div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">关注码</div><div class="code">23693</div></div><div class="blk"><div class="lab">对应码</div><div class="code">80728</div></div></div>
+<div class="hero"><div class="blk"><div class="lab">最新更新</div><div class="val time">2026-08-12 22:13</div><div class="meta">最新开奖 2026213（2026-08-11）<b>7</b><b>4</b><b>0</b><b>7</b><b>1</b></div></div><div class="blk"><div class="lab">开机号</div><div class="balls"><b>0</b><b>5</b><b>3</b><b>6</b><b>4</b></div><div class="meta">开机 期号 2026214 · 2026-08-12 20:21</div></div><div class="blk"><div class="lab">试机号</div><div class="balls"><b>4</b><b>0</b><b>8</b><b>0</b><b>5</b></div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">金码</div><div class="val">3</div><div class="meta">试机/金码/关注/对应 期号 2026214 · 2026-08-12 20:13</div></div><div class="blk"><div class="lab">关注码</div><div class="code">23693</div></div><div class="blk"><div class="lab">对应码</div><div class="code">80728</div></div></div>
 
 <div class="panel">
   <h3>和值走势图（0-45 走势格 · 仿17500结构）</h3>
@@ -690,14 +690,20 @@ function renderCatStats(){
     +'</div>';
 }
 
-// ===== 全量表：5大/5小/5奇/5偶/5阴/5阳 的每年出现次数 + 全周期统计 =====
+// ===== 全量表：5大/5小/5奇/5偶/5阴/5阳/5大(789)/5中(3456)/5小(012)/5红/5蓝/5绿 的每年出现次数 + 全周期统计 =====
 var ALLCATS=[
-  {name:'5大', set:[5,6,7,8,9]},
-  {name:'5小', set:[0,1,2,3,4]},
+  {name:'5大(56789)', set:[5,6,7,8,9]},
+  {name:'5小(01234)', set:[0,1,2,3,4]},
   {name:'5奇', set:[1,3,5,7,9]},
   {name:'5偶', set:[0,2,4,6,8]},
   {name:'5阴', set:[0,3,4,6,7]},
-  {name:'5阳', set:[1,2,5,8,9]}
+  {name:'5阳', set:[1,2,5,8,9]},
+  {name:'5大(789)', set:[7,8,9]},
+  {name:'5中(3456)', set:[3,4,5,6]},
+  {name:'5小(012)', set:[0,1,2]},
+  {name:'5红(1278)', set:[1,2,7,8]},
+  {name:'5蓝(0349)', set:[0,3,4,9]},
+  {name:'5绿(56)', set:[5,6]}
 ];
 function isAll(digs,set){ for(var i=0;i<digs.length;i++){ if(set.indexOf(digs[i])<0) return false; } return true; }
 
@@ -759,9 +765,9 @@ function renderAllTable(){
   var part2='<h4 class="cz">全周期统计（最大遗漏/最大连出/平均遗漏为全周期口径；M差值与当前遗漏为当年）</h4>'
     +'<table><thead><tr>'+h2+'</tr></thead><tbody>'+rows2+'</tbody></table>';
   box.innerHTML='<div class="hzall">'
-    +'<h4 class="cz">全量表 · 5大(56789)/5小(01234)/5奇/5偶/5阴/5阳 每年出现与全周期统计</h4>'
+    +'<h4 class="cz">全量表 · 12 类「5位同属性」每年出现次数与全周期统计</h4>'
     + part1 + part2
-    +'<div class="note">5大=五位均∈{5,6,7,8,9}；5小=五位均∈{0,1,2,3,4}；5奇=五位全奇数；5偶=五位全偶数；5阴=五位均∈{0,3,4,6,7}；5阳=五位均∈{1,2,5,8,9}。全周期统计基于全部 '+N+' 期；M差值=当年次数−完整年均值×(当年月份/12)。</div>'
+    +'<div class="note">各类=五位开奖数字全部属于该集合：5大(56789)=五位均∈{5,6,7,8,9}；5小(01234)=五位均∈{0,1,2,3,4}；5奇=五位全奇数；5偶=五位全偶数；5阴=五位均∈{0,3,4,6,7}；5阳=五位均∈{1,2,5,8,9}；5大(789)=五位均∈{7,8,9}；5中(3456)=五位均∈{3,4,5,6}；5小(012)=五位均∈{0,1,2}；5红=五位均∈{1,2,7,8}；5蓝=五位均∈{0,3,4,9}；5绿=五位均∈{5,6}。全周期统计基于全部 '+N+' 期；M差值=当年次数−完整年均值×(当年月份/12)；当前遗漏为当年至今未出的期数。</div>'
     +'</div>';
 }
 

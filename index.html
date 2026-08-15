@@ -493,7 +493,7 @@
   <!-- 模式二补充：和值×组六/组三×跨度 统计（位于和值走势图下方，随 3D/排三 切换） -->
   <div class="panel" id="hstPanel" style="display:none">
     <div class="resTitle">和值 × 组六/组三 × 跨度 统计（不含今年；M值：跨度M值 + 和值M值）</div>
-    <div class="sub" style="margin:0 0 8px;font-size:12px;color:#66707a">口径：历史=2004~2025（不含2026）；出现次数=历史命中期数；最大/平均遗漏期=历史最大间隔/各段遗漏均值（不含当前进行中）；每年M值(2021~2025)=该年实际次数−平均年（<span class="hst-mk-pos">红=偏热</span>/<span class="hst-mk-neg">蓝=偏冷</span>）；正值年份数≤1 的5格标<span style="background:#fff3cd;padding:0 3px;border-radius:3px">浅黄</span>（近5年长期偏冷）；当前遗漏=截至最新一期(含2026)距上次出现间隔（<span class="hst-star">★</span>=创史上最冷）；今年M值=今年次数−平均年×(今年最新月/12)。粒度=(和值,类型,跨度)，豹子已排除。<b>跨度M值</b>(浅蓝表头)=按(和值,类型,跨度)单元算，6列紧接「跨度」右侧；<b>和值M值</b>(绿表头)=同一和值下所有(类型,跨度)合并后算，6列置于表尾（与「和值」列同绿）；「跨」列（含表头）浅蓝底，与跨度M值块同色；今年M值(跨度块)/今年出现/和值M值块今年M值 三列加粗框线；跨度右侧8列(当前遗漏+跨度M值块6列+号码)以跨度为口径、表尾7列(今年出现+和值M值块6列)以和值为口径，列宽与字体已缩小；号码列显示该类别下全部号码组合（组六6个/组三3个排列，不再只显示组选号码）。</div>
+    <div class="sub" style="margin:0 0 8px;font-size:12px;color:#66707a">口径：历史=2004~2025（不含2026）；出现次数=历史命中期数；最大/平均遗漏期=历史最大间隔/各段遗漏均值（不含当前进行中）；每年M值(2021~2025)=该年实际次数−平均年（<span class="hst-mk-pos">红=偏热</span>/<span class="hst-mk-neg">蓝=偏冷</span>）；正值年份数≤1 的5格标<span style="background:#fff3cd;padding:0 3px;border-radius:3px">浅黄</span>（近5年长期偏冷）；当前遗漏=截至最新一期(含2026)距上次出现间隔（<span class="hst-star">★</span>=创史上最冷）；今年M值=今年次数−平均年×(今年最新月/12)。粒度=(和值,类型,跨度)，豹子已排除。<b>跨度M值</b>(浅蓝表头)=按(和值,类型,跨度)单元算，6列紧接「跨度」右侧；<b>和值M值</b>(绿表头)=按(和值,类型)组合算(对应组三/组六分开统计)，6列置于表尾（与「和值」列同绿）；「跨」列（含表头）浅蓝底，与跨度M值块同色；今年M值(跨度块)/今年出现/和值M值块今年M值 三列加粗框线；跨度右侧8列(当前遗漏+跨度M值块6列+号码)以跨度为口径、表尾7列(今年出现+和值M值块6列)以和值为口径，列宽与字体已缩小；「跨」右侧「当前遗漏」按(跨度,类型)口径(和值不限)、平均遗漏期之后「当前遗漏」按(和值,类型)口径(跨度不限)，均对应组三/组六分开统计，两列口径不同；号码列只显示组选组合（不展开排列，组六1个/组三1~2个组选号码）。</div>
     <div class="hst-scroll"><table class="hst-table" id="hstTable"><thead></thead><tbody></tbody></table></div>
   </div>
 
@@ -1052,11 +1052,27 @@ function renderHst(){
   hist.forEach(r=>{ const k=keyOf(r); (catYear[k]||(catYear[k]={}))[r.y]=(catYear[k][r.y]||0)+1; });
   thisY.forEach(r=>{ const k=keyOf(r); catThis[k]=(catThis[k]||0)+1; });
   recs.forEach(r=>{ const k=keyOf(r); (catNums[k]||(catNums[k]=new Set())).add(r.a*100+r.b*10+r.c); });
-  const heAppear={}, heThis={}, heYear={};
-  Object.keys(catHist).forEach(k=>{ const he=+k.split('|')[0]; heAppear[he]=(heAppear[he]||0)+catHist[k].length; });
-  Object.keys(catThis).forEach(k=>{ const he=+k.split('|')[0]; heThis[he]=(heThis[he]||0)+catThis[k]; });
-  Object.keys(catYear).forEach(k=>{ const he=+k.split('|')[0]; heYear[he]=heYear[he]||{}; LAST5.forEach(y=>{ heYear[he][y]=(heYear[he][y]||0)+((catYear[k]&&catYear[k][y])||0); }); });
+  // 和值×类型聚合（用于「和值M值」块 与 和值口径当前遗漏：同一(和值,类型)合并，对应组三/组六分开统计）
+  const heTypAppear={}, heTypThis={}, heTypYear={};
+  const heKeyOf = k=>{ const p=k.split('|'); return p[0]+'|'+p[1]; };
+  Object.keys(catHist).forEach(k=>{ const hk=heKeyOf(k); heTypAppear[hk]=(heTypAppear[hk]||0)+catHist[k].length; });
+  Object.keys(catThis).forEach(k=>{ const hk=heKeyOf(k); heTypThis[hk]=(heTypThis[hk]||0)+catThis[k]; });
+  Object.keys(catYear).forEach(k=>{ const hk=heKeyOf(k); heTypYear[hk]=heTypYear[hk]||{}; LAST5.forEach(y=>{ heTypYear[hk][y]=(heTypYear[hk][y]||0)+((catYear[k]&&catYear[k][y])||0); }); });
   const keys = new Set([].concat(Object.keys(catHist), Object.keys(catThis)));
+  // 和值×类型 索引（用于「当前遗漏(和值口径)」列：按(和值,类型)口径，对应组三/组六分开）
+  const heFullLast = {};
+  recs.forEach((r,i)=>{ heFullLast[r.sum+'|'+r.typ]=i; });
+  const heHistIdx = {};
+  hist.forEach((r,i)=>{ const hk=r.sum+'|'+r.typ; (heHistIdx[hk]=heHistIdx[hk]||[]).push(i); });
+  const heMaxGap = {};
+  for(const hk in heHistIdx){ const idx=heHistIdx[hk]; let mx=idx[0]; for(let j=0;j<idx.length-1;j++){ const g=idx[j+1]-idx[j]-1; if(g>mx) mx=g; } heMaxGap[hk]=mx; }
+  // 跨度×类型 索引（用于「当前遗漏(跨度口径)」列：按(跨度,类型)口径，对应组三/组六分开）
+  const spFullLast = {};
+  recs.forEach((r,i)=>{ spFullLast[r.sp+'|'+r.typ]=i; });
+  const spHistIdx = {};
+  hist.forEach((r,i)=>{ const hk=r.sp+'|'+r.typ; (spHistIdx[hk]=spHistIdx[hk]||[]).push(i); });
+  const spMaxGap = {}, spAvg = {};
+  for(const hk in spHistIdx){ const idx=spHistIdx[hk]; if(!idx.length){ spMaxGap[hk]=null; spAvg[hk]=null; continue; } let mx=idx[0]; for(let j=0;j<idx.length-1;j++){ const g=idx[j+1]-idx[j]-1; if(g>mx) mx=g; } spMaxGap[hk]=mx; spAvg[hk]=pyRound((idx[idx.length-1]-(idx.length-1))/idx.length); }
   let rows=[];
   keys.forEach(k=>{
     const p=k.split('|'); const he=+p[0], typ=p[1], sp=+p[2];
@@ -1075,20 +1091,23 @@ function renderHst(){
     const mdiff = FY>0 ? pyRound(tcount - avg_year*(M/12)) : null;
     let m_year=null;
     if(FY>0){ m_year={}; LAST5.forEach(y=>{ m_year[y]=pyRound(((catYear[k]&&catYear[k][y])||0)-avg_year); }); }
-    const nums = catNums[k]? [...catNums[k]].sort((x,y)=>x-y).map(n=>(''+n).padStart(3,'0')) : [];
-    const grp = nums.length? nums[0].split('').sort().join('') : '';
-    const avg_year_he = FY>0 ? heAppear[he]/FY : 0;
-    const tcount_he = heThis[he]||0;
+    // 组选组合：每类别下所有不同「数字多重集」(排序唯一) — 组六1个、组三1~2个
+    const nums = catNums[k]? [...new Set([...catNums[k]].map(code=>{ const a=Math.floor(code/100),b=Math.floor(code/10)%10,c=code%10; return [a,b,c].sort((x,y)=>x-y).join(''); }))].sort() : [];
+    const hk = he+'|'+typ;
+    const avg_year_he = FY>0 ? heTypAppear[hk]/FY : 0;
+    const tcount_he = heTypThis[hk]||0;
     const mdiff_he = FY>0 ? pyRound(tcount_he - avg_year_he*(M/12)) : null;
     let m_year_he=null;
-    if(FY>0){ m_year_he={}; LAST5.forEach(y=>{ m_year_he[y]=pyRound(((heYear[he]&&heYear[he][y])||0)-avg_year_he); }); }
+    if(FY>0){ m_year_he={}; LAST5.forEach(y=>{ m_year_he[y]=pyRound(((heTypYear[hk]&&heTypYear[hk][y])||0)-avg_year_he); }); }
     const full = catFull[k]||[];
     const last_idx = full.length? full[full.length-1] : -1;
     const cur_gap = (recs.length-1)-last_idx;
-    rows.push({he,typ,sp,appear,avg_year,max_gap,avg,m_year,cur_gap,tcount,mdiff,nums,nnum:nums.length,grp,he_mdiff:mdiff_he,he_m_year:m_year_he});
+    const cur_gap_he = (recs.length-1)-(heFullLast[hk]!==undefined?heFullLast[hk]:-1);
+    const cur_gap_sp = (recs.length-1)-(spFullLast[sp+'|'+typ]!==undefined?spFullLast[sp+'|'+typ]:-1);
+    rows.push({he,typ,sp,appear,avg_year,max_gap,avg,m_year,cur_gap,cur_gap_he,cur_gap_sp,sp_max_gap:spMaxGap[sp+'|'+typ],sp_avg:spAvg[sp+'|'+typ],he_max_gap:heMaxGap[hk],tcount,mdiff,nums,nnum:nums.length,he_mdiff:mdiff_he,he_m_year:m_year_he});
   });
   rows.sort((x,y)=> x.he-y.he || ((x.typ==='组六'?0:1)-(y.typ==='组六'?0:1)) || x.sp-y.sp);
-  const head = [['和值','hst-th-he'],['类型',''],['跨','hst-th-span'],['当前遗漏','']]
+  const head = [['和值','hst-th-he'],['类型',''],['跨','hst-th-span'],['当前遗漏','hst-th-span']]
     .concat((['今年M值']).concat(LAST5.map(y=>(y%100)+'M值')).map((x,i)=>[x,'hst-th-span'+(i===0?' hst-bold-col':'')+' hst-narrow']))
     .concat([['号码','hst-narrow'],['号码数',''],['历史出现',''],['年均出现',''],['最大遗漏期',''],['平均遗漏期',''],['当前遗漏',''],['今年出现','hst-bold-col hst-narrow hst-th-he']])
     .concat((['今年M值']).concat(LAST5.map(y=>(y%100)+'M值')).map((x,i)=>[x,'hst-th-he'+(i===0?' hst-bold-col':'')+' hst-narrow']));
@@ -1112,6 +1131,12 @@ function renderHst(){
     let cgcell;
     if(r.avg!==null && r.cur_gap>=r.avg) cgcell='<span class="hst-mk-pos">'+cg+star+'</span>';
     else cgcell='<span class="hst-num">'+cg+star+'</span>';
+    // 「跨」右侧「当前遗漏」= 跨度×类型口径(和值不限)：达/超该(跨度,类型)平均遗漏标红，超该(跨度,类型)历史最大遗漏加★
+    const exceed_max_sp = (r.sp_max_gap!==null && r.cur_gap_sp>r.sp_max_gap);
+    const star_sp = exceed_max_sp?' <span class="hst-star">★</span>':'';
+    let cgcell_sp;
+    if(r.sp_avg!==null && r.cur_gap_sp>=r.sp_avg) cgcell_sp='<span class="hst-mk-pos">'+r.cur_gap_sp+star_sp+'</span>';
+    else cgcell_sp='<span class="hst-num">'+r.cur_gap_sp+star_sp+'</span>';
     let m5='';
     const my=r.m_year;
     if(my===null){ LAST5.forEach(()=>{ m5+='<td class="hst-num">—</td>'; }); }
@@ -1143,7 +1168,7 @@ function renderHst(){
       +'<td class="hst-he">'+r.he+'</td>'
       +'<td>'+r.typ+'</td>'
       +'<td class="hst-td-span hst-narrow">'+r.sp+'</td>'
-      +'<td class="hst-num">'+cgcell+'</td>'
+      +'<td class="hst-num">'+cgcell_sp+'</td>'
       +'<td class="hst-num hst-bold-col hst-narrow">'+mdcell+'</td>'
       +m5
       +'<td class="hst-narrow" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;color:#445;white-space:normal;min-width:130px;max-width:260px;line-height:1.3;text-align:left">'+r.nums.join(' ')+'</td>'
@@ -1152,7 +1177,7 @@ function renderHst(){
       +'<td class="hst-num">'+r.avg_year.toFixed(1)+'</td>'
       +'<td class="hst-num">'+mg+'</td>'
       +'<td class="hst-num">'+av+'</td>'
-      +'<td class="hst-num">'+cgcell+'</td>'
+      +'<td class="hst-num">'+r.cur_gap_he+'</td>'
       +'<td class="hst-num hst-bold-col hst-narrow">'+r.tcount+'</td>'
       +heM
       +'</tr>';

@@ -49,9 +49,10 @@
   .topbar .cat-btn.on{background:#c0392b;border-color:#c0392b;box-shadow:0 1px 4px rgba(192,57,43,.35)}
   /* ---- 和值×组六/组三×跨度 统计表（和值走势面板下方，随 3D/排三 切换） ---- */
   .hst-scroll{overflow:auto;max-height:80vh;border:1px solid #e3e7ee;border-radius:10px;background:#fff}
-  .hst-table{border-collapse:collapse;font-size:11.5px;width:100%}
-  .hst-table th,.hst-table td{border:1px solid #e3e7ee;padding:2px 3px;text-align:center;white-space:nowrap}
-  .hst-table thead th{background:#34495e;color:#fff;position:sticky;top:0;z-index:2;font-size:11px}
+  .hst-table{border-collapse:collapse;font-size:11.5px;width:100%;table-layout:fixed}
+  .hst-table th,.hst-table td{border:1px solid #e3e7ee;padding:2px 3px;text-align:center}
+  .hst-table td{white-space:nowrap}
+  .hst-table thead th{background:#34495e;color:#fff;position:sticky;top:0;z-index:2;font-size:11px;white-space:normal;line-height:1.15}
   .hst-table thead th.hst-th-span{background:#cfe3f7;color:#1f2933}
   .hst-table thead th.hst-th-he{background:#2e7d32;color:#fff}
   .hst-table tbody tr:nth-child(even){background:#fff}
@@ -65,7 +66,7 @@
   .hst-table td.hst-he-cell{background:#e8f5e9}
   .hst-table td.hst-bold-col,.hst-table th.hst-bold-col{border:2px solid #1f2d3d}
   .hst-table td.hst-narrow,.hst-table th.hst-narrow{font-size:10px;padding:2px 4px}
-  .hst-table td.hst-nm{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#334;white-space:nowrap;min-width:44px;padding:2px 3px;text-align:center}
+  .hst-table td.hst-nm{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#334;white-space:nowrap;padding:2px 3px;text-align:center}
   /* 鼠标悬停：整行变灰 */
   .hst-table tbody tr:hover td{background:#dfe3e9 !important}
   .hst-table tbody tr:hover td.hst-he{background:#6b7684 !important;color:#fff !important}
@@ -496,7 +497,7 @@
 
   <!-- 模式二补充：和值×组六/组三×跨度 统计（位于和值走势图下方，随 3D/排三 切换） -->
   <div class="panel" id="hstPanel" style="display:none">
-    <div class="resTitle">和值 × 组六/组三 × 跨度 统计（不含今年；M值：跨度M值 + 和值M值）</div>
+    <div class="resTitle" id="hstTitle">3D 和值 × 组六/组三 × 跨度 统计（不含今年；M值：跨度M值 + 和值M值）</div>
     <div class="sub" style="margin:0 0 8px;font-size:12px;color:#66707a">口径：历史=2004~2025（不含2026）；出现次数=历史命中期数；最大/平均遗漏期=历史最大间隔/各段遗漏均值（不含当前进行中）；每年M值(2021~2025)=该年实际次数−平均年（<span class="hst-mk-pos">红=偏热</span>/<span class="hst-mk-neg">蓝=偏冷</span>）；正值年份数≤1 的5格标<span style="background:#fff3cd;padding:0 3px;border-radius:3px">浅黄</span>（近5年长期偏冷）；当前遗漏=截至最新一期(含2026)距上次出现间隔（<span class="hst-star">★</span>=创史上最冷）；今年M值=今年次数−平均年×(今年最新月/12)。粒度=(和值,类型,跨度)，豹子已排除。<b>跨度M值</b>(浅蓝表头)=按(和值,类型,跨度)单元算，6列紧接「跨度」右侧；<b>和值M值</b>(绿表头)=按(和值,类型)组合算(对应组三/组六分开统计)，6列置于表尾（与「和值」列同绿）；「跨」列（含表头）浅蓝底，与跨度M值块同色；今年M值(跨度块)/今年出现/和值M值块今年M值 三列加粗框线；跨度右侧8列(当前遗漏+跨度M值块6列+号码)以跨度为口径、表尾7列(今年出现+和值M值块6列)以和值为口径，列宽与字体已缩小；「跨」右侧「当前遗漏」按(跨度,类型)口径(和值不限)、平均遗漏期之后「当前遗漏」按(和值,类型)口径(跨度不限)，均对应组三/组六分开统计，两列口径不同；本表「一行一个组选号码」：号码列每行列一个号码，紧靠其后新增该号码自身的8列(当前遗漏/今年出现/今年M值/21~25M值)；历史出现/年均出现/最大遗漏期/平均遗漏期改为该号码自身统计；「当前遗漏(跨)/(和值)」与「跨度M值块/和值M值块」仍按该号码所属类别统计(作上下文)；已删除号码数列；每号码自身「当前遗漏」按该号码口径(达/超该号码平均遗漏标红，<span class="hst-star">★</span>=超该号码历史最大遗漏)。</div>
     <div class="hst-scroll"><table class="hst-table" id="hstTable"><thead></thead><tbody></tbody></table></div>
   </div>
@@ -1032,6 +1033,9 @@ function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
 /* ---------- 和值×组六/组三×跨度 统计（和值走势面板下方，随 D 切换 3D/排三） ---------- */
 function renderHst(){
   const t=$('hstTable'); if(!t) return;
+  // 面板标题随 3D/排三 切换：前缀「3D」/「排三」
+  const _hstTitle=$('hstTitle');
+  if(_hstTitle) _hstTitle.textContent=((D===DP3)?'排三':'3D')+' 和值 × 组六/组三 × 跨度 统计（不含今年；M值：跨度M值 + 和值M值）';
   const THIS_YEAR=2026, LAST5=[2021,2022,2023,2024,2025];
   const pyRound=x=>{ const f=Math.floor(x), r=x-f; if(r<0.5)return f; if(r>0.5)return f+1; return (f%2===0)?f:f+1; }; // 复刻 Python round()（银行家舍入）
   const pyRound1=x=>{ const s=x*10, f=Math.floor(s), r=s-f; let g; if(r<0.5)g=f; else if(r>0.5)g=f+1; else g=(f%2===0)?f:f+1; return (g/10).toFixed(1); }; // 复刻 Python %.1f（银行家舍入 + 固定1位小数，与独立报告一致）

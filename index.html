@@ -10,12 +10,12 @@
   header{background:linear-gradient(90deg,#c0392b,#e67e22);color:#fff;padding:14px 20px}
   header h1{margin:0;font-size:18px}
   header .sub{font-size:12px;opacity:.9;margin-top:3px}
-  .wrap{max-width:1280px;margin:14px auto;padding:0 14px}
-  .panel{background:#fff;border:1px solid #e3e7ee;border-radius:10px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0}
+  .wrap{max-width:1280px;margin:7px auto;padding:0 14px}
+  .panel{background:#fff;border:1px solid #e3e7ee;border-radius:10px;padding:12px 14px;margin-bottom:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .row{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:3px 0}
   .row .lab{font-size:13px;color:#555;font-weight:600}
   select,input[type=number]{font-size:13px;padding:5px 8px;border:1px solid #cdd5e0;border-radius:6px;background:#fff;color:#222}
-  .catbar{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+  .catbar{display:flex;flex-wrap:wrap;gap:3px;flex:1}
   .cat-btn{padding:5px 11px;border:1px solid #cfd6e0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px;color:#445;user-select:none;transition:all .12s}
   .cat-btn:hover{background:#eef3fb;border-color:#b9c4d4}
   .cat-btn.on{background:#34495e;color:#fff;border-color:#34495e;font-weight:600;box-shadow:0 1px 3px rgba(52,73,94,.35)}
@@ -28,9 +28,9 @@
   tbody tr:nth-child(even){background:#fafbfc}
   tbody tr:hover{background:#fff7e6}
   .hl{color:#e74c3c;font-weight:700}
-  .warn{color:#e67e22;font-size:12px;margin:6px 0}
-  .meta{font-size:12px;color:#666;margin:4px 0 8px}
-  .sep{border:none;border-top:1px dashed #e3e7ee;margin:8px 0}
+  .warn{color:#e67e22;font-size:12px;margin:3px 0}
+  .meta{font-size:12px;color:#666;margin:2px 0 4px}
+  .sep{border:none;border-top:1px dashed #e3e7ee;margin:4px 0}
   .scroller{overflow-y:auto;overflow-x:auto;max-height:60vh;border:1px solid #e3e7ee;border-radius:10px;padding:0;background:#fff}
   .scroller .resTitle{position:sticky;top:0;background:#2c3e50;color:#fff;font-size:13px;font-weight:600;padding:8px 12px;z-index:3}
   .scroller table{border:none;border-collapse:collapse;width:100%;font-size:13px;background:#fff}
@@ -42,9 +42,9 @@
   .sort{display:inline-flex;flex-direction:column;justify-content:center;font-style:normal;line-height:1;font-size:9px;margin-left:4px;color:#90a4b8;vertical-align:middle}
   .sort .up,.sort .down{display:block;height:9px;line-height:9px}
   .sort .on{color:#ffd34d;text-shadow:0 0 2px rgba(255,211,77,.6)}
-  .hint{font-size:12px;color:#888;margin-top:4px}
+  .hint{font-size:12px;color:#888;margin-top:2px}
   /* ---- 顶栏模式切换（独立于查询类型栏） ---- */
-  .topbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .topbar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
   .topbar .cat-btn{font-size:14px;padding:8px 22px}
   .topbar .cat-btn.on{background:#c0392b;border-color:#c0392b;box-shadow:0 1px 4px rgba(192,57,43,.35)}
   /* ---- 和值×组六/组三×跨度 统计表（和值走势面板下方，随 3D/排三 切换） ---- */
@@ -88,7 +88,7 @@
   .mk-neg{color:#2980b9;font-weight:700}  /* M差值：低于历史同月均值 */
   #zstSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
   /* 两码走势图网格 */
-  .lmGridBlock{margin-bottom:14px}
+  .lmGridBlock{margin-bottom:7px}
   .lmGridBlock > .resTitle{position:sticky;top:0;background:#2c3e50;color:#fff;font-size:13px;font-weight:600;padding:8px 12px;z-index:3}
   #lmGrids{display:block}
   #lmGrids table{margin:0;border-collapse:collapse}
@@ -99,7 +99,7 @@
   #lmGrids .grp-sep{border-left:2px solid #90a4ae}
   #lmGrids td.omission{color:#9aa0a6;font-size:11px}
   /* 直选定位两码：三个位置各一张卡片横向并排（每位置100种），小字号自适应页面宽度 */
-  .zxCols{display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;align-items:flex-start;margin-top:12px;padding:4px}
+  .zxCols{display:flex;flex-direction:row;flex-wrap:wrap;gap:5px;align-items:flex-start;margin-top:6px;padding:4px}
   .zxCol{flex:1 1 300px;min-width:0;background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);overflow-x:auto}
   .zxColTitle{background:linear-gradient(135deg,#3a5b78,#2c3e50);color:#fff;font-weight:600;text-align:center;padding:8px 0;font-size:13px;letter-spacing:1px}
   .zxCol table{width:100%;border-collapse:collapse}
@@ -111,7 +111,7 @@
   #zstTable tr.mrow td:first-child,#lmGrids tr.mrow td:first-child{color:#a0670f}
   .mdcell{background:#fdf6e3;font-weight:700}  /* M差值 单元格统一高亮（所有类目一致），数值正负表示方向 */
   /* 直组三码遗漏：四张表（直选三不同/对子 + 组六/组三）四列响应式网格 */
-  .zu3Grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
+  .zu3Grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:6px}
   @media(max-width:760px){.zu3Grid{grid-template-columns:1fr}}
   .zu3Grid .hint{grid-column:1 / -1}
   .zu3Card{border:1px solid #d8e0ea;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(44,62,80,.08)}
@@ -121,7 +121,7 @@
   .zu3Card th,.zu3Card td{border:1px solid #e3e7ee;padding:3px 5px;text-align:center;white-space:nowrap}
   .zu3Card thead th{position:sticky;top:0;background:#34495e;color:#fff;z-index:2;cursor:pointer;user-select:none}
   /* 多项数和：逐期走势表（照搬 17500：子类和横向分组，命中圆球，遗漏计数，表脚六指标） */
-  .shuStack{display:flex;flex-direction:column;gap:16px;margin-top:12px}
+  .shuStack{display:flex;flex-direction:column;gap:8px;margin-top:6px}
   .shuBlock{background:#fff;border:1px solid #d8e0ea;border-radius:10px;box-shadow:0 2px 10px rgba(44,62,80,.08);overflow:hidden}
   .shuTitle{background:linear-gradient(135deg,#3a5b78,#2c3e50);color:#fff;font-weight:600;text-align:center;padding:8px 0;font-size:13px;letter-spacing:1px}
   .shuWrap{overflow-x:auto;background:#fff}
@@ -169,7 +169,7 @@
   #zxLmResult .missOrange{background:#fde0cc;color:#b5530a;font-weight:700}
   #zxLmResult .comboOrange{background:#fde0cc;color:#b5530a;font-weight:700}
   /* 合并三位组合卡片（含形态分布） */
-  .zxMerge{margin:22px 4px 6px;background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);overflow-x:auto}
+  .zxMerge{margin:11px 4px 3px;background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);overflow-x:auto}
   .zxMergeTitle{background:linear-gradient(135deg,#6b4773,#8e44ad);color:#fff;font-weight:600;text-align:center;padding:10px 0;font-size:14px;letter-spacing:1px}
   .zxMerge table{width:100%;border-collapse:collapse;margin-top:0;min-width:760px}
   .zxMerge th,.zxMerge td{padding:3px 4px !important;font-size:11px !important}
@@ -185,11 +185,11 @@
   .zxMerge .patZ3{color:#2980b9;font-weight:700}    /* 组三：蓝 */
   .zxMerge .patZ6{color:#27ae60;font-weight:700}    /* 组六：绿 */
   /* 形态分布 */
-  .zxDist{background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);margin:18px 4px 6px;padding:14px 16px}
-  .zxDistTitle{font-weight:600;color:#6b4773;font-size:14px;margin-bottom:10px;letter-spacing:1px;border-left:4px solid #8e44ad;padding-left:8px}
-  .zxDistGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .zxDist{background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);margin:9px 4px 3px;padding:14px 16px}
+  .zxDistTitle{font-weight:600;color:#6b4773;font-size:14px;margin-bottom:5px;letter-spacing:1px;border-left:4px solid #8e44ad;padding-left:8px}
+  .zxDistGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
   .zxDistCard{background:#faf7fc;border:1px solid #ece3f3;border-radius:9px;padding:8px 10px}
-  .zxDistH{font-weight:600;color:#6b4773;font-size:13px;margin-bottom:6px}
+  .zxDistH{font-weight:600;color:#6b4773;font-size:13px;margin-bottom:3px}
   .zxDistCard .dx{display:inline-block;margin:2px 6px 2px 0;padding:2px 7px;background:#fff;border:1px solid #e3d8ef;border-radius:20px;font-size:12px;color:#555}
   .zxDistCard .dx b{color:#8e44ad;margin-left:4px;font-size:13px}
   #lmGrids td.lm-hit{font-weight:700}
@@ -197,65 +197,65 @@
   #lmGrids .footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:left;padding-left:10px}
   /* ===== 顶部概览（照搬 dashboard 前两行：数据看板 + 最新开奖/模拟号） ===== */
   #dashTop{--bg:#f5f7fa;--card:#fff;--ink:#1f2933;--sub:#6b7785;--line:#e5e9f0;--brand:#e11d48;--brand2:#4f46e5;--shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04)}
-  #dashTop header{padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  #dashTop header{padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
   #dashTop header h1{font-size:20px;margin:0}
   #dashTop header .meta{color:var(--sub);font-size:13px}
   #dashTop .wrap{padding:0 28px 0;max-width:1320px;margin:0 auto}
-  #dashTop .hero{display:flex;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;box-shadow:var(--shadow);margin-bottom:0;flex-wrap:wrap}
+  #dashTop .hero{display:flex;gap:9px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px 22px;box-shadow:var(--shadow);margin-bottom:0;flex-wrap:wrap}
   #dashTop .hero .issue{font-size:13px;color:var(--brand);font-weight:700;margin-right:8px}
   #dashTop .hero .today{font-size:13px;color:var(--sub)}
   #dashTop .hero .clock{font-size:13px;color:#4f46e5;margin-left:10px;font-variant-numeric:tabular-nums;font-weight:600}
   #dashTop .hero .countdown{font-size:13px;color:#e11d48;margin-left:10px;font-variant-numeric:tabular-nums;font-weight:600}
-  #dashTop .nums{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;margin:6px 0}
-  #dashTop .grp{display:flex;flex-direction:column;gap:6px}
+  #dashTop .nums{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin:3px 0}
+  #dashTop .grp{display:flex;flex-direction:column;gap:3px}
   #dashTop .grp .lab{font-size:13px;color:var(--sub);font-weight:600}
   #dashTop .grp .lab i{font-style:normal;font-size:11px;opacity:.75;margin-left:4px}
-  #dashTop .grp .balls{display:flex;gap:8px;align-items:center}
-  #dashTop .grp.try{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:10px 14px;min-width:210px}
+  #dashTop .grp .balls{display:flex;gap:4px;align-items:center}
+  #dashTop .grp.try{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:5px 14px;min-width:210px}
   #dashTop .grp.try .lab{color:#c2410c}
   #dashTop .grp.try .na{font-size:13px;color:var(--sub)}
-  #dashTop .grp.try .extras{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  #dashTop .grp.try .extras{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
   #dashTop .grp.try .tag{font-size:12px;color:var(--sub);background:#f5f7ff;border:1px solid #e2e8f0;border-radius:8px;padding:2px 9px;white-space:nowrap}
   #dashTop .grp.try .tag b{color:var(--brand);font-weight:700;margin-right:5px}
-  #dashTop .grp .subline{display:flex;align-items:center;gap:8px;margin-top:2px}
+  #dashTop .grp .subline{display:flex;align-items:center;gap:4px;margin-top:1px}
   #dashTop .grp .slab{font-size:12px;color:#c2410c;font-weight:600;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:1px 7px;white-space:nowrap}
   #dashTop .grp.try .balls.sm{gap:6px}
   #dashTop .grp.try .snum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
   #dashTop .grp.try .snum.tb{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
-  #dashTop .grp.plan2{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:10px 14px;min-width:210px}
+  #dashTop .grp.plan2{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:5px 14px;min-width:210px}
   #dashTop .grp.plan2 .lab{color:#047857}
   #dashTop .grp.plan2 .snum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
   #dashTop .grp.plan2 .slab{color:#047857;background:#ecfdf5;border-color:#a7f3d0}
   #dashTop .num{width:28px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;background:var(--brand)}
   #dashTop .num.s{background:var(--brand2)}
-  #dashTop .heroRow{display:flex;gap:24px;flex-wrap:wrap;align-items:stretch;margin-top:6px}
-  #dashTop .heroLeft{display:flex;flex-direction:column;gap:6px}
+  #dashTop .heroRow{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch;margin-top:3px}
+  #dashTop .heroLeft{display:flex;flex-direction:column;gap:3px}
   #dashTop .heroTrial{display:flex;align-items:stretch}
   #dashTop .heroPlan2{display:flex;align-items:stretch}
   #dashTop .vsep{flex:0 0 auto;width:1px;align-self:stretch;background:linear-gradient(to bottom,transparent,#cbd5e1 16%,#cbd5e1 84%,transparent);margin:2px 0}
-  #dashTop .filterBox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);margin-top:14px}
-  #dashTop .fbTitle{font-size:15px;font-weight:700;color:#1f2933;margin-bottom:4px}
-  #dashTop .fbDesc{font-size:12.5px;color:var(--sub);margin-bottom:10px;line-height:1.5}
+  #dashTop .filterBox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);margin-top:7px}
+  #dashTop .fbTitle{font-size:15px;font-weight:700;color:#1f2933;margin-bottom:2px}
+  #dashTop .fbDesc{font-size:12.5px;color:var(--sub);margin-bottom:5px;line-height:1.5}
   #dashTop .fbDesc strong{color:#e11d48}
-  #dashTop .fbRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  #dashTop .fbRow{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
   #dashTop .fSel{padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font-size:13px;color:#1f2933}
   #dashTop .fInp{flex:1;min-width:280px;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;color:#1f2933}
   #dashTop .fInp:focus{outline:2px solid #c7d2fe;border-color:#4f46e5}
   #dashTop .fBtn{padding:8px 16px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-weight:700;font-size:13px;cursor:pointer}
   #dashTop .fBtn:hover{background:#4338ca}
-  #dashTop .fbHint{font-size:12px;color:#6b7785;margin-top:8px}
+  #dashTop .fbHint{font-size:12px;color:#6b7785;margin-top:4px}
   #dashTop .fbHint code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;padding:1px 6px;margin:0 2px;font-size:11.5px;color:#334155}
-  #dashTop .fResult{margin-top:12px}
-  #dashTop .fitem{background:#f8fafc;border:1px solid #eef2f7;border-radius:10px;padding:12px 14px;margin-bottom:10px}
+  #dashTop .fResult{margin-top:6px}
+  #dashTop .fitem{background:#f8fafc;border:1px solid #eef2f7;border-radius:10px;padding:12px 14px;margin-bottom:5px}
   #dashTop .fhead{font-size:14px;color:#1f2933}
   #dashTop .fhead .om{color:#e11d48}
-  #dashTop .fsub{font-size:12.5px;color:#6b7785;margin:6px 0}
-  #dashTop .flist{display:flex;flex-wrap:wrap;gap:6px}
+  #dashTop .fsub{font-size:12.5px;color:#6b7785;margin:3px 0}
+  #dashTop .flist{display:flex;flex-wrap:wrap;gap:3px}
   #dashTop .chip{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:3px 9px;font-size:12.5px;color:#334155}
   #dashTop .chip b{color:#4f46e5;font-weight:700}
-  #dashTop .fdraw{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  #dashTop .fdraw{display:flex;flex-direction:column;gap:4px;margin-top:2px}
   #dashTop .fgrp{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px}
-  #dashTop .fgrp .gh{font-size:13px;font-weight:700;color:#1f2933;margin-bottom:6px}
+  #dashTop .fgrp .gh{font-size:13px;font-weight:700;color:#1f2933;margin-bottom:3px}
   #dashTop .fgrp .gh .om{color:#e11d48}
   #dashTop .muted{color:#94a3b8;font-size:13px}
   #dashTop .warn{color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:13px}
@@ -273,16 +273,16 @@
   #dashTop .lotterySel select:hover{border-color:#94a3b8}
   #dashTop .lotterySel select:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
   #dashTop .lotterySel::after{content:'';position:absolute;right:13px;top:50%;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #64748b;transform:translateY(-50%);pointer-events:none}
-  #dashTop .lotteryNotice{margin-top:8px;font-size:13px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px}
+  #dashTop .lotteryNotice{margin-top:4px;font-size:13px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px}
   #dashTop .lotteryNotice.p3{color:#047857;background:#ecfdf5;border-color:#a7f3d0}
-  #dashTop .pl3Stamp{margin-top:12px;font-size:12.5px;line-height:1.6;color:#047857;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 12px;display:none}
+  #dashTop .pl3Stamp{margin-top:6px;font-size:12.5px;line-height:1.6;color:#047857;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 12px;display:none}
   #dashTop .pl3Stamp b{color:#065f46}
-  #dashTop .matchFocus{margin:10px 0 0;background:#fff;border:1px solid #e2e8f0;border-left:4px solid #6366f1;border-radius:12px;padding:12px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-  #dashTop .matchFocus .mf-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;font-weight:700;color:#1f2d3d}
+  #dashTop .matchFocus{margin:5px 0 0;background:#fff;border:1px solid #e2e8f0;border-left:4px solid #6366f1;border-radius:12px;padding:12px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  #dashTop .matchFocus .mf-head{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:14px;font-weight:700;color:#1f2d3d}
   #dashTop .matchFocus .mf-gen{font-size:11.5px;font-weight:500;color:#94a3b8}
   #dashTop .matchFocus .mf-link{margin-left:auto;font-size:12.5px;font-weight:700;color:#6366f1;text-decoration:none;border:1px solid #c7d2fe;border-radius:8px;padding:3px 10px}
   #dashTop .matchFocus .mf-link:hover{background:#eef2ff}
-  #dashTop .matchFocus .mf-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+  #dashTop .matchFocus .mf-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
   #dashTop .matchFocus .mf-chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:3px 11px;color:#334155}
   #dashTop .matchFocus .mf-chip b{color:#64748b;font-weight:700}
   #dashTop .matchFocus .mf-chip i{font-style:normal;font-weight:700;color:#475569}
@@ -290,10 +290,10 @@
   #dashTop .matchFocus .mf-chip.mf-mid i{color:#c2410c}
   #dashTop .matchFocus .mf-chip.mf-hot{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
   #dashTop .matchFocus .mf-chip.mf-hot i{color:#dc2626}
-  #dashTop .matchFocus .mf-best{margin-top:8px;font-size:12px;color:#64748b;line-height:1.7}
+  #dashTop .matchFocus .mf-best{margin-top:4px;font-size:12px;color:#64748b;line-height:1.7}
   #dashTop .matchFocus .mf-best b{color:#334155}
   #dashTop .heroFormYear{flex:0 0 auto;display:flex;align-items:stretch}
-  #dashTop .formYearLink{display:flex;flex-direction:column;justify-content:center;gap:5px;text-decoration:none;background:#fff;border:1px solid #22c55e;border-left:4px solid #22c55e;border-radius:12px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:158px;transition:background .15s}
+  #dashTop .formYearLink{display:flex;flex-direction:column;justify-content:center;gap:5px;text-decoration:none;background:#fff;border:1px solid #22c55e;border-left:4px solid #22c55e;border-radius:12px;padding:6px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:158px;transition:background .15s}
   #dashTop .formYearLink:hover{background:#f0fdf4}
   #dashTop .formYearLink .lab{font-size:13.5px;font-weight:700;color:#166534;display:flex;align-items:center;gap:4px}
   #dashTop .formYearLink .fy-sub{font-size:11.5px;color:#16a34a}

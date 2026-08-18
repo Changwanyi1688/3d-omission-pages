@@ -55,6 +55,15 @@
   #mainWrap .panel[id$="Ctl"] > .row input{padding:2px 6px;font-size:12px}
   #mainWrap .panel[id$="Ctl"] > .row .btn{padding:4px 10px;font-size:12px}
   .topbar .cat-btn.on{background:#c0392b;border-color:#c0392b;box-shadow:0 1px 4px rgba(192,57,43,.35)}
+  /* 2345678 组三/组六 出现勾选表 */
+  #res2348{overflow-x:auto}
+  .ckTbl{border-collapse:collapse;font-size:12px;width:100%}
+  .ckTbl th,.ckTbl td{border:1px solid #e3e7ee;padding:4px 6px;text-align:center;white-space:nowrap}
+  .ckTbl th{background:#34495e;color:#fff}
+  .ckTbl td.num{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:#1a5276}
+  .ck{color:#e03131;font-weight:700;font-size:15px;line-height:1}
+  .zxCol{margin-bottom:12px}
+  .zxColTitle{font-weight:600;margin:6px 0 4px;color:#334;font-size:13px}
   /* ---- 和值×组六/组三×跨度 统计表（和值走势面板下方，随 3D/排三 切换） ---- */
   .hst-scroll{overflow:auto;max-height:80vh;border:1px solid #e3e7ee;border-radius:10px;background:#fff}
   .hst-table{border-collapse:collapse;font-size:11.5px;width:100%;table-layout:fixed}
@@ -413,6 +422,7 @@
       <div class="cat-btn" id="mode1257">1257&amp;1368</div>
       <div class="cat-btn" id="modeZu3">直组三码遗漏</div>
       <div class="cat-btn" id="modeShu">多项数和</div>
+      <div class="cat-btn" id="mode2348">2345678</div>
     </div>
   </div>
 
@@ -547,6 +557,21 @@
     </div>
     <div class="meta" id="m1257Diff"></div>
     <div id="res1257" class="zxCols"></div>
+  </div>
+
+  <!-- 模式：2345678 组三/组六 出现勾选表 -->
+  <div class="panel" id="panel2348" style="display:none">
+    <div class="row">
+      <span class="lab">按年份</span>
+      <select id="y2348Sel"></select>
+      <span class="lab">期号范围</span>
+      <input id="s2348Sel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <span class="lab">至</span>
+      <input id="e2348Sel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <button class="btn sec" id="query2348Btn" type="button" style="padding:4px 12px">查询</button>
+    </div>
+    <div class="meta" id="m2348"></div>
+    <div id="res2348"></div>
   </div>
 
   <!-- 模式七：直组三码遗漏（直选三不同/对子 + 组六/组三，按最大遗漏排名） -->
@@ -1285,6 +1310,7 @@ function setMode(m){
   $('mode1257').classList.toggle('on', m==='1257');
   $('modeZu3').classList.toggle('on', m==='zu3');
   $('modeShu').classList.toggle('on', m==='shu');
+  $('mode2348').classList.toggle('on', m==='2348');
   $('modeZx2').classList.toggle('on', m==='zx2');
   $('omissionCtl').style.display = (m==='omission')?'':'none';
   $('resPanel').style.display     = (m==='omission')?'':'none';
@@ -1299,6 +1325,7 @@ function setMode(m){
   $('panel1257').style.display     = (m==='1257')?'':'none';
   $('panelZu3').style.display      = (m==='zu3')?'':'none';
   $('panelShu').style.display      = (m==='shu')?'':'none';
+  $('panel2348').style.display      = (m==='2348')?'':'none';
   if(m==='hezhi'){ hezhiQuery(); renderHst(); }
   if(m==='lm'){ lmQuery(); }
   if(m==='zxlm'){ zxLmQuery(); }
@@ -1307,6 +1334,7 @@ function setMode(m){
   if(m==='1257'){ query1257(); }
   if(m==='zu3'){ zhiZuSanQuery(); }
   if(m==='shu'){ shuQuery(); }
+  if(m==='2348'){ query2348(); }
 }
 
 /* ===== 模式四：直选定位两码（每位置100种） ===== */
@@ -1625,6 +1653,65 @@ function query1257(){
   const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×(覆盖月份/12)（表内 M差值 行及底部各年份 M差值：数值为正=高于历史同期、为负=低于，颜色统一为同色高亮）</div>';
   $('m1257Diff').innerHTML=mHtml;
   $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝该范围内出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期偏多(正值)或偏少(负值)；所有 M差值 行统一用同色高亮，数值正负表示方向。表底另列最近五年的逐年 M差值（年份置前），逐年与完整年基准比较。</div>';
+}
+
+/* ===== 模式：2345678 组三/组六 出现勾选表 ===== */
+const S2348 = new Set([2,3,4,5,6,7,8]);
+let _2348init=false;
+function query2348(){
+  const sSel=$('s2348Sel'), eSel=$('e2348Sel'), ySel=$('y2348Sel');
+  if(!_2348init){
+    _2348init=true;
+    ySel.innerHTML='<option value="0">全部年份</option>';
+    YEARS.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y+'年'; ySel.appendChild(o); });
+    sSel.value=D[0][0]; eSel.value=D[D.length-1][0];
+    const rerun=()=>{ const a=parseInt(sSel.value,10), b=parseInt(eSel.value,10); if(a>b){const t=sSel.value;sSel.value=eSel.value;eSel.value=t;} query2348(); };
+    ySel.onchange=()=>{
+      if(ySel.value!=='0'){
+        const ys=D.filter(d=> Math.floor(d[0]/1000)===parseInt(ySel.value,10));
+        if(ys.length){ sSel.value=ys[0][0]; eSel.value=ys[ys.length-1][0]; }
+      } else { sSel.value=D[0][0]; eSel.value=D[D.length-1][0]; }
+      query2348();
+    };
+    sSel.onchange=rerun; eSel.onchange=rerun;
+    $('query2348Btn').onclick=()=>{ query2348(); };
+  }
+  let s=parseInt(sSel.value,10), e=parseInt(eSel.value,10);
+  if(isNaN(s)) s=D[0][0];
+  if(isNaN(e)) e=D[D.length-1][0];
+  if(s>e){ const t=s; s=e; e=t; }
+  const period=D.filter(d=> d[0]>=s && d[0]<=e);
+  const CK='<span class="ck">✓</span>';
+  // 上栏 组六：开奖号含 2-8 数字即在对应列打✓（三不同号最多亮3列）
+  let h1='<div class="zxCol"><div class="zxColTitle">组六（开奖号含 2-8 数字即在对应列打红色✓；三不同号最多亮3列，组三/豹子号亮更少列）</div>';
+  h1+='<table class="ckTbl"><thead><tr><th>日期</th><th>期号</th><th>开奖号码</th>';
+  for(let d=2; d<=8; d++) h1+='<th>'+d+'</th>';
+  h1+='</tr></thead><tbody>';
+  period.forEach(d=>{
+    const ds=[d[1],d[2],d[3]];
+    const set=new Set(ds);
+    h1+='<tr><td>'+d[4]+'</td><td>'+d[0]+'</td><td class="num">'+ds.join('')+'</td>';
+    for(let x=2; x<=8; x++) h1+='<td>'+(set.has(x)?CK:'')+'</td>';
+    h1+='</tr>';
+  });
+  h1+='</tbody></table></div>';
+  // 下栏 组三：对子数字 / 单码数字 两列（仅组三号：恰两位相同才拆出对子与单码；数字在 2-8 才打✓）
+  let h2='<div class="zxCol"><div class="zxColTitle">组三（对子 / 单码 数字在 2-8 即在对应列打红色✓；非组三号两列留空）</div>';
+  h2+='<table class="ckTbl"><thead><tr><th>日期</th><th>期号</th><th>开奖号码</th><th>对子</th><th>单码</th></tr></thead><tbody>';
+  period.forEach(d=>{
+    const ds=[d[1],d[2],d[3]];
+    let pair=null, single=null;
+    const cnt={}; ds.forEach(x=>cnt[x]=(cnt[x]||0)+1);
+    const keys=Object.keys(cnt);
+    if(keys.length===2){ keys.forEach(k=>{ if(cnt[k]===2) pair=+k; else single=+k; }); }
+    h2+='<tr><td>'+d[4]+'</td><td>'+d[0]+'</td><td class="num">'+ds.join('')+'</td>';
+    h2+='<td>'+(pair!==null?(S2348.has(pair)?CK:''):'')+'</td>';
+    h2+='<td>'+(single!==null?(S2348.has(single)?CK:''):'')+'</td>';
+    h2+='</tr>';
+  });
+  h2+='</tbody></table></div>';
+  $('res2348').innerHTML=h1+h2;
+  $('m2348').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期。左三列=日期/期号/开奖号；组六栏数字列、组三栏对子/单码列，开奖号中该数字属于 {2,3,4,5,6,7,8} 即打红色✓，否则留空。</div>';
 }
 
 /* ===== 模式七：直组三码遗漏（直选三不同/对子 + 组六/组三，按最大遗漏排名） ===== */
@@ -2369,6 +2456,7 @@ $('modeZxGroup').onclick=()=>setMode('zxgroup');
 $('mode1257').onclick=()=>setMode('1257');
 $('modeZu3').onclick=()=>setMode('zu3');
 $('modeShu').onclick=()=>setMode('shu');
+$('mode2348').onclick=()=>setMode('2348');
 
 /* ---------- 初始化 ---------- */
 curCat='多码任意组合';
@@ -2719,6 +2807,7 @@ function renderAll(){
   lmQuery();   // 3D 与排三均按当前 D 的两码数据渲染（P3 已接入排三同口径数据）
   // 组三
   renderZu3();
+  if(mode==='2348') query2348();
   // 数据看板概览
   renderHero();
 }

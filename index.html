@@ -429,7 +429,7 @@
     <div class="catbar">
       <div class="cat-btn on" id="modeOmission">遗漏组合查询</div>
       <div class="cat-btn" id="modeHezhi">和值走势查询</div>
-      <div class="cat-btn" id="modeLm">两码走势查询</div>
+      <div class="cat-btn" id="modeLm">组(三/六)两码</div>
       <div class="cat-btn" id="modeZxLm">直选定位两码</div>
       <div class="cat-btn" id="modeZx2">直选两码</div>
       <div class="cat-btn" id="modeZxGroup">组选两码</div>
@@ -1071,11 +1071,7 @@ function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
   });
   $('lmGrids').innerHTML=html;
   metaEl.textContent='组（六、三）两码走势｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）';
-  let warn=(all.length>shown.length)?('提示：为便于观察，仅绘制最近 '+shown.length+' 期；表脚统计仍基于完整 '+all.length+' 期。'):'';
-  if(mDiff || (lmYearRows&&lmYearRows.length)){
-    warn+=' ｜ M差值(v)=年份总次数(v)-完整年平均数(v)x(该年最新月份/12) 取整；主行为所选年份，表底另列近五年(不含当年)逐年份 M差值，统一同色高亮，数值正=高于/负=低于';
-  }
-  warnEl.textContent=warn;
+  warnEl.textContent='';   // 用户要求：删除橙色「提示」及后面的说明文字
 }
 /* ---------- 和值×组六/组三×跨度 统计（和值走势面板下方，随 D 切换 3D/排三） ---------- */
 function renderHst(){

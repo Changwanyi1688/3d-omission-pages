@@ -1707,18 +1707,20 @@ function query2348(){
   });
   // 全周期 5 项指标：出现次数 / 当前遗漏 / 最大遗漏 / 平均遗漏 / 最大连出
   function colStat(arr){
-    const idx=[]; for(let i=0;i<N;i++) if(arr[i]) idx.push(i);
+    const n=arr.length;
+    const idx=[]; for(let i=0;i<n;i++) if(arr[i]) idx.push(i);
     const appear=idx.length;
-    if(appear===0) return {appear:0, curGap:N, maxGap:null, avg:null, maxRun:0};
-    const curGap=(N-1)-idx[idx.length-1];
+    if(appear===0) return {appear:0, curGap:n, maxGap:null, avg:null, maxRun:0};
+    const curGap=(n-1)-idx[idx.length-1];
     let maxGap=idx[0];
     for(let j=0;j<idx.length-1;j++){ const g=idx[j+1]-idx[j]-1; if(g>maxGap) maxGap=g; }
     const avg=Math.round((idx[idx.length-1]-(idx.length-1))/appear);
     let maxRun=0,cur=0;
-    for(let i=0;i<N;i++){ if(arr[i]){cur++; if(cur>maxRun)maxRun=cur;} else cur=0; }
+    for(let i=0;i<n;i++){ if(arr[i]){cur++; if(cur>maxRun)maxRun=cur;} else cur=0; }
     return {appear, curGap, maxGap, avg, maxRun};
   }
-  const st6=colStat(hit6Arr), st3=colStat(hit3Arr);
+  const p6=period.map(d=>cells[d[0]].h6), p3=period.map(d=>cells[d[0]].h3);
+  const st6=colStat(p6), st3=colStat(p3);
   // 完整年(含1&12月)均值，作为 M差值 基准
   const allYears=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
   const completeYears=allYears.filter(y=>{ const ms=yrMonths[y]; return ms&&ms.has(1)&&ms.has(12); });
@@ -1775,7 +1777,7 @@ function query2348(){
   $('res2348').innerHTML=html;
   const yl=showM?(' ｜ 按年份 '+ySelVal):'';
   $('m2348').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期'+yl
-    +' ｜ 组六/组三：开奖号为「组六且三位∈{2-8}」→红色✓，否则显示遗漏期数；<b>和值/和尾/跨只在出现红勾的行计算显示</b>。表脚 5 项（出现次数/当前遗漏/最大遗漏/平均遗漏/最大连出）为<b>全周期口径</b>；'
+    +' ｜ 组六/组三：开奖号为「组六且三位∈{2-8}」→红色✓，否则显示遗漏期数；<b>和值/和尾/跨只在出现红勾的行计算显示</b>。表脚 5 项（出现次数/当前遗漏/最大遗漏/平均遗漏/最大连出）为<b>当前筛选范围口径（随年份/期号范围变化）</b>；'
     + (showM ? 'M差值=当年出现次数−完整年(含1&12月)均值×(当年月份/12)，黄底行=当年及近5年偏离（正=高于/负=低于历史同期）。' : '选择具体年份后，表脚附「当年 M差值」与「近5年 M差值」行（黄底高亮）。')
     +'</div>';
 }

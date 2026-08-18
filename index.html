@@ -1688,34 +1688,92 @@ function query2348(){
   // 命中判定：组六=三不同且三位数字全部属于 {2,3,4,5,6,7,8}；组三=恰一对且两个不同数字全部属于该集合
   function hit6(ds){ const t=new Set(ds); return t.size===3 && ds.every(inS); }
   function hit3(ds){ const t=new Set(ds); return t.size===2 && [...t].every(inS); }
-  // 在完整 D（升序）上计算每期命中与遗漏期数，保证所选区间内遗漏值连续正确
-  const cells={};
-  let om6=0, om3=0;
-  D.forEach(d=>{
+
+  // ===== 全量统计（基于完整 D 升序，仅算一次）=====
+  const N=D.length;
+  const hit6Arr=new Array(N), hit3Arr=new Array(N);
+  const yr6={}, yr3={}, yrMonths={};
+  let om6=0, om3=0; const cells={};
+  D.forEach((d,i)=>{
     const ds=[d[1],d[2],d[3]];
     const h6=hit6(ds), h3=hit3(ds);
-    om6 = h6 ? 0 : om6+1;
-    om3 = h3 ? 0 : om3+1;
+    hit6Arr[i]=h6; hit3Arr[i]=h3;
+    const yy=Math.floor(d[0]/1000), im=issueMonthOf(d[4]);
+    yr6[yy]=(yr6[yy]||0)+(h6?1:0);
+    yr3[yy]=(yr3[yy]||0)+(h3?1:0);
+    (yrMonths[yy]||(yrMonths[yy]=new Set())).add(im.month);
+    om6 = h6 ? 0 : om6+1; om3 = h3 ? 0 : om3+1;
     cells[d[0]] = { z6: h6?CK:om6, z3: h3?CK:om3 };
   });
-  const curOm6=om6, curOm3=om3;
+  // 全周期 5 项指标：出现次数 / 当前遗漏 / 最大遗漏 / 平均遗漏 / 最大连出
+  function colStat(arr){
+    const idx=[]; for(let i=0;i<N;i++) if(arr[i]) idx.push(i);
+    const appear=idx.length;
+    if(appear===0) return {appear:0, curGap:N, maxGap:null, avg:null, maxRun:0};
+    const curGap=(N-1)-idx[idx.length-1];
+    let maxGap=idx[0];
+    for(let j=0;j<idx.length-1;j++){ const g=idx[j+1]-idx[j]-1; if(g>maxGap) maxGap=g; }
+    const avg=Math.round((idx[idx.length-1]-(idx.length-1))/appear);
+    let maxRun=0,cur=0;
+    for(let i=0;i<N;i++){ if(arr[i]){cur++; if(cur>maxRun)maxRun=cur;} else cur=0; }
+    return {appear, curGap, maxGap, avg, maxRun};
+  }
+  const st6=colStat(hit6Arr), st3=colStat(hit3Arr);
+  // 完整年(含1&12月)均值，作为 M差值 基准
+  const allYears=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const completeYears=allYears.filter(y=>{ const ms=yrMonths[y]; return ms&&ms.has(1)&&ms.has(12); });
+  const fyAvg=obj=> completeYears.length ? Math.round(completeYears.reduce((s,y)=>s+(obj[y]||0),0)/completeYears.length) : 0;
+  const avgFull6=fyAvg(yr6), avgFull3=fyAvg(yr3);
+  function mDiff(year){
+    const months=yrMonths[year]?yrMonths[year].size:0, f=months/12;
+    return [ Math.round((yr6[year]||0)-avgFull6*f), Math.round((yr3[year]||0)-avgFull3*f) ];
+  }
+  const ySelVal=parseInt(ySel.value,10);
+  const showM=(!isNaN(ySelVal) && ySelVal!==0);
+  const last5=allYears.slice(-6,-1).reverse().filter(y=>y!==ySelVal);
+
+  // ===== 表头 =====
   let html='<table class="ckTbl"><thead><tr>'
     +'<th>日期</th><th>期号</th><th>开奖号码</th>'
     +'<th>组六<span class="sub">（三不同·全在2-8）</span></th>'
     +'<th>组三<span class="sub">（一对一单·全在2-8）</span></th>'
+    +'<th>和值</th><th>和尾</th><th>跨</th>'
     +'</tr></thead><tbody>';
+  // ===== 表体 =====
   period.forEach(d=>{
     const ds=[d[1],d[2],d[3]];
+    const sum=d[1]+d[2]+d[3], he=sum%10, span=Math.max(d[1],d[2],d[3])-Math.min(d[1],d[2],d[3]);
     const c=cells[d[0]];
     const cls6=(typeof c.z6==='number')?' class="om"':'';
     const cls3=(typeof c.z3==='number')?' class="om"':'';
     html+='<tr><td>'+d[4]+'</td><td>'+d[0]+'</td><td class="num">'+ds.join('')+'</td>'
-      +'<td'+cls6+'>'+c.z6+'</td><td'+cls3+'>'+c.z3+'</td></tr>';
+      +'<td'+cls6+'>'+c.z6+'</td><td'+cls3+'>'+c.z3+'</td>'
+      +'<td>'+sum+'</td><td>'+he+'</td><td>'+span+'</td></tr>';
   });
-  html+='</tbody></table>';
+  // ===== 表脚：全周期 5 项 + M差值(当年) + 近5年 M差值 =====
+  function sumRow(label, v6, v3, cls){
+    return '<tr'+(cls?(' class="'+cls+'"'):'')+'><td colspan="3"><b>'+label+'</b></td>'
+      +'<td>'+v6+'</td><td>'+v3+'</td><td>—</td><td>—</td><td>—</td></tr>';
+  }
+  let tfoot='<tfoot>';
+  tfoot+=sumRow('出现次数', st6.appear, st3.appear);
+  tfoot+=sumRow('当前遗漏', st6.curGap, st3.curGap);
+  tfoot+=sumRow('最大遗漏', st6.maxGap===null?'—':st6.maxGap, st3.maxGap===null?'—':st3.maxGap);
+  tfoot+=sumRow('平均遗漏', st6.avg===null?'—':st6.avg, st3.avg===null?'—':st3.avg);
+  tfoot+=sumRow('最大连出', st6.maxRun, st3.maxRun);
+  if(showM){
+    const md=mDiff(ySelVal);
+    tfoot+=sumRow(ySelVal+'年 M差值', md[0], md[1], 'mrow');
+    last5.forEach(y=>{ const m=mDiff(y); tfoot+=sumRow(y+'年 M差值', m[0], m[1], 'mrow'); });
+  }
+  tfoot+='</tfoot>';
+  html+=tfoot+'</table>';
   $('res2348').innerHTML=html;
-  $('m2348').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length
-    +' 期。右侧两列＝组六 / 组三：开奖号为「组六且三位数字均属 {2,3,4,5,6,7,8}」→组六列打红色✓，否则显示遗漏期数；组三同理（恰一对且两数字均属该集合）。当前遗漏：组六 '+curOm6+' 期，组三 '+curOm3+' 期。</div>';
+  const yl=showM?(' ｜ 按年份 '+ySelVal):'';
+  $('m2348').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期'+yl
+    +' ｜ 组六/组三：开奖号为「组六且三位∈{2-8}」→红色✓，否则显示遗漏期数；和值/和尾/跨为每期开奖号属性。表脚 5 项（出现次数/当前遗漏/最大遗漏/平均遗漏/最大连出）为<b>全周期口径</b>；'
+    + (showM ? 'M差值=当年出现次数−完整年(含1&12月)均值×(当年月份/12)，黄底行=当年及近5年偏离（正=高于/负=低于历史同期）。' : '选择具体年份后，表脚附「当年 M差值」与「近5年 M差值」行（黄底高亮）。')
+    +'</div>';
 }
 
 /* ===== 模式七：直组三码遗漏（直选三不同/对子 + 组六/组三，按最大遗漏排名） ===== */

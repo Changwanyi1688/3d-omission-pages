@@ -2478,12 +2478,19 @@ function renderHero(){
   // 方案三（pinble）已下线，不再展示
 }
 // ===== 关联匹配·综合重点号单 嵌入面板（读取 MATCH，按当前彩种渲染）=====
-// 给三码号码加 组六/组三/豹子 特征徽章（两码/四码等多位组合无此三位形态，跳过）
-function mfGrpBadge(l){
-  const m=(l||'').replace(/[^0-9]/g,'');
-  if(m.length!==3) return '';
-  const u=new Set(m.split('').map(Number));
-  const g=u.size===1?'豹子':(u.size===2?'组三':'组六');
+// 给号单号码加 组六/组三/豹子 特征徽章。
+// 判定以数据里的 kind 字段为准：组三三码 z3c3 的组合本身是三个互异数字，绝不能用「数数字是否重复」来判（会误判为组六）。
+function mfGrpBadge(it){
+  const k=it&&it.kind;
+  let g=null;
+  if(k==='z3c3'||k==='z3') g='组三';
+  else if(k==='zl'||k==='z4'||k==='zm') g='组六';
+  else if(k==='z0'||k==='bz') g='豹子';
+  if(!g){ // 极少数无 kind 时按数字去重兜底
+    const m=(it&&it.label||'').replace(/[^0-9]/g,'');
+    if(m.length===3){const u=new Set(m.split('').map(Number));g=u.size===1?'豹子':(u.size===2?'组三':'组六');}
+  }
+  if(!g) return '';
   const cls=g==='豹子'?'gbBao':(g==='组三'?'gbZ3':'gbZ6');
   return ' <span class="'+cls+'">'+g+'</span>';
 }
@@ -2498,11 +2505,11 @@ function renderMatch(){
   const cross=(lot.cross||[]).slice(0,10);
   const chips=cross.map((x,i)=>{
     const cls=x.composite>=4?'mf-hot':(x.composite>=2.5?'mf-mid':'');
-    return '<span class="mf-chip '+cls+'"><b>'+(i+1)+'</b> '+x.label+mfGrpBadge(x.label)+' <i>'+x.composite.toFixed(2)+'</i></span>';
+    return '<span class="mf-chip '+cls+'"><b>'+(i+1)+'</b> '+x.label+mfGrpBadge(x)+' <i>'+x.composite.toFixed(2)+'</i></span>';
   }).join('');
   const t1=lot.top1||{};
   const kn={zm:'两码组六',zl:'组六三码',z4:'组六四码',z3:'组三',z3c3:'组三三码'};
-  const bestParts=Object.keys(kn).filter(k=>t1[k]).map(k=>kn[k]+' '+t1[k].label+mfGrpBadge(t1[k].label)+'('+t1[k].composite.toFixed(2)+')');
+  const bestParts=Object.keys(kn).filter(k=>t1[k]).map(k=>kn[k]+' '+t1[k].label+mfGrpBadge(t1[k])+'('+t1[k].composite.toFixed(2)+')');
   const best=bestParts.length?('分类型榜首 → '+bestParts.join(' · ')):'';
   el.innerHTML='<div class="mf-head">📌 关联匹配·综合重点号单 <span class="mf-gen">更新 '+(MATCH.gen||'')+'</span>'
     +'<a class="mf-link" href="predict_match_model.html" target="_blank">查看完整号单 →</a></div>'

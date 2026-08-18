@@ -1666,7 +1666,7 @@ function query2348(){
     _2348init=true;
     ySel.innerHTML='<option value="0">全部年份</option>';
     YEARS.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y+'年'; ySel.appendChild(o); });
-    sSel.value=D[0][0]; eSel.value=D[D.length-1][0];
+    eSel.value=D[D.length-1][0]; sSel.value=D[Math.max(0,D.length-100)][0];
     const rerun=()=>{ const a=parseInt(sSel.value,10), b=parseInt(eSel.value,10); if(a>b){const t=sSel.value;sSel.value=eSel.value;eSel.value=t;} query2348(); };
     ySel.onchange=()=>{
       if(ySel.value!=='0'){

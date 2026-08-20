@@ -94,15 +94,16 @@
   .hst-star{color:#f39c12;font-weight:800;margin-left:1px}
   /* ---- 和值走势图（带连线） ---- */
   #zstTable{margin:0}
-  #zstTable th,#zstTable td{border:1px solid #e3e7ee;padding:4px 6px;text-align:center;white-space:nowrap;font-size:12px}
+  #zstTable th,#zstTable td{border:1px solid #e3e7ee;padding:2px 4px;text-align:center;white-space:nowrap;font-size:11px}
   #zstTable thead th{position:sticky;top:35px;z-index:2;background:#34495e;color:#fff}
   #zstTable .lab-h{background:#2c3e50;color:#fff;font-weight:600}
   #zstTable .grp-h{background:#34495e;color:#fff;font-weight:600}
+  #zstTable .zsub{display:block;font-size:9px;font-weight:400;color:#cbd5e1}
   #zstTable .grp-sep{border-left:2px solid #90a4ae}
   #zstTable .mk{font-weight:700}
-  #zstTable td.omission{color:#9aa0a6;font-size:11px}
+  #zstTable td.omission{color:#9aa0a6;font-size:10px}
   #zstTable tfoot td{background:#f0f3f8;font-weight:600;color:#34495e}
-  #zstTable .footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:left;padding-left:10px}
+  #zstTable .footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:left;padding-left:8px}
   .mk-pos{color:#e74c3c;font-weight:700}  /* M差值：高于历史同月均值 */
   .mk-neg{color:#2980b9;font-weight:700}  /* M差值：低于历史同月均值 */
   #zstSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
@@ -522,7 +523,7 @@
   </div>
 
   <div class="panel scroller" id="zstPanel" style="display:none;position:relative">
-    <div class="resTitle">和值走势图（带连线）｜ 和值0-27(红) / 和尾0-9(蓝) / 跨度0-9(绿) 连线，其余列为属性标记</div>
+    <div class="resTitle">和值走势图（带连线）｜ 和值0-27(红) / 和尾0-9(蓝) / 跨度0-9(绿) 连线，其余列为属性标记（组选/奇偶/大小/质合/012路/大中小）</div>
     <svg id="zstSvg"></svg>
     <table id="zstTable" style="position:relative;z-index:0"></table>
   </div>
@@ -2282,6 +2283,7 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
       pr:([2,3,5,7,11,13,17,19,23].includes(sum))?'质':'合',
       road:sum%3,
       span:Math.max(a,b,c)-Math.min(a,b,c),
+      bms:(sum>=18)?'大':(sum>=9?'中':'小'),
       typ:typeOf(a,b,c)};
   };
   const shownData=shown.map(rowData), allData=all.map(rowData);
@@ -2294,8 +2296,7 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
     {name:'奇偶',get:r=>r.par},
     {name:'大小',get:r=>r.size},
     {name:'质合',get:r=>r.pr},
-    {name:'012路',get:r=>r.road},
-    {name:'组选',get:r=>r.typ}
+    {name:'012路',get:r=>r.road}
   ];
   // 逐期遗漏（基于完整范围 all，使窗口起始行也准确），按 issue 索引：omitByIssue[gi].get(issue)[v]
   const omitByIssue=grids.map(()=>new Map());
@@ -2311,26 +2312,31 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
   }
   // 表头（两行：分组标题 + 0..n 子标题）
   let thead='<thead><tr>';
-  thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号</th>';
+  thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号</th><th class="lab-h" rowspan="2">组选</th>';
   grids.forEach(g=>{ thead+='<th class="grp-h" colspan="'+g.n+'">'+g.name+'</th>'; });
   cats.forEach(c=>{ thead+='<th class="grp-h" rowspan="2">'+c.name+'</th>'; });
+  thead+='<th class="grp-h" colspan="3">大中小<span class="zsub">大18-27·中9-17·小0-8</span></th>';
   thead+='</tr><tr>';
   grids.forEach(g=>{ for(let v=0;v<g.n;v++) thead+='<th'+(v===0?' class="grp-sep"':'')+'>'+v+'</th>'; });
+  thead+='<th>大</th><th>中</th><th>小</th>';
   thead+='</tr></thead>';
   // 表体（仅窗口内行）
   let tbody='<tbody>';
   shownData.forEach(r=>{
     tbody+='<tr>';
-    tbody+='<td>'+r.issue+'</td><td>'+r.a+' '+r.b+' '+r.c+'</td>';
+    tbody+='<td>'+r.issue+'</td><td>'+r.a+' '+r.b+' '+r.c+'</td><td>'+r.typ+'</td>';
     grids.forEach((g,gi)=>{
       const val=g.get(r);
       const om=omitByIssue[gi].get(r.issue);
+      // 合值(和尾)=跨度 时，和尾/跨度两列命中格红底
+      const red=(r.tail===r.span && (gi===1||gi===2));
       for(let v=0;v<g.n;v++){
-        if(v===val) tbody+='<td class="mk" data-grp="'+gi+'" style="background:'+g.color+'22;color:'+g.color+';font-weight:700">'+v+'</td>';
+        if(v===val) tbody+='<td class="mk" data-grp="'+gi+'" style="'+(red?'background:#dc2626;color:#fff;font-weight:800':'background:'+g.color+'22;color:'+g.color+';font-weight:700')+'">'+v+'</td>';
         else { const oc=(v===0?' class="grp-sep omission"':' class="omission"'); tbody+='<td'+oc+'>'+om[v]+'</td>'; }
       }
     });
     cats.forEach(c=>{ tbody+='<td>'+c.get(r)+'</td>'; });
+    tbody+='<td>'+(r.bms==='大'?r.bms:'')+'</td><td>'+(r.bms==='中'?r.bms:'')+'</td><td>'+(r.bms==='小'?r.bms:'')+'</td>';
     tbody+='</tr>';
   });
   tbody+='</tbody>';
@@ -2413,6 +2419,7 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
       }
     });
     cats.forEach(()=>{ tfoot+='<td></td>'; });
+    for(let k=0;k<3;k++) tfoot+='<td></td>';   // 大中小三列
     tfoot+='</tr>';
   });
   // M差值 行：主行(单年模式) + 近五年(不含当年)行，统一 .mrow 同色高亮
@@ -2426,13 +2433,14 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
       }
     });
     cats.forEach(()=>{ h+='<td></td>'; });
+    for(let k=0;k<3;k++) h+='<td></td>';       // 大中小三列
     return h+'</tr>';
   }
   if(isYearMode) tfoot+=zstMDiffRow('M差值', mDiff);
   hzYearRows.forEach(r=>{ tfoot+=zstMDiffRow(r.year+' M差值', r.vals); });
   tfoot+='</tfoot>';
   $('zstTable').innerHTML=thead+tbody+tfoot;
-  metaEl.textContent='和值走势图（带连线）｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ 连线：和值(红)/和尾(蓝)/跨度(绿)';
+  metaEl.textContent='和值走势图（带连线）｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ 连线：和值(红)/和尾(蓝)/跨度(绿) ｜ 组选列在开奖号右侧 ｜ 大中小：大18-27/中9-17/小0-8 ｜ 合值(和尾)=跨度 时该两格红底';
   let warn='';
   warnEl.textContent=warn;
   setTimeout(drawZstLines,30);

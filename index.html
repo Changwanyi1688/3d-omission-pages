@@ -1738,10 +1738,10 @@ function query2348(){
   const allYears=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
   const completeYears=allYears.filter(y=>{ const ms=yrMonths[y]; return ms&&ms.has(1)&&ms.has(12); });
   const fyAvg=obj=> completeYears.length ? Math.round(completeYears.reduce((s,y)=>s+(obj[y]||0),0)/completeYears.length) : 0;
-  const avgFull6=fyAvg(yr6), avgFull3=fyAvg(yr3);
+  const avgFull6=fyAvg(yr6), avgFull30=fyAvg(yr30), avgFull3=fyAvg(yr3);
   function mDiff(year){
     const months=yrMonths[year]?yrMonths[year].size:0, f=months/12;
-    return [ Math.round((yr6[year]||0)-avgFull6*f), Math.round((yr3[year]||0)-avgFull3*f) ];
+    return [ Math.round((yr6[year]||0)-avgFull6*f), Math.round((yr30[year]||0)-avgFull30*f), Math.round((yr3[year]||0)-avgFull3*f) ];
   }
   const ySelVal=parseInt(ySel.value,10);
   const showM=(!isNaN(ySelVal) && ySelVal!==0);
@@ -1787,8 +1787,8 @@ function query2348(){
   tfoot+=sumRow('最大连出', st6.maxRun, st30.maxRun, st3.maxRun);
   if(showM){
     const md=mDiff(ySelVal);
-    tfoot+=sumRow(ySelVal+'年 M差值', md[0], '—', md[1], 'mrow');
-    last5.forEach(y=>{ const m=mDiff(y); tfoot+=sumRow(y+'年 M差值', m[0], '—', m[1], 'mrow'); });
+    tfoot+=sumRow(ySelVal+'年 M差值', md[0], md[1], md[2], 'mrow');
+    last5.forEach(y=>{ const m=mDiff(y); tfoot+=sumRow(y+'年 M差值', m[0], m[1], m[2], 'mrow'); });
   }
   tfoot+='</tfoot>';
   html+=tfoot+'</table>';
@@ -1798,7 +1798,7 @@ function query2348(){
     +' ｜ 组六/组三：开奖号为「组六且三位均在2345678」或「组三且两数字均在2345678」→红色✓，否则显示遗漏期数；'
     +'组选30码：开奖号为「组六且三位不定位命中 30 组号码（018 028 035 036 038 057 058 059 127 134 139 149 156 158 159 169 179 237 238 248 259 268 289 347 357 369 378 456 458 459）」→红色✓，否则显示遗漏期数；'
     +'<b>和值/和尾/跨分别紧跟在组六、组三右侧，仅该组出现红勾时计算显示</b>。表脚 5 项（出现次数/当前遗漏/最大遗漏/平均遗漏/最大连出）为<b>当前筛选范围口径（随年份/期号范围变化）</b>；'
-    + (showM ? 'M差值=当年出现次数−完整年(含1&12月)均值×(当年月份/12)，黄底行=当年及近5年偏离（正=高于/负=低于历史同期）。' : '选择具体年份后，表脚附「当年 M差值」与「近5年 M差值」行（黄底高亮）。')
+    + (showM ? 'M差值=当年出现次数−完整年(含1&12月)均值×(当年月份/12)，三列（组六/组选30码/组三）均计算，黄底行=当年及近5年偏离（正=高于/负=低于历史同期）。' : '选择具体年份后，表脚附「当年 M差值」与「近5年 M差值」行（黄底高亮，三列均计算）。')
     +'</div>';
 }
 

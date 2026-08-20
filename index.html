@@ -128,6 +128,25 @@
   #wshzTable tr.mrow td:first-child{color:#a0670f}
   #wshzTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
   #wshzSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
+  /* ---- 跨度走势图（同和值尾逻辑） ---- */
+  #kdTable{margin:0;border-collapse:collapse}
+  #kdTable th,#kdTable td{border:1px solid #d5dce6;padding:2px 6px;text-align:center;white-space:nowrap;font-size:11px;vertical-align:middle;font-variant-numeric:tabular-nums}
+  #kdTable thead th{position:sticky;top:35px;z-index:2;background:linear-gradient(#3d5a7c,#2c3e50);color:#fff;border-color:#22303f}
+  #kdTable .lab-h{background:#27384d;color:#fff;font-weight:700}
+  #kdTable .grp-h{background:#31475f;color:#fff;font-weight:600}
+  #kdTable .zsub{display:block;font-size:9px;font-weight:400;color:#c8d6e5}
+  #kdTable .grp-sep{border-left:2px solid #8fa3b8}
+  #kdTable .mk{font-weight:700}
+  #kdTable td.omission{color:#a8aeb8;font-size:10px}
+  #kdTable tbody tr:nth-child(even) td{background:#f4f7fb}
+  #kdTable tbody tr:hover td{background:#eaf1f9}
+  #kdTable .att-hit{background:#dbeafe;color:#1e40af;font-weight:700}
+  #kdTable tfoot td{background:#e9eef5;font-weight:600;color:#33475f;vertical-align:middle}
+  #kdTable tfoot tr:hover td{background:#e2e9f2}
+  #kdTable tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
+  #kdTable tr.mrow td:first-child{color:#a0670f}
+  #kdTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
+  #kdSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
   .mk-pos{color:#e74c3c;font-weight:700}  /* M差值：高于历史同月均值 */
   .mk-neg{color:#2980b9;font-weight:700}  /* M差值：低于历史同月均值 */
   #zstSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
@@ -574,6 +593,28 @@
     <table id="wshzTable" style="position:relative;z-index:0"></table>
   </div>
 
+  <!-- 跨度走势图（同和值尾逻辑，主指标=跨度） -->
+  <div class="panel scroller" id="kdPanel" style="display:none;position:relative">
+    <div class="resTitle">跨度走势图｜ 跨度0-9(绿) / 振幅0-9(蓝) 连线+遗漏；属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(012小/3456中/789大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳)</div>
+    <div class="row">
+      <span class="lab">期号范围</span>
+      <input type="number" id="kdFrom" style="width:90px" placeholder="起期">
+      <span>—</span>
+      <input type="number" id="kdTo" style="width:90px" placeholder="止期">
+      <button class="btn sec" id="kdSearchBtn" title="按范围筛查">&#128269; 筛查</button>
+      <span class="lab">按年份</span>
+      <select id="kdYearSel"></select>
+      <span class="lab">显示最近</span>
+      <input type="number" id="kdWin" style="width:80px" value="100">
+      <span>期（仅默认初始窗口）</span>
+      <button class="btn go" id="kdQueryBtn">查 询</button>
+    </div>
+    <div class="meta" id="kdMetaBox"></div>
+    <div class="warn" id="kdWarnBox"></div>
+    <svg id="kdSvg"></svg>
+    <table id="kdTable" style="position:relative;z-index:0"></table>
+  </div>
+
   <!-- 模式二补充：和值×组六/组三×跨度 统计（位于和值走势图下方，随 3D/排三 切换） -->
   <div class="panel" id="hstPanel" style="display:none">
     <div class="resTitle" id="hstTitle">3D 和值 × 组六/组三 × 跨度 统计（不含今年；M值：跨度M值 + 和值M值）</div>
@@ -978,6 +1019,7 @@ function hezhiQuery(){
   const shown=pr.filter((d,i)=>ff[i]);
   renderZst(shown, period, hezhiGrp, period.length, hzMetaBox, hzWarnBox);
   wshzQuery();   // 和值尾走势图同步刷新（跟随期号/年份/形态筛选）
+  kdQuery();     // 跨度走势图同步刷新
 }
 
 /* ---------- 两码走势查询（顶栏独立模式，与和值走势并列） ---------- */
@@ -1375,6 +1417,7 @@ function setMode(m){
   $('hezhiCtl').style.display     = (m==='hezhi')?'':'none';
   $('zstPanel').style.display     = (m==='hezhi')?'':'none';
   $('wshzPanel').style.display    = (m==='hezhi')?'':'none';
+  $('kdPanel').style.display      = (m==='hezhi')?'':'none';
   $('hstPanel').style.display     = (m==='hezhi')?'':'none';
   $('lmCtl').style.display        = (m==='lm')?'':'none';
   $('lmPanel').style.display      = (m==='lm')?'':'none';
@@ -1385,7 +1428,7 @@ function setMode(m){
   $('panelZu3').style.display      = (m==='zu3')?'':'none';
   $('panelShu').style.display      = (m==='shu')?'':'none';
   $('panel2348').style.display      = (m==='2348')?'':'none';
-  if(m==='hezhi'){ hezhiQuery(); renderHst(); wshzQuery(); }
+  if(m==='hezhi'){ hezhiQuery(); renderHst(); wshzQuery(); kdQuery(); }
   if(m==='lm'){ lmQuery(); }
   if(m==='zxlm'){ zxLmQuery(); }
   if(m==='zx2'){ zxDirectQuery(); }
@@ -2587,8 +2630,9 @@ function wshzQuery(){
   renderWshz(shown, period, hezhiGrp, metaEl, warnEl);
 }
 function ySelValOf(){ const v=$('wzYearSel').value; return v===''?0:parseInt(v,10); }
-function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
-    const a=d[1],b=d[2],c=d[3], sum=a+b+c, tail=sum%10;
+function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
+  const gf=cfg.gridField;  const rowData=d=>{
+    const a=d[1],b=d[2],c=d[3], sum=a+b+c, tail=cfg.keyOf(a,b,c);   // key=和值尾 或 跨度
     return {issue:d[0],a,b,c,sum,tail,
       size:(tail<=4)?'小':'大',
       par:(tail%2===1)?'奇':'偶',
@@ -2606,10 +2650,7 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
     allData[i].amp=amp;
     ampMap.set(allData[i].issue, amp);
   }
-  const grids=[
-    {name:'和值尾',n:10,get:r=>r.tail,color:'#d35400'},
-    {name:'振幅',n:10,get:r=>r.amp,color:'#2980b9'}
-  ];
+  const grids=cfg.grids;   // [主指标(0-9, get:r=>r.tail), 振幅(0-9)]
   // 属性列（各按类分列，仅所属列显示）：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(单列0/1/2) 大中小(小|中|大) 五行(金|木|水|火|土) 阴阳(阴|阳)
   const attrs=[
     {head:'小',test:r=>r.size==='小'},{head:'大',test:r=>r.size==='大'},
@@ -2683,8 +2724,8 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
   const aggYear={}, yearMonths={};
   D.forEach(d=>{
     const yy=Math.floor(d[0]/1000), t=(d[1]+d[2]+d[3])%10;
-    const o=aggYear[yy]||(aggYear[yy]={tail:Array(10).fill(0),amp:Array(10).fill(0),attr:{}});
-    o.tail[t]=(o.tail[t]||0)+1;
+    const o=aggYear[yy]||(aggYear[yy]={[gf]:Array(10).fill(0),amp:Array(10).fill(0),attr:{}});
+    o[gf][t]=(o[gf][t]||0)+1;
     // 属性列年度计数
     const rd={size:(t<=4)?'小':'大',par:(t%2===1)?'奇':'偶',pr:([1,2,3,5,7].includes(t))?'质':'合',road:t%3,bms:(t<=2)?'小':(t<=6?'中':'大'),wx:WUXING[t],yin:([0,3,4,6,7].includes(t))?'阴':'阳'};
     attrs.forEach(a=>{ if(a.test ? a.test(rd) : true) o.attr[a.head]=(o.attr[a.head]||0)+1; });
@@ -2696,7 +2737,7 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
     const yy=Math.floor(d[0]/1000), t=(d[1]+d[2]+d[3])%10;
     if(i>0){
       const p=D[i-1], pt=(p[1]+p[2]+p[3])%10, amp=Math.abs(t-pt);
-      const o=aggYear[yy]||(aggYear[yy]={tail:Array(10).fill(0),amp:Array(10).fill(0)});
+      const o=aggYear[yy]||(aggYear[yy]={[gf]:Array(10).fill(0),amp:Array(10).fill(0)});
       o.amp[amp]=(o.amp[amp]||0)+1;
     }
     prevTailY=t;
@@ -2706,13 +2747,13 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
     let mx=0, rec=null; D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){mx=d[0];rec=d;} });
     const M=rec? issueMonthOf(rec[4]).month : 12;
     const yearList=Object.keys(aggYear).map(Number).filter(y=> y!==Y && isFull(y));
-    const mean={tail:Array(10).fill(0),amp:Array(10).fill(0),attr:{}};
-    yearList.forEach(y=>{ const o=aggYear[y]; for(let v=0;v<10;v++){ mean.tail[v]+=(o.tail[v]||0); mean.amp[v]+=(o.amp[v]||0); } attrs.forEach(a=>{ mean.attr[a.head]=(mean.attr[a.head]||0)+(o.attr[a.head]||0); }); });
-    for(let v=0;v<10;v++){ mean.tail[v]= yearList.length? mean.tail[v]/yearList.length : 0; mean.amp[v]= yearList.length? mean.amp[v]/yearList.length : 0; }
+    const mean={[gf]:Array(10).fill(0),amp:Array(10).fill(0),attr:{}};
+    yearList.forEach(y=>{ const o=aggYear[y]; for(let v=0;v<10;v++){ mean[gf][v]+=(o[gf][v]||0); mean.amp[v]+=(o.amp[v]||0); } attrs.forEach(a=>{ mean.attr[a.head]=(mean.attr[a.head]||0)+(o.attr[a.head]||0); }); });
+    for(let v=0;v<10;v++){ mean[gf][v]= yearList.length? mean[gf][v]/yearList.length : 0; mean.amp[v]= yearList.length? mean.amp[v]/yearList.length : 0; }
     attrs.forEach(a=>{ mean.attr[a.head]= yearList.length? (mean.attr[a.head]||0)/yearList.length : 0; });
-    const cur=aggYear[Y]||{tail:Array(10).fill(0),amp:Array(10).fill(0),attr:{}};
+    const cur=aggYear[Y]||{[gf]:Array(10).fill(0),amp:Array(10).fill(0),attr:{}};
     return {
-      tail: cur.tail.map((cnt,i)=> Math.round(cnt - mean.tail[i]*(M/12))),
+      [gf]: cur[gf].map((cnt,i)=> Math.round(cnt - mean[gf][i]*(M/12))),
       amp:  cur.amp.map((cnt,i)=> Math.round(cnt - mean.amp[i]*(M/12))),
       attr: attrs.map(a=> Math.round((cur.attr[a.head]||0) - (mean.attr[a.head]||0)*(M/12)))
     };
@@ -2757,7 +2798,7 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
     if(!arr) return '';
     let h='<tr class="mrow"><td class="footer-lab" colspan="3">'+label+'</td>';
     grids.forEach((g,gi)=>{
-      const src=(gi===0)?arr.tail:arr.amp;
+      const src=(gi===0)?arr[gf]:arr.amp;
       for(let v=0;v<g.n;v++){ const x=(src&&src[v]!==null&&src[v]!==undefined)?src[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>'; }
     });
     attrs.forEach((a,ai)=>{
@@ -2769,13 +2810,32 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
   if(isYearMode) tfoot+=mdiffRow('M差值', mDiff);
   yearRows.forEach(r=>{ tfoot+=mdiffRow(r.year+' M差值', r.vals); });
   tfoot+='</tfoot>';
-  $('wshzTable').innerHTML=thead+tbody+tfoot;
-  metaEl.textContent='和值尾走势图｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ 连线：和值尾(橙)/振幅(蓝) ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 振幅=本期和值尾−上期和值尾绝对值 ｜ 表脚 5 项统计与 M差值 覆盖 和值尾、振幅 及右侧全部属性列';
+  $(cfg.tblId).innerHTML=thead+tbody+tfoot;
+  metaEl.textContent=cfg.metaTitle+'｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ '+cfg.metaExtra;
   warnEl.textContent='';
-  setTimeout(drawWshzLines,30);
+  setTimeout(cfg.drawFn,30);
 }
-function drawWshzLines(){
-  const scroller=$('wshzPanel'), svg=$('wshzSvg'), tbl=$('wshzTable');
+
+function renderWshz(shown, all, grp, metaEl, warnEl){
+  renderGridChart(shown, all, grp, metaEl, warnEl, {
+    gridField:'tail', tblId:'wshzTable', drawFn:drawWshzLines,
+    keyOf:(a,b,c)=>(a+b+c)%10,
+    grids:[{name:'和值尾',n:10,get:r=>r.tail,color:'#d35400'},{name:'振幅',n:10,get:r=>r.amp,color:'#2980b9'}],
+    metaTitle:'和值尾走势图',
+    metaExtra:'连线：和值尾(橙)/振幅(蓝) ｜ 振幅=本期和值尾−上期和值尾绝对值 ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 表脚 5 项统计与 M差值 覆盖 全部数值列'
+  });
+}
+function renderKd(shown, all, grp, metaEl, warnEl){
+  renderGridChart(shown, all, grp, metaEl, warnEl, {
+    gridField:'span', tblId:'kdTable', drawFn:drawKdLines,
+    keyOf:(a,b,c)=>Math.max(a,b,c)-Math.min(a,b,c),
+    grids:[{name:'跨度',n:10,get:r=>r.tail,color:'#27ae60'},{name:'振幅',n:10,get:r=>r.amp,color:'#2980b9'}],
+    metaTitle:'跨度走势图',
+    metaExtra:'连线：跨度(绿)/振幅(蓝) ｜ 振幅=本期跨度−上期跨度绝对值 ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 表脚 5 项统计与 M差值 覆盖 全部数值列'
+  });
+}
+function drawGridLines(panelId,svgId,tblId,colors){
+  const scroller=$(panelId), svg=$(svgId), tbl=$(tblId);
   if(!tbl) return;
   const W=tbl.scrollWidth, H=tbl.scrollHeight;
   svg.setAttribute('width',W); svg.setAttribute('height',H);
@@ -2784,12 +2844,12 @@ function drawWshzLines(){
   const cRect=scroller.getBoundingClientRect();
   const sx=scroller.scrollLeft, sy=scroller.scrollTop;
   const groups={};
-  document.querySelectorAll('#wshzTable td.mk').forEach(td=>{
+  document.querySelectorAll('#'+tblId+' td.mk').forEach(td=>{
     const g=td.dataset.grp, r=td.getBoundingClientRect();
     const x=r.left-cRect.left+sx+r.width/2, y=r.top-cRect.top+sy+r.height/2;
     (groups[g]=groups[g]||[]).push(x+','+y);
   });
-  const colors=['#d35400','#2980b9'];
+  
   for(const g in groups){
     const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
     pl.setAttribute('points',groups[g].join(' '));
@@ -2800,7 +2860,48 @@ function drawWshzLines(){
     svg.appendChild(pl);
   }
 }
-window.addEventListener('resize',()=>{ if($('wshzPanel').style.display!=='none') drawWshzLines(); });
+function drawWshzLines(){ drawGridLines('wshzPanel','wshzSvg','wshzTable',['#d35400','#2980b9']); }
+function drawKdLines(){ drawGridLines('kdPanel','kdSvg','kdTable',['#27ae60','#2980b9']); }
+window.addEventListener('resize',()=>{ if($('wshzPanel').style.display!=='none') drawWshzLines(); if($('kdPanel').style.display!=='none') drawKdLines(); });
+
+
+/* ===== 跨度走势图（同和值尾逻辑，主指标=跨度） ===== */
+let _kdInit=false;
+function kdQuery(){
+  const warnEl=$('kdWarnBox'), metaEl=$('kdMetaBox'), tbl=$('kdTable');
+  warnEl.textContent='';
+  if(!_kdInit){
+    _kdInit=true;
+    const ySel=$('kdYearSel');
+    ySel.innerHTML='<option value="0">全部年份</option>';
+    YEARS.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y+'年';ySel.appendChild(o);});
+    $('kdTo').value=D[D.length-1][0];
+    $('kdFrom').value=D[Math.max(0,D.length-100)][0];
+    const rerun=()=>{const a=parseInt($('kdFrom').value,10), b=parseInt($('kdTo').value,10); if(a>b){const t=$('kdFrom').value;$('kdFrom').value=$('kdTo').value;$('kdTo').value=t;} kdQuery();};
+    ySel.onchange=()=>{
+      if(ySel.value!=='0'){const ys=D.filter(d=>Math.floor(d[0]/1000)===parseInt(ySel.value,10)); if(ys.length){$('kdFrom').value=ys[0][0];$('kdTo').value=ys[ys.length-1][0];}}
+      else {$('kdFrom').value=D[0][0];$('kdTo').value=D[D.length-1][0];}
+      kdQuery();
+    };
+    $('kdFrom').onchange=rerun; $('kdTo').onchange=rerun;
+    $('kdSearchBtn').onclick=kdQuery; $('kdQueryBtn').onclick=kdQuery; $('kdWin').onchange=kdQuery;
+  }
+  const f=parseInt($('kdFrom').value||FIRST,10), t=parseInt($('kdTo').value||LAST,10);
+  const y=parseInt($('kdYearSel').value,10)||0;
+  // 「显示最近N期」仅为默认初始窗口：按年份筛选或修改期号范围后显示该范围内全部
+  const defF=D[Math.max(0,D.length-100)][0], defT=D[D.length-1][0];
+  const userFiltered = (y!==0) || ($('kdFrom').value!==String(defF)) || ($('kdTo').value!==String(defT));
+  let period=D.filter(d=>d[0]>=f&&d[0]<=t&&(y===0||Math.floor(d[0]/1000)===y));
+  if(period.length===0){warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围。';tbl.innerHTML='';metaEl.textContent='';return;}
+  const formFlag=period.map(d=> hezhiGrp==='全' || typeOf(d[1],d[2],d[3])===hezhiGrp);
+  const formCount=formFlag.reduce((a,b)=>a+(b?1:0),0);
+  if(formCount===0){warnEl.textContent='该形态过滤条件下无数据。';tbl.innerHTML='';metaEl.textContent='';return;}
+  let W = userFiltered ? 999999 : (parseInt($('kdWin').value||100,10)||100);
+  let pr=period, ff=formFlag;
+  if(period.length>W){ pr=period.slice(period.length-W); ff=formFlag.slice(formFlag.length-W); }
+  const shown=pr.filter((d,i)=>ff[i]);
+  renderKd(shown, period, hezhiGrp, metaEl, warnEl);
+}
 
 function query(){
   warnBox.textContent='';

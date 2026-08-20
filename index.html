@@ -554,7 +554,7 @@
 
   <!-- 和值尾走势图（复刻 cjcp 3d_weishu-hzw 逻辑，本地数据实时计算） -->
   <div class="panel scroller" id="wshzPanel" style="display:none;position:relative">
-    <div class="resTitle">和值尾走势图（cjcp 逻辑复刻）｜ 和值尾0-9(橙) / 振幅0-9(蓝) 连线+遗漏；属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(012小/3456中/789大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳)</div>
+    <div class="resTitle">和值尾走势图｜ 和值尾0-9(橙) / 振幅0-9(蓝) 连线+遗漏；属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(012小/3456中/789大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳)</div>
     <div class="row">
       <span class="lab">期号范围</span>
       <input type="number" id="wzFrom" style="width:90px" placeholder="起期">
@@ -2572,12 +2572,15 @@ function wshzQuery(){
   }
   const f=parseInt($('wzFrom').value||FIRST,10), t=parseInt($('wzTo').value||LAST,10);
   const y=parseInt($('wzYearSel').value,10)||0;
+  // 「显示最近N期」仅为默认初始窗口：一旦按年份筛选或修改期号范围，则显示该范围内全部期数
+  const defF=D[Math.max(0,D.length-100)][0], defT=D[D.length-1][0];
+  const userFiltered = (y!==0) || ($('wzFrom').value!==String(defF)) || ($('wzTo').value!==String(defT));
   let period=D.filter(d=>d[0]>=f&&d[0]<=t&&(y===0||Math.floor(d[0]/1000)===y));
   if(period.length===0){warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围。';tbl.innerHTML='';metaEl.textContent='';return;}
   const formFlag=period.map(d=> hezhiGrp==='全' || typeOf(d[1],d[2],d[3])===hezhiGrp);
   const formCount=formFlag.reduce((a,b)=>a+(b?1:0),0);
   if(formCount===0){warnEl.textContent='该形态过滤条件下无数据。';tbl.innerHTML='';metaEl.textContent='';return;}
-  let W=parseInt($('wzWin').value||100,10); if(!(W>0))W=100;
+  let W = userFiltered ? 999999 : (parseInt($('wzWin').value||100,10)||100);
   let pr=period, ff=formFlag;
   if(period.length>W){ pr=period.slice(period.length-W); ff=formFlag.slice(formFlag.length-W); }
   const shown=pr.filter((d,i)=>ff[i]);

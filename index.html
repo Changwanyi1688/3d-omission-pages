@@ -110,8 +110,12 @@
   #zstTable tfoot tr:hover td{background:#e2e9f2}
   #zstTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
   /* ---- 和值尾走势图（cjcp 复刻） ---- */
-  #wshzTable{margin:0;border-collapse:collapse}
-  #wshzTable th,#wshzTable td{border:1px solid #d5dce6;padding:2px 6px;text-align:center;white-space:nowrap;font-size:11px;vertical-align:middle;font-variant-numeric:tabular-nums}
+  #wshzPanel,#kdPanel{overflow-x:hidden}   /* 取消左右滑动拉条：整表压缩适配容器宽度 */
+  #wshzTable{margin:0;border-collapse:collapse;width:100%;table-layout:fixed}
+  #wshzTable th,#wshzTable td{border:1px solid #d5dce6;padding:2px 2px;text-align:center;white-space:nowrap;font-size:10.5px;vertical-align:middle;font-variant-numeric:tabular-nums;overflow:hidden}
+  #wshzTable th:nth-child(1),#wshzTable td:nth-child(1){width:54px;font-size:9.5px}
+  #wshzTable th:nth-child(2),#wshzTable td:nth-child(2){width:34px}
+  #wshzTable th:nth-child(3),#wshzTable td:nth-child(3){width:22px}
   #wshzTable thead th{position:sticky;top:35px;z-index:2;background:linear-gradient(#3d5a7c,#2c3e50);color:#fff;border-color:#22303f}
   #wshzTable .lab-h{background:#27384d;color:#fff;font-weight:700}
   #wshzTable .grp-h{background:#31475f;color:#fff;font-weight:600}
@@ -129,8 +133,11 @@
   #wshzTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
   #wshzSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
   /* ---- 跨度走势图（同和值尾逻辑） ---- */
-  #kdTable{margin:0;border-collapse:collapse}
-  #kdTable th,#kdTable td{border:1px solid #d5dce6;padding:2px 6px;text-align:center;white-space:nowrap;font-size:11px;vertical-align:middle;font-variant-numeric:tabular-nums}
+  #kdTable{margin:0;border-collapse:collapse;width:100%;table-layout:fixed}
+  #kdTable th,#kdTable td{border:1px solid #d5dce6;padding:2px 2px;text-align:center;white-space:nowrap;font-size:10.5px;vertical-align:middle;font-variant-numeric:tabular-nums;overflow:hidden}
+  #kdTable th:nth-child(1),#kdTable td:nth-child(1){width:54px;font-size:9.5px}
+  #kdTable th:nth-child(2),#kdTable td:nth-child(2){width:34px}
+  #kdTable th:nth-child(3),#kdTable td:nth-child(3){width:22px}
   #kdTable thead th{position:sticky;top:35px;z-index:2;background:linear-gradient(#3d5a7c,#2c3e50);color:#fff;border-color:#22303f}
   #kdTable .lab-h{background:#27384d;color:#fff;font-weight:700}
   #kdTable .grp-h{background:#31475f;color:#fff;font-weight:600}

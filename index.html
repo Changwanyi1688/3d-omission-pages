@@ -121,6 +121,7 @@
   #wshzTable td.omission{color:#a8aeb8;font-size:10px}
   #wshzTable tbody tr:nth-child(even) td{background:#f4f7fb}
   #wshzTable tbody tr:hover td{background:#eaf1f9}
+  #wshzTable .att-hit{background:#dbeafe;color:#1e40af;font-weight:700}
   #wshzTable tfoot td{background:#e9eef5;font-weight:600;color:#33475f;vertical-align:middle}
   #wshzTable tfoot tr:hover td{background:#e2e9f2}
   #wshzTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
@@ -551,7 +552,7 @@
 
   <!-- 和值尾走势图（复刻 cjcp 3d_weishu-hzw 逻辑，本地数据实时计算） -->
   <div class="panel scroller" id="wshzPanel" style="display:none;position:relative">
-    <div class="resTitle">和值尾走势图（cjcp 逻辑复刻）｜ 和值尾0-9 连线(橙) + 遗漏；属性：大小(01234小/56789大) 奇偶(13579奇/02468偶) 质合(12357质/04689合) 012路(尾%3) 大中小(012小/3456中/789大) 五行(19金/28木/37水/46火/50土) 振幅(本期尾−上期尾绝对值)</div>
+    <div class="resTitle">和值尾走势图（cjcp 逻辑复刻）｜ 和值尾0-9(橙) / 振幅0-9(蓝) 连线+遗漏；属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(012小/3456中/789大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳)</div>
     <div class="row">
       <span class="lab">期号范围</span>
       <input type="number" id="wzFrom" style="width:90px" placeholder="起期">
@@ -2589,48 +2590,72 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
       pr:([1,2,3,5,7].includes(tail))?'质':'合',
       road:tail%3,
       bms:(tail<=2)?'小':(tail<=6?'中':'大'),
-      wx:WUXING[tail]};
+      wx:WUXING[tail],
+      yin:([0,3,4,6,7].includes(tail))?'阴':'阳'};
   };
   const allData=all.map(rowData);
   // 振幅：与完整序列上一期和值尾差的绝对值
   const ampMap=new Map();
   for(let i=0;i<allData.length;i++){
     const amp = i===0 ? null : Math.abs(allData[i].tail-allData[i-1].tail);
+    allData[i].amp=amp;
     ampMap.set(allData[i].issue, amp);
   }
-  const grids=[{name:'和值尾',n:10,get:r=>r.tail,color:'#d35400'}];
-  const attrs=[
-    {head:'大小',get:r=>r.size},{head:'奇偶',get:r=>r.par},{head:'质合',get:r=>r.pr},
-    {head:'012路',get:r=>r.road},{head:'大中小',get:r=>r.bms},{head:'五行',get:r=>r.wx}
+  const grids=[
+    {name:'和值尾',n:10,get:r=>r.tail,color:'#d35400'},
+    {name:'振幅',n:10,get:r=>r.amp,color:'#2980b9'}
   ];
-  // 逐期遗漏（基于完整范围 all）
-  const omitByIssue=new Map();
-  { const gap=Array(10).fill(0);
-    allData.forEach(r=>{ const hit=r.tail; for(let v=0;v<10;v++){ if(v===hit) gap[v]=0; else gap[v]++; } omitByIssue.set(r.issue,gap.slice()); });
+  // 属性列（各按类分列，仅所属列显示）：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(单列0/1/2) 大中小(小|中|大) 五行(金|木|水|火|土) 阴阳(阴|阳)
+  const attrs=[
+    {head:'小',test:r=>r.size==='小'},{head:'大',test:r=>r.size==='大'},
+    {head:'奇',test:r=>r.par==='奇'},{head:'偶',test:r=>r.par==='偶'},
+    {head:'质',test:r=>r.pr==='质'},{head:'合',test:r=>r.pr==='合'},
+    {head:'012路',get:r=>r.road},
+    {head:'小',test:r=>r.bms==='小'},{head:'中',test:r=>r.bms==='中'},{head:'大',test:r=>r.bms==='大'},
+    {head:'金',test:r=>r.wx==='金'},{head:'木',test:r=>r.wx==='木'},{head:'水',test:r=>r.wx==='水'},{head:'火',test:r=>r.wx==='火'},{head:'土',test:r=>r.wx==='土'},
+    {head:'阴',test:r=>r.yin==='阴'},{head:'阳',test:r=>r.yin==='阳'}
+  ];
+  const attrSep=new Set([0,2,4,7,10,15]);   // 各组首列(012路单列不参与拆分, 其位置 6)
+  const attrGroups=[['大小',2],['奇偶',2],['质合',2],['012路',1],['大中小',3],['五行',5],['阴阳',2]];
+  // 逐期遗漏（基于完整范围 all；和值尾 + 振幅 两组）
+  const omitByIssue=grids.map(()=>new Map());
+  { const gaps=grids.map(g=>Array(g.n).fill(0));
+    allData.forEach(r=>{
+      grids.forEach((g,gi)=>{
+        const hit=g.get(r), arr=gaps[gi];
+        for(let v=0;v<g.n;v++){ if(v===hit) arr[v]=0; else arr[v]++; }
+        omitByIssue[gi].set(r.issue, arr.slice());
+      });
+    });
   }
   // 表头
   let thead='<thead><tr>';
   thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号码</th><th class="lab-h" rowspan="2">和值</th>';
   grids.forEach(g=>{ thead+='<th class="grp-h" colspan="'+g.n+'">'+g.name+'</th>'; });
-  attrs.forEach(a=>{ thead+='<th class="grp-h" rowspan="2">'+a.head+'</th>'; });
-  thead+='<th class="grp-h" rowspan="2">振幅</th>';
+  attrGroups.forEach(ag=>{ thead+='<th class="grp-h" colspan="'+ag[1]+'">'+ag[0]+'</th>'; });
   thead+='</tr><tr>';
   grids.forEach(g=>{ for(let v=0;v<g.n;v++) thead+='<th'+(v===0?' class="grp-sep"':'')+'>'+v+'</th>'; });
+  attrs.forEach((a,ai)=>{ thead+='<th'+(attrSep.has(ai)?' class="grp-sep"':'')+'>'+a.head+'</th>'; });
   thead+='</tr></thead>';
   // 表体（仅窗口内行）
   let tbody='<tbody>';
   const shownData=shown.map(rowData);
   shownData.forEach(r=>{
-    const amp=ampMap.get(r.issue);
+    r.amp=ampMap.get(r.issue);
     tbody+='<tr>';
     tbody+='<td>'+r.issue+'</td><td>'+r.a+' '+r.b+' '+r.c+'</td><td>'+r.sum+'</td>';
-    const om=omitByIssue.get(r.issue);
-    for(let v=0;v<10;v++){
-      if(v===r.tail) tbody+='<td class="mk" data-grp="0" style="background:#d3540022;color:#d35400;font-weight:700">'+v+'</td>';
-      else tbody+='<td'+(v===0?' class="grp-sep omission"':' class="omission"')+'>'+om[v]+'</td>';
-    }
-    attrs.forEach(a=>{ tbody+='<td>'+a.get(r)+'</td>'; });
-    tbody+='<td>'+((amp===null)?'—':amp)+'</td>';
+    grids.forEach((g,gi)=>{
+      const val=g.get(r), om=omitByIssue[gi].get(r.issue);
+      for(let v=0;v<g.n;v++){
+        if(v===val) tbody+='<td class="mk" data-grp="'+gi+'" style="background:'+g.color+'22;color:'+g.color+';font-weight:700">'+v+'</td>';
+        else tbody+='<td'+(v===0?' class="grp-sep omission"':' class="omission"')+'>'+om[v]+'</td>';
+      }
+    });
+    attrs.forEach((a,ai)=>{
+      const hit = a.test ? a.test(r) : true;   // 单列属性(012路)恒显示其值
+      const cls=(attrSep.has(ai)?'grp-sep ':'')+(a.test&&hit?'att-hit':'');
+      tbody+='<td class="'+cls+'">'+(a.test?(hit?a.head:''):String(a.get(r)))+'</td>';
+    });
     tbody+='</tr>';
   });
   tbody+='</tbody>';
@@ -2647,24 +2672,39 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
     for(let i=0;i<n;i++){ if(hitArr[i]){cur++; if(cur>maxCon)maxCon=cur;} else cur=0; }
     return {appear,curGap,maxGap,avgGap,maxCon};
   }
-  const st=[]; for(let v=0;v<10;v++) st.push(statOf(allData.map(r=>r.tail===v)));
-  // M差值（单年模式主行 + 近五年）
+  const gridStats=grids.map(g=>{ const arr=[]; for(let v=0;v<g.n;v++) arr.push(statOf(allData.map(r=>g.get(r)===v))); return arr; });
+  // M差值（单年模式主行 + 近五年；和值尾 + 振幅 两组）
   const aggYear={}, yearMonths={};
   D.forEach(d=>{
     const yy=Math.floor(d[0]/1000), t=(d[1]+d[2]+d[3])%10;
-    const o=aggYear[yy]||(aggYear[yy]=Array(10).fill(0)); o[t]=(o[t]||0)+1;
+    const o=aggYear[yy]||(aggYear[yy]={tail:Array(10).fill(0),amp:Array(10).fill(0)});
+    o.tail[t]=(o.tail[t]||0)+1;
     const im=issueMonthOf(d[4]); (yearMonths[yy]||(yearMonths[yy]=new Set())).add(im.month);
+  });
+  // 振幅按年聚合：需要依赖上一期，用 D 顺序遍历
+  let prevTailY=null;
+  D.forEach((d,i)=>{
+    const yy=Math.floor(d[0]/1000), t=(d[1]+d[2]+d[3])%10;
+    if(i>0){
+      const p=D[i-1], pt=(p[1]+p[2]+p[3])%10, amp=Math.abs(t-pt);
+      const o=aggYear[yy]||(aggYear[yy]={tail:Array(10).fill(0),amp:Array(10).fill(0)});
+      o.amp[amp]=(o.amp[amp]||0)+1;
+    }
+    prevTailY=t;
   });
   const isFull=y=>{const ms=yearMonths[y]; return ms && ms.has(1) && ms.has(12);};
   function tailYearMDiff(Y){
     let mx=0, rec=null; D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){mx=d[0];rec=d;} });
     const M=rec? issueMonthOf(rec[4]).month : 12;
     const yearList=Object.keys(aggYear).map(Number).filter(y=> y!==Y && isFull(y));
-    const mean=Array(10).fill(0);
-    yearList.forEach(y=>{ const o=aggYear[y]; for(let v=0;v<10;v++) mean[v]+=(o[v]||0); });
-    for(let v=0;v<10;v++) mean[v]= yearList.length? mean[v]/yearList.length : 0;
-    const cur=aggYear[Y]||Array(10).fill(0);
-    return cur.map((cnt,i)=> Math.round(cnt - mean[i]*(M/12)));
+    const mean={tail:Array(10).fill(0),amp:Array(10).fill(0)};
+    yearList.forEach(y=>{ const o=aggYear[y]; for(let v=0;v<10;v++){ mean.tail[v]+=(o.tail[v]||0); mean.amp[v]+=(o.amp[v]||0); } });
+    for(let v=0;v<10;v++){ mean.tail[v]= yearList.length? mean.tail[v]/yearList.length : 0; mean.amp[v]= yearList.length? mean.amp[v]/yearList.length : 0; }
+    const cur=aggYear[Y]||{tail:Array(10).fill(0),amp:Array(10).fill(0)};
+    return {
+      tail: cur.tail.map((cnt,i)=> Math.round(cnt - mean.tail[i]*(M/12))),
+      amp:  cur.amp.map((cnt,i)=> Math.round(cnt - mean.amp[i]*(M/12)))
+    };
   }
   const yrs=new Set(all.map(d=>Math.floor(d[0]/1000)));
   const isYearMode=yrs.size===1;
@@ -2678,30 +2718,36 @@ function renderWshz(shown, all, grp, metaEl, warnEl){  const rowData=d=>{
   let tfoot='<tfoot>';
   statNames.forEach(sn=>{
     tfoot+='<tr><td class="footer-lab" colspan="3">'+sn+'</td>';
-    for(let v=0;v<10;v++){
-      let val='—', cls=(v===0?' class="grp-sep"':'');
-      if(sn==='出现次数')val=st[v].appear;
-      else if(sn==='当前遗漏')val=st[v].curGap;
-      else if(sn==='最大遗漏')val=st[v].maxGap;
-      else if(sn==='平均遗漏')val=st[v].avgGap;
-      else if(sn==='最大连出')val=st[v].maxCon;
-      tfoot+='<td'+cls+'>'+val+'</td>';
-    }
-    for(let k=0;k<7;k++) tfoot+='<td></td>';   // 6 属性 + 振幅
+    grids.forEach((g,gi)=>{
+      for(let v=0;v<g.n;v++){
+        const st=gridStats[gi][v];
+        let val='—', cls=(v===0?' class="grp-sep"':'');
+        if(sn==='出现次数')val=st.appear;
+        else if(sn==='当前遗漏')val=st.curGap;
+        else if(sn==='最大遗漏')val=st.maxGap;
+        else if(sn==='平均遗漏')val=st.avgGap;
+        else if(sn==='最大连出')val=st.maxCon;
+        tfoot+='<td'+cls+'>'+val+'</td>';
+      }
+    });
+    attrs.forEach((a,ai)=>{ tfoot+='<td'+(attrSep.has(ai)?' class="grp-sep"':'')+'></td>'; });
     tfoot+='</tr>';
   });
   function mdiffRow(label,arr){
     if(!arr) return '';
     let h='<tr class="mrow"><td class="footer-lab" colspan="3">'+label+'</td>';
-    for(let v=0;v<10;v++){ const x=(arr[v]!==null&&arr[v]!==undefined)?arr[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>'; }
-    for(let k=0;k<7;k++) h+='<td></td>';
+    grids.forEach((g,gi)=>{
+      const src=(gi===0)?arr.tail:arr.amp;
+      for(let v=0;v<g.n;v++){ const x=(src&&src[v]!==null&&src[v]!==undefined)?src[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>'; }
+    });
+    attrs.forEach((a,ai)=>{ h+='<td'+(attrSep.has(ai)?' class="grp-sep"':'')+'></td>'; });
     return h+'</tr>';
   }
   if(isYearMode) tfoot+=mdiffRow('M差值', mDiff);
   yearRows.forEach(r=>{ tfoot+=mdiffRow(r.year+' M差值', r.vals); });
   tfoot+='</tfoot>';
   $('wshzTable').innerHTML=thead+tbody+tfoot;
-  metaEl.textContent='和值尾走势图｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ 连线：和值尾(橙) ｜ 五行：19金/28木/37水/46火/50土 ｜ 振幅=本期和值尾−上期和值尾差的绝对值 ｜ 表脚 5 项统计与 M差值 按和值尾 0-9 计算';
+  metaEl.textContent='和值尾走势图｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ 连线：和值尾(橙)/振幅(蓝) ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 振幅=本期和值尾−上期和值尾绝对值 ｜ 表脚 5 项统计与 M差值 按 和值尾、振幅 0-9 计算';
   warnEl.textContent='';
   setTimeout(drawWshzLines,30);
 }
@@ -2720,11 +2766,12 @@ function drawWshzLines(){
     const x=r.left-cRect.left+sx+r.width/2, y=r.top-cRect.top+sy+r.height/2;
     (groups[g]=groups[g]||[]).push(x+','+y);
   });
+  const colors=['#d35400','#2980b9'];
   for(const g in groups){
     const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
     pl.setAttribute('points',groups[g].join(' '));
     pl.setAttribute('fill','none');
-    pl.setAttribute('stroke','#d35400');
+    pl.setAttribute('stroke',colors[+g]||'#888');
     pl.setAttribute('stroke-width','1.3');
     pl.setAttribute('opacity','0.85');
     svg.appendChild(pl);

@@ -2651,18 +2651,18 @@ function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
     ampMap.set(allData[i].issue, amp);
   }
   const grids=cfg.grids;   // [主指标(0-9, get:r=>r.tail), 振幅(0-9)]
-  // 属性列（各按类分列，仅所属列显示）：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(单列0/1/2) 大中小(小|中|大) 五行(金|木|水|火|土) 阴阳(阴|阳)
+  // 属性列（各按类分列，仅所属列显示）：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0|1|2) 大中小(小|中|大) 五行(金|木|水|火|土) 阴阳(阴|阳)
   const attrs=[
     {head:'小',test:r=>r.size==='小'},{head:'大',test:r=>r.size==='大'},
     {head:'奇',test:r=>r.par==='奇'},{head:'偶',test:r=>r.par==='偶'},
     {head:'质',test:r=>r.pr==='质'},{head:'合',test:r=>r.pr==='合'},
-    {head:'012路',get:r=>r.road},
+    {head:'0',test:r=>r.road===0},{head:'1',test:r=>r.road===1},{head:'2',test:r=>r.road===2},
     {head:'小',test:r=>r.bms==='小'},{head:'中',test:r=>r.bms==='中'},{head:'大',test:r=>r.bms==='大'},
     {head:'金',test:r=>r.wx==='金'},{head:'木',test:r=>r.wx==='木'},{head:'水',test:r=>r.wx==='水'},{head:'火',test:r=>r.wx==='火'},{head:'土',test:r=>r.wx==='土'},
     {head:'阴',test:r=>r.yin==='阴'},{head:'阳',test:r=>r.yin==='阳'}
   ];
-  const attrSep=new Set([0,2,4,7,10,15]);   // 各组首列(012路单列不参与拆分, 其位置 6)
-  const attrGroups=[['大小',2],['奇偶',2],['质合',2],['012路',1],['大中小',3],['五行',5],['阴阳',2]];
+  const attrSep=new Set([0,2,4,6,9,12,17]);   // 各组首列(0/1/2 三列组首=0)
+  const attrGroups=[['大小',2],['奇偶',2],['质合',2],['012路',3],['大中小',3],['五行',5],['阴阳',2]];
   // 逐期遗漏（基于完整范围 all；和值尾 + 振幅 两组）
   const omitByIssue=grids.map(()=>new Map());
   { const gaps=grids.map(g=>Array(g.n).fill(0));

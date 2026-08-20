@@ -105,6 +105,7 @@
   #zstTable tbody tr:nth-child(even) td{background:#f4f7fb}
   #zstTable tbody tr:hover td{background:#eaf1f9}
   #zstTable .att-hit{background:#dbeafe;color:#1e40af;font-weight:700}
+  #zstTable .z3-red{color:#dc2626;font-weight:700}
   #zstTable tfoot td{background:#e9eef5;font-weight:600;color:#33475f;vertical-align:middle}
   #zstTable tfoot tr:hover td{background:#e2e9f2}
   #zstTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
@@ -2333,7 +2334,7 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
   let tbody='<tbody>';
   shownData.forEach(r=>{
     tbody+='<tr>';
-    tbody+='<td>'+r.issue+'</td><td>'+r.a+' '+r.b+' '+r.c+'</td><td>'+r.typ+'</td>';
+    tbody+='<td>'+r.issue+'</td><td>'+r.a+' '+r.b+' '+r.c+'</td><td'+(r.typ==='组三'?' class="z3-red"':'')+'>'+r.typ+'</td>';
     grids.forEach((g,gi)=>{
       const val=g.get(r);
       const om=omitByIssue[gi].get(r.issue);

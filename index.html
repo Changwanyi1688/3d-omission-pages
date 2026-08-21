@@ -2396,11 +2396,11 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
   ];
   // 属性列：奇偶(奇/偶)、大小(小/大)、质合(质/合)、012路(0/1/2)、大中小(大/中/小)，共 12 列；每期仅所属列显示
   const attrs=[
-    {head:'奇',test:r=>r.par==='奇'},{head:'偶',test:r=>r.par==='偶'},
-    {head:'小',test:r=>r.size==='小'},{head:'大',test:r=>r.size==='大'},
-    {head:'质',test:r=>r.pr==='质'},{head:'合',test:r=>r.pr==='合'},
-    {head:'0',test:r=>r.road===0},{head:'1',test:r=>r.road===1},{head:'2',test:r=>r.road===2},
-    {head:'大',test:r=>r.bms==='大'},{head:'中',test:r=>r.bms==='中'},{head:'小',test:r=>r.bms==='小'}
+    {key:'par奇',head:'奇',test:r=>r.par==='奇'},{key:'par偶',head:'偶',test:r=>r.par==='偶'},
+    {key:'size小',head:'小',test:r=>r.size==='小'},{key:'size大',head:'大',test:r=>r.size==='大'},
+    {key:'pr质',head:'质',test:r=>r.pr==='质'},{key:'pr合',head:'合',test:r=>r.pr==='合'},
+    {key:'r0',head:'0',test:r=>r.road===0},{key:'r1',head:'1',test:r=>r.road===1},{key:'r2',head:'2',test:r=>r.road===2},
+    {key:'bms大',head:'大',test:r=>r.bms==='大'},{key:'bms中',head:'中',test:r=>r.bms==='中'},{key:'bms小',head:'小',test:r=>r.bms==='小'}
   ];
   const attrSep=new Set([0,2,4,6,9]);   // 各组首列加分隔线
   const attrGroups=[['奇偶',2],['大小',2],['质合',2],['012路',3],['大中小',3]];
@@ -2487,7 +2487,7 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
     const t=s%10; o.tail[t]=(o.tail[t]||0)+1;
     const sp=Math.max(a,b,c)-Math.min(a,b,c); o.span[sp]=(o.span[sp]||0)+1;
     const rd={par:(s%2===0)?'偶':'奇',size:(s<=13)?'小':'大',pr:([2,3,5,7,11,13,17,19,23].includes(s))?'质':'合',road:String(s%3),bms:(s>=18)?'大':(s>=9?'中':'小')};
-    attrs.forEach(attr=>{ if(attr.test({par:rd.par,size:rd.size,pr:rd.pr,road:+rd.road,bms:rd.bms})) o.attr[attr.head]=(o.attr[attr.head]||0)+1; });
+    attrs.forEach(attr=>{ if(attr.test({par:rd.par,size:rd.size,pr:rd.pr,road:+rd.road,bms:rd.bms})) o.attr[attr.key]=(o.attr[attr.key]||0)+1; });
     (yearMonths[y]||(yearMonths[y]=new Set())).add(im.month);
   });
   const isFullYear = y => { const ms=yearMonths[y]; return ms && ms.has(1) && ms.has(12); };
@@ -2507,8 +2507,8 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
         return curArr.map((cnt,i)=> Math.round(cnt - mean[i] * (M/12)));
       }),
       attrs: attrs.map(attr=>{
-        const mean= yearList.length? yearList.reduce((s,y)=>(s+(aggYear[y].attr[attr.head]||0)),0)/yearList.length : 0;
-        return Math.round((curYear.attr[attr.head]||0) - mean*(M/12));
+        const mean= yearList.length? yearList.reduce((s,y)=>(s+(aggYear[y].attr[attr.key]||0)),0)/yearList.length : 0;
+        return Math.round((curYear.attr[attr.key]||0) - mean*(M/12));
       })
     };
   }
@@ -2664,13 +2664,13 @@ function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
   const grids=cfg.grids;   // [主指标(0-9, get:r=>r.tail), 振幅(0-9)]
   // 属性列（各按类分列，仅所属列显示）：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0|1|2) 大中小(小|中|大) 五行(金|木|水|火|土) 阴阳(阴|阳)
   const attrs=[
-    {head:'小',test:r=>r.size==='小'},{head:'大',test:r=>r.size==='大'},
-    {head:'奇',test:r=>r.par==='奇'},{head:'偶',test:r=>r.par==='偶'},
-    {head:'质',test:r=>r.pr==='质'},{head:'合',test:r=>r.pr==='合'},
-    {head:'0',test:r=>r.road===0},{head:'1',test:r=>r.road===1},{head:'2',test:r=>r.road===2},
-    {head:'小',test:r=>r.bms==='小'},{head:'中',test:r=>r.bms==='中'},{head:'大',test:r=>r.bms==='大'},
-    {head:'金',test:r=>r.wx==='金'},{head:'木',test:r=>r.wx==='木'},{head:'水',test:r=>r.wx==='水'},{head:'火',test:r=>r.wx==='火'},{head:'土',test:r=>r.wx==='土'},
-    {head:'阴',test:r=>r.yin==='阴'},{head:'阳',test:r=>r.yin==='阳'}
+    {key:'size小',head:'小',test:r=>r.size==='小'},{key:'size大',head:'大',test:r=>r.size==='大'},
+    {key:'par奇',head:'奇',test:r=>r.par==='奇'},{key:'par偶',head:'偶',test:r=>r.par==='偶'},
+    {key:'pr质',head:'质',test:r=>r.pr==='质'},{key:'pr合',head:'合',test:r=>r.pr==='合'},
+    {key:'r0',head:'0',test:r=>r.road===0},{key:'r1',head:'1',test:r=>r.road===1},{key:'r2',head:'2',test:r=>r.road===2},
+    {key:'bms小',head:'小',test:r=>r.bms==='小'},{key:'bms中',head:'中',test:r=>r.bms==='中'},{key:'bms大',head:'大',test:r=>r.bms==='大'},
+    {key:'w金',head:'金',test:r=>r.wx==='金'},{key:'w木',head:'木',test:r=>r.wx==='木'},{key:'w水',head:'水',test:r=>r.wx==='水'},{key:'w火',head:'火',test:r=>r.wx==='火'},{key:'w土',head:'土',test:r=>r.wx==='土'},
+    {key:'yin阴',head:'阴',test:r=>r.yin==='阴'},{key:'yin阳',head:'阳',test:r=>r.yin==='阳'}
   ];
   const attrSep=new Set([0,2,4,6,9,12,17]);   // 各组首列(0/1/2 三列组首=0)
   const attrGroups=[['大小',2],['奇偶',2],['质合',2],['012路',3],['大中小',3],['五行',5],['阴阳',2]];
@@ -2739,20 +2739,20 @@ function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
   // M差值（单年模式主行 + 近五年；和值尾 + 振幅 两组）
   const aggYear={}, yearMonths={};
   D.forEach(d=>{
-    const yy=Math.floor(d[0]/1000), t=(d[1]+d[2]+d[3])%10;
+    const yy=Math.floor(d[0]/1000), t=cfg.keyOf(d[1],d[2],d[3]);
     const o=aggYear[yy]||(aggYear[yy]={[gf]:Array(10).fill(0),amp:Array(10).fill(0),attr:{}});
     o[gf][t]=(o[gf][t]||0)+1;
     // 属性列年度计数
     const rd={size:(t<=4)?'小':'大',par:(t%2===1)?'奇':'偶',pr:([1,2,3,5,7].includes(t))?'质':'合',road:t%3,bms:(t<=2)?'小':(t<=6?'中':'大'),wx:WUXING[t],yin:([0,3,4,6,7].includes(t))?'阴':'阳'};
-    attrs.forEach(a=>{ if(a.test ? a.test(rd) : true) o.attr[a.head]=(o.attr[a.head]||0)+1; });
+    attrs.forEach(a=>{ if(a.test ? a.test(rd) : true) o.attr[a.key]=(o.attr[a.key]||0)+1; });
     const im=issueMonthOf(d[4]); (yearMonths[yy]||(yearMonths[yy]=new Set())).add(im.month);
   });
   // 振幅按年聚合：需要依赖上一期，用 D 顺序遍历
   let prevTailY=null;
   D.forEach((d,i)=>{
-    const yy=Math.floor(d[0]/1000), t=(d[1]+d[2]+d[3])%10;
+    const yy=Math.floor(d[0]/1000), t=cfg.keyOf(d[1],d[2],d[3]);
     if(i>0){
-      const p=D[i-1], pt=(p[1]+p[2]+p[3])%10, amp=Math.abs(t-pt);
+      const p=D[i-1], pt=cfg.keyOf(p[1],p[2],p[3]), amp=Math.abs(t-pt);
       const o=aggYear[yy]||(aggYear[yy]={[gf]:Array(10).fill(0),amp:Array(10).fill(0)});
       o.amp[amp]=(o.amp[amp]||0)+1;
     }
@@ -2764,14 +2764,14 @@ function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
     const M=rec? issueMonthOf(rec[4]).month : 12;
     const yearList=Object.keys(aggYear).map(Number).filter(y=> y!==Y && isFull(y));
     const mean={[gf]:Array(10).fill(0),amp:Array(10).fill(0),attr:{}};
-    yearList.forEach(y=>{ const o=aggYear[y]; for(let v=0;v<10;v++){ mean[gf][v]+=(o[gf][v]||0); mean.amp[v]+=(o.amp[v]||0); } attrs.forEach(a=>{ mean.attr[a.head]=(mean.attr[a.head]||0)+(o.attr[a.head]||0); }); });
+    yearList.forEach(y=>{ const o=aggYear[y]; for(let v=0;v<10;v++){ mean[gf][v]+=(o[gf][v]||0); mean.amp[v]+=(o.amp[v]||0); } attrs.forEach(a=>{ mean.attr[a.key]=(mean.attr[a.key]||0)+(o.attr[a.key]||0); }); });
     for(let v=0;v<10;v++){ mean[gf][v]= yearList.length? mean[gf][v]/yearList.length : 0; mean.amp[v]= yearList.length? mean.amp[v]/yearList.length : 0; }
-    attrs.forEach(a=>{ mean.attr[a.head]= yearList.length? (mean.attr[a.head]||0)/yearList.length : 0; });
+    attrs.forEach(a=>{ mean.attr[a.key]= yearList.length? (mean.attr[a.key]||0)/yearList.length : 0; });
     const cur=aggYear[Y]||{[gf]:Array(10).fill(0),amp:Array(10).fill(0),attr:{}};
     return {
       [gf]: cur[gf].map((cnt,i)=> Math.round(cnt - mean[gf][i]*(M/12))),
       amp:  cur.amp.map((cnt,i)=> Math.round(cnt - mean.amp[i]*(M/12))),
-      attr: attrs.map(a=> Math.round((cur.attr[a.head]||0) - (mean.attr[a.head]||0)*(M/12)))
+      attr: attrs.map(a=> Math.round((cur.attr[a.key]||0) - (mean.attr[a.key]||0)*(M/12)))
     };
   }
   const yrs=new Set(all.map(d=>Math.floor(d[0]/1000)));

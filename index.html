@@ -584,7 +584,7 @@
 
   <!-- 和值尾走势图（复刻 cjcp 3d_weishu-hzw 逻辑，本地数据实时计算） -->
   <div class="panel scroller" id="wshzPanel" style="display:none;position:relative">
-    <div class="resTitle">和值尾走势图｜ 和值尾0-9(橙) / 振幅0-9(蓝) 连线+遗漏；属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(012小/3456中/789大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳)</div>
+    <div class="resTitle">和值尾走势图｜ 和值尾0-9(橙) / 振幅0-9(蓝) 连线+遗漏 ｜ <span style="color:#f59e0b">大小：01234小/56789大</span> ｜ <span style="color:#3b82f6">大中小：012小/3456中/789大</span> ｜ 其余属性（奇偶/质合/012路/五行/阴阳）口径见下方说明</div>
     <div class="row">
       <span class="lab">期号范围</span>
       <input type="number" id="wzFrom" style="width:90px" placeholder="起期">
@@ -606,7 +606,7 @@
 
   <!-- 跨度走势图（同和值尾逻辑，主指标=跨度） -->
   <div class="panel scroller" id="kdPanel" style="display:none;position:relative">
-    <div class="resTitle">跨度走势图｜ 跨度0-9(绿) / 振幅0-9(蓝) 连线+遗漏；属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(012小/3456中/789大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳)</div>
+    <div class="resTitle">跨度走势图｜ 跨度0-9(绿) / 振幅0-9(蓝) 连线+遗漏 ｜ <span style="color:#f59e0b">大小：01234小/56789大</span> ｜ <span style="color:#3b82f6">大中小：012小/3456中/789大</span> ｜ 其余属性（奇偶/质合/012路/五行/阴阳）口径见下方说明</div>
     <div class="row">
       <span class="lab">期号范围</span>
       <input type="number" id="kdFrom" style="width:90px" placeholder="起期">
@@ -2689,7 +2689,12 @@ function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
   let thead='<thead><tr>';
   thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号码</th><th class="lab-h" rowspan="2">和值</th>';
   grids.forEach(g=>{ thead+='<th class="grp-h" colspan="'+g.n+'">'+g.name+'</th>'; });
-  attrGroups.forEach(ag=>{ thead+='<th class="grp-h" colspan="'+ag[1]+'">'+ag[0]+'</th>'; });
+  attrGroups.forEach(ag=>{
+    let sub='';
+    if(ag[0]==='大小') sub='<span class="zsub">01234小/56789大</span>';
+    else if(ag[0]==='大中小') sub='<span class="zsub">012小/3456中/789大</span>';
+    thead+='<th class="grp-h" colspan="'+ag[1]+'">'+ag[0]+sub+'</th>';
+  });
   thead+='</tr><tr>';
   grids.forEach(g=>{ for(let v=0;v<g.n;v++) thead+='<th'+(v===0?' class="grp-sep"':'')+'>'+v+'</th>'; });
   attrs.forEach((a,ai)=>{ thead+='<th'+(attrSep.has(ai)?' class="grp-sep"':'')+'>'+a.head+'</th>'; });

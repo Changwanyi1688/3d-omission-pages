@@ -3012,7 +3012,7 @@ function drawBwLines(){
             const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
             pl.setAttribute('points',pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
             pl.setAttribute('fill','none'); pl.setAttribute('stroke',col);
-            pl.setAttribute('stroke-width','1.8'); pl.setAttribute('opacity','0.95');
+            pl.setAttribute('stroke-width','0.9'); pl.setAttribute('opacity','0.95');
             svg.appendChild(pl);
             pts.forEach(p=>{
               const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
@@ -3048,7 +3048,7 @@ function drawBwLines(){
         const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
         pl.setAttribute('points',pts.join(' '));
         pl.setAttribute('fill','none'); pl.setAttribute('stroke',col);
-        pl.setAttribute('stroke-width','1.4'); pl.setAttribute('opacity','0.9');
+        pl.setAttribute('stroke-width','0.7'); pl.setAttribute('opacity','0.9');
         svg2.appendChild(pl);
       }
     });

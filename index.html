@@ -184,6 +184,10 @@
   #zstTable tr.mrow td,#lmGrids tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
   #zstTable tr.mrow td:first-child,#lmGrids tr.mrow td:first-child{color:#a0670f}
   .mdcell{background:#fdf6e3;font-weight:700}  /* M差值 单元格统一高亮（所有类目一致），数值正负表示方向 */
+  /* 百位走势图：表格下方独立折线图 */
+  .bwScroll{overflow-x:auto;width:100%}
+  .bwChartWrap{width:100%;overflow-x:auto;margin-top:10px;border-top:1px dashed #cdd5df;padding-top:8px}
+  .bwChartWrap svg{display:block}
   /* 直组三码遗漏：四张表（直选三不同/对子 + 组六/组三）四列响应式网格 */
   .zu3Grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:6px}
   @media(max-width:760px){.zu3Grid{grid-template-columns:1fr}}
@@ -576,6 +580,30 @@
     </table>
   </div>
 
+  <!-- 百位走势图（遗漏组合查询·号码项内，依据 cjcp 3d_weishu-bw 逻辑用数据库历史数据绘制；折线图置于表格下方） -->
+  <div class="panel" id="bwPanel" style="display:none">
+    <div class="resTitle">百位走势图｜ 百位0-9(紫) / 振幅0-9(蓝) 连线（折线图位于表格下方）｜ 大小：01234小/56789大 ｜ 大中小：012小/3456中/789大 ｜ 其余属性（奇偶/质合/012路/五行/阴阳）口径见下方说明</div>
+    <div class="row">
+      <span class="lab">期号范围</span>
+      <input type="number" id="bwFrom" style="width:90px" placeholder="起期">
+      <span>—</span>
+      <input type="number" id="bwTo" style="width:90px" placeholder="止期">
+      <button class="btn sec" id="bwSearchBtn" title="按范围筛查">&#128269; 筛查</button>
+      <span class="lab">按年份</span>
+      <select id="bwYearSel"></select>
+      <span class="lab">显示最近</span>
+      <input type="number" id="bwWin" style="width:80px" value="100">
+      <span>期（仅连线可视范围）</span>
+      <button class="btn go" id="bwQueryBtn">查 询</button>
+    </div>
+    <div class="meta" id="bwMetaBox"></div>
+    <div class="warn" id="bwWarnBox"></div>
+    <div class="bwScroll">
+      <table id="bwTable" style="position:relative;z-index:0"></table>
+    </div>
+    <div class="bwChartWrap"><svg id="bwSvg"></svg></div>
+  </div>
+
   <div class="panel scroller" id="zstPanel" style="display:none;position:relative">
     <div class="resTitle">和值走势图（带连线）｜ 和值0-27(红) / 和尾0-9(蓝) / 跨度0-9(绿) 连线，其余属性列（组选/奇偶/大小/质合/012路/大中小）各按类分列</div>
     <svg id="zstSvg"></svg>
@@ -895,7 +923,7 @@ function theoretical(cat,sub,codes,grp,periodLen){
 
 /* ---------- 类别 / 子项 / 号码宇宙 ---------- */
 const CATS=[
-  {name:'号码',label:'号码',subs:['不定位','百位','十位','个位']},
+  {name:'号码',label:'号码',subs:['不定位','百位','十位','个位','百位走势']},
   {name:'和值',label:'和值',subs:['全']},
   {name:'合值',label:'合值',subs:['全']},
   {name:'跨度',label:'跨度',subs:['全']},
@@ -2687,7 +2715,7 @@ function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
   }
   // 表头
   let thead='<thead><tr>';
-  thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号码</th><th class="lab-h" rowspan="2">和值</th>';
+  thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号码</th><th class="lab-h" rowspan="2">'+(cfg.sumHead||"和值")+'</th>';
   grids.forEach(g=>{ thead+='<th class="grp-h" colspan="'+g.n+'">'+g.name+'</th>'; });
   attrGroups.forEach(ag=>{
     let sub='';
@@ -2878,7 +2906,86 @@ function drawGridLines(panelId,svgId,tblId,colors){
 }
 function drawWshzLines(){ drawGridLines('wshzPanel','wshzSvg','wshzTable',['#d35400','#2980b9']); }
 function drawKdLines(){ drawGridLines('kdPanel','kdSvg','kdTable',['#27ae60','#2980b9']); }
-window.addEventListener('resize',()=>{ if($('wshzPanel').style.display!=='none') drawWshzLines(); if($('kdPanel').style.display!=='none') drawKdLines(); });
+
+/* ===== 百位走势图（遗漏组合查询·号码项内；主指标=百位数字 a）===== */
+let _bwInit=false;
+function bwQuery(){
+  const warnEl=$('bwWarnBox'), metaEl=$('bwMetaBox'), tbl=$('bwTable');
+  warnEl.textContent='';
+  if(!_bwInit){
+    _bwInit=true;
+    const ySel=$('bwYearSel');
+    ySel.innerHTML='<option value="0">全部年份</option>';
+    YEARS.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y+'年';ySel.appendChild(o);});
+    $('bwTo').value=D[D.length-1][0];
+    $('bwFrom').value=D[Math.max(0,D.length-100)][0];
+    const rerun=()=>{const a=parseInt($('bwFrom').value,10), b=parseInt($('bwTo').value,10); if(a>b){const t=$('bwFrom').value;$('bwFrom').value=$('bwTo').value;$('bwTo').value=t;} bwQuery();};
+    ySel.onchange=()=>{
+      if(ySel.value!=='0'){const ys=D.filter(d=>Math.floor(d[0]/1000)===parseInt(ySel.value,10)); if(ys.length){$('bwFrom').value=ys[0][0];$('bwTo').value=ys[ys.length-1][0];}}
+      else {$('bwFrom').value=D[0][0];$('bwTo').value=D[D.length-1][0];}
+      bwQuery();
+    };
+    $('bwFrom').onchange=rerun; $('bwTo').onchange=rerun;
+    $('bwSearchBtn').onclick=bwQuery; $('bwQueryBtn').onclick=bwQuery; $('bwWin').onchange=bwQuery;
+  }
+  const f=parseInt($('bwFrom').value||FIRST,10), t=parseInt($('bwTo').value||LAST,10);
+  const y=parseInt($('bwYearSel').value,10)||0;
+  const defF=D[Math.max(0,D.length-100)][0], defT=D[D.length-1][0];
+  const userFiltered = (y!==0) || ($('bwFrom').value!==String(defF)) || ($('bwTo').value!==String(defT));
+  let period=D.filter(d=>d[0]>=f&&d[0]<=t&&(y===0||Math.floor(d[0]/1000)===y));
+  if(period.length===0){warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围。';tbl.innerHTML='';metaEl.textContent='';return;}
+  const grp=curGrp;   // 复用 omission 模式 组六/组三 筛选框
+  const formFlag=period.map(d=> grp==='全' || typeOf(d[1],d[2],d[3])===grp);
+  const formCount=formFlag.reduce((a,b)=>a+(b?1:0),0);
+  if(formCount===0){warnEl.textContent='该形态过滤条件下无数据。';tbl.innerHTML='';metaEl.textContent='';return;}
+  let W = userFiltered ? 999999 : (parseInt($('bwWin').value||100,10)||100);
+  let pr=period, ff=formFlag;
+  if(period.length>W){ pr=period.slice(period.length-W); ff=formFlag.slice(formFlag.length-W); }
+  const shown=pr.filter((d,i)=>ff[i]);
+  renderBw(shown, period, grp, metaEl, warnEl);
+}
+function renderBw(shown, all, grp, metaEl, warnEl){
+  renderGridChart(shown, all, grp, metaEl, warnEl, {
+    gridField:'bw', tblId:'bwTable', drawFn:drawBwLines,
+    keyOf:(a,b,c)=>a,
+    grids:[{name:'百位',n:10,get:r=>r.tail,color:'#8e44ad'},{name:'振幅',n:10,get:r=>r.amp,color:'#2980b9'}],
+    sumHead:'和值',
+    metaTitle:'百位走势图',
+    metaExtra:'连线（表格下方独立折线图）：百位(紫)/振幅(蓝) ｜ 振幅=本期百位−上期百位绝对值 ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 表脚 5 项统计与 M差值 覆盖 全部数值列'
+  });
+}
+function drawBwLines(){
+  const tbl=$('bwTable'); const svg=$('bwSvg'); const wrap=$('bwChartWrap');
+  if(!tbl||!svg||!wrap) return;
+  const tbody=tbl.tBodies[0]; if(!tbody){ svg.innerHTML=''; return; }
+  const rows=[...tbody.rows];
+  if(rows.length===0){ svg.innerHTML=''; return; }
+  const W=tbl.scrollWidth; const Hc=240;
+  svg.setAttribute('width',W); svg.setAttribute('height',Hc);
+  svg.style.width=W+'px'; svg.style.height=Hc+'px';
+  svg.innerHTML='';
+  const tblRect=tbl.getBoundingClientRect();
+  const pts0=[],pts1=[];
+  rows.forEach(tr=>{
+    const issTd=tr.cells[0];
+    const rr=issTd.getBoundingClientRect();
+    const x=rr.left-tblRect.left+issTd.offsetWidth/2;
+    const m0=tr.querySelector('td.mk[data-grp="0"]'); const v0=m0?parseInt(m0.textContent,10):null;
+    if(v0!==null&&!isNaN(v0)){ pts0.push(x+','+(Hc-(v0+0.5)/10*Hc)); }
+    const m1=tr.querySelector('td.mk[data-grp="1"]'); const v1=m1?parseInt(m1.textContent,10):null;
+    if(v1!==null&&!isNaN(v1)){ pts1.push(x+','+(Hc-(v1+0.5)/10*Hc)); }
+  });
+  [['#8e44ad',pts0],['#2980b9',pts1]].forEach(([col,pts])=>{
+    if(pts.length>1){
+      const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+      pl.setAttribute('points',pts.join(' '));
+      pl.setAttribute('fill','none'); pl.setAttribute('stroke',col);
+      pl.setAttribute('stroke-width','1.4'); pl.setAttribute('opacity','0.9');
+      svg.appendChild(pl);
+    }
+  });
+}
+window.addEventListener('resize',()=>{ if($('wshzPanel').style.display!=='none') drawWshzLines(); if($('kdPanel').style.display!=='none') drawKdLines(); if($('bwPanel').style.display!=='none') drawBwLines(); });
 
 
 /* ===== 跨度走势图（同和值尾逻辑，主指标=跨度） ===== */
@@ -2922,6 +3029,15 @@ function kdQuery(){
 function query(){
   warnBox.textContent='';
   const cat=curCat, sub=curSub, grp=curGrp;
+
+  // 号码项 → 百位走势图：独立面板，隐藏遗漏表
+  if(cat==='号码' && sub==='百位走势'){
+    $('resPanel').style.display='none';
+    $('bwPanel').style.display='';
+    bwQuery();
+    return;
+  }
+  $('bwPanel').style.display='none';
 
   // ===== 其他组合：改用引擎从开奖号实时计算（不再依赖 17500 快照；号码类型/号码形态 用标准五分类）=====
 

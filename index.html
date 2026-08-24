@@ -169,6 +169,10 @@
   #bwTable tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
   #bwTable tr.mrow td:first-child{color:#a0670f}
   #bwTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:6px;white-space:nowrap;font-size:10px}
+  /* 列表头随动：纵向滚动时整块表头（期号行+分组行）固定在顶部，不被滚走 */
+  #bwTable thead{position:sticky;top:0;z-index:20}
+  #bwTable thead th{background:#27384d}  /* 兜底底色，避免 sticky 时透出下方折线 */
+  #bwTable thead .grp-h{background:#31475f}
   #kdSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
   .mk-pos{color:#e74c3c;font-weight:700}  /* M差值：高于历史同月均值 */
   .mk-neg{color:#2980b9;font-weight:700}  /* M差值：低于历史同月均值 */

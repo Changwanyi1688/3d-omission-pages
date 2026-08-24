@@ -139,18 +139,59 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 .hero .issue{font-size:11.5px;color:#f87171;font-weight:700;margin-right:6px}
 .hero .na{font-size:11.5px;color:#64748b}
 
+
+.pl5trend{display:none;margin-top:6px}
+.pl5trend h3{color:#7dd3fc}
+.pl5dt{margin-top:8px;border:1px solid #334155;border-radius:8px;background:#0f172a;padding:8px}
+.pl5dt h4{color:#7dd3fc;font-size:14px;margin:0 0 4px}
+.bwScroll{overflow-x:auto;width:100%;position:relative}
+table.pl5dgt{border-collapse:collapse;font-size:12px;white-space:nowrap;color:#cbd5e1;width:100%;table-layout:fixed}
+table.pl5dgt th,table.pl5dgt td{border:1px solid #2a3a52;padding:2px 1px;text-align:center;overflow:hidden}
+table.pl5dgt th{background:#1e293b;color:#cbd5e1;font-weight:600}
+table.pl5dgt thead tr:first-child th{position:sticky;top:0;z-index:3}
+table.pl5dgt thead tr:nth-child(2) th{position:sticky;top:23px;z-index:3}
+table.pl5dgt tbody tr:nth-child(even){background:#172033}
+table.pl5dgt td.mk{font-weight:700}
+table.pl5dgt td.omission{color:#5b6b82;font-size:11px}
+table.pl5dgt td.grp-sep{border-left:2px solid #475569}
+table.pl5dgt td.att-hit{background:#1e3a5f;color:#7dd3fc;font-weight:700}
+table.pl5dgt tfoot td{background:#172033;font-weight:600}
+table.pl5dgt tfoot td.footer-lab{background:#1e293b;color:#e2e8f0;text-align:left;padding-left:6px;white-space:nowrap}
+table.pl5dgt tfoot td.mrow{background:#fdf6e3;color:#b45309;font-weight:700}
+table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
+.bwChartWrap{width:100%;overflow-x:auto;margin-top:8px;border-top:1px dashed #334155;padding-top:6px}
+.bwChartWrap svg{display:block}
+.trendChk{font-size:11px;color:#94a3b8;margin-left:6px;font-weight:400;cursor:pointer}
+.trendChk input{vertical-align:middle;margin-right:2px}
+.posbox h4.withChk{display:flex;align-items:center;justify-content:space-between}
+.pl5dt svg.overlay{position:absolute;left:0;top:0;pointer-events:none;z-index:5;overflow:visible}
+
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-24 21:59</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026226 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">0</div><div class="num s">1</div><div class="num">6</div><div class="num">9</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">9</div><div class="snum">9</div><div class="snum">9</div><div class="snum">0</div><div class="snum">0</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">6</div><div class="snum">1</div><div class="snum">9</div><div class="snum">3</div></div></div><div class="extras"><span class="tag"><b>金码</b>8</span><span class="tag"><b>关注码</b>01979</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">6</div><div class="snum">1</div><div class="snum">9</div><div class="snum">3</div></div></div><div class="extras"><span class="tag"><b>金码</b>8</span><span class="tag"><b>关注码</b>01979</span><span class="tag"><b>对应码</b>67310</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-24 23:08</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026226 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">0</div><div class="num s">1</div><div class="num">6</div><div class="num">9</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">9</div><div class="snum">9</div><div class="snum">9</div><div class="snum">0</div><div class="snum">0</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">6</div><div class="snum">1</div><div class="snum">9</div><div class="snum">3</div></div></div><div class="extras"><span class="tag"><b>金码</b>8</span><span class="tag"><b>关注码</b>01979</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">6</div><div class="snum">1</div><div class="snum">9</div><div class="snum">3</div></div></div><div class="extras"><span class="tag"><b>金码</b>8</span><span class="tag"><b>关注码</b>01979</span><span class="tag"><b>对应码</b>67310</span></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
-  <div class="posgrid"><div class="posbox"><h4>第万位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>8</td><td>85</td><td>760</td><td>0</td></tr><tr><td>1</td><td>1</td><td>56</td><td>738</td><td>21</td></tr><tr class="curhit"><td>2</td><td>0</td><td>66</td><td>768</td><td>2</td></tr><tr><td>3</td><td>27</td><td>56</td><td>762</td><td>6</td></tr><tr><td>4</td><td>6</td><td>66</td><td>801</td><td>11</td></tr><tr><td>5</td><td>15</td><td>56</td><td>775</td><td>15</td></tr><tr><td>6</td><td>7</td><td>85</td><td>764</td><td>14</td></tr><tr><td>7</td><td>13</td><td>64</td><td>749</td><td>6</td></tr><tr><td>8</td><td>4</td><td>57</td><td>813</td><td>9</td></tr><tr><td>9</td><td>2</td><td>72</td><td>771</td><td>2</td></tr></tbody></table></div>
-<div class="posbox"><h4>第千位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr class="curhit"><td>0</td><td>0</td><td>76</td><td>747</td><td>19</td></tr><tr><td>1</td><td>1</td><td>66</td><td>767</td><td>0</td></tr><tr><td>2</td><td>3</td><td>58</td><td>748</td><td>7</td></tr><tr><td>3</td><td>14</td><td>55</td><td>788</td><td>8</td></tr><tr><td>4</td><td>13</td><td>63</td><td>792</td><td>28</td></tr><tr><td>5</td><td>10</td><td>60</td><td>745</td><td>25</td></tr><tr><td>6</td><td>5</td><td>73</td><td>758</td><td>1</td></tr><tr><td>7</td><td>4</td><td>59</td><td>768</td><td>3</td></tr><tr><td>8</td><td>6</td><td>75</td><td>788</td><td>10</td></tr><tr><td>9</td><td>16</td><td>56</td><td>800</td><td>14</td></tr></tbody></table></div>
-<div class="posbox"><h4>第百位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>13</td><td>63</td><td>726</td><td>19</td></tr><tr class="curhit"><td>1</td><td>0</td><td>80</td><td>762</td><td>17</td></tr><tr><td>2</td><td>2</td><td>67</td><td>759</td><td>3</td></tr><tr><td>3</td><td>3</td><td>76</td><td>764</td><td>6</td></tr><tr><td>4</td><td>12</td><td>52</td><td>851</td><td>3</td></tr><tr><td>5</td><td>15</td><td>69</td><td>756</td><td>7</td></tr><tr><td>6</td><td>1</td><td>74</td><td>760</td><td>17</td></tr><tr><td>7</td><td>4</td><td>60</td><td>738</td><td>6</td></tr><tr class="hot"><td>8</td><td>51</td><td>61</td><td>785</td><td>3</td></tr><tr><td>9</td><td>5</td><td>58</td><td>800</td><td>2</td></tr></tbody></table></div>
-<div class="posbox"><h4>第十位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>10</td><td>63</td><td>763</td><td>10</td></tr><tr><td>1</td><td>7</td><td>89</td><td>750</td><td>23</td></tr><tr><td>2</td><td>26</td><td>57</td><td>784</td><td>20</td></tr><tr><td>3</td><td>1</td><td>57</td><td>761</td><td>9</td></tr><tr><td>4</td><td>2</td><td>52</td><td>839</td><td>11</td></tr><tr><td>5</td><td>8</td><td>63</td><td>768</td><td>7</td></tr><tr class="curhit"><td>6</td><td>0</td><td>56</td><td>748</td><td>8</td></tr><tr><td>7</td><td>3</td><td>64</td><td>740</td><td>0</td></tr><tr><td>8</td><td>5</td><td>69</td><td>772</td><td>12</td></tr><tr><td>9</td><td>6</td><td>75</td><td>776</td><td>5</td></tr></tbody></table></div>
-<div class="posbox"><h4>第个位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>2</td><td>74</td><td>725</td><td>5</td></tr><tr><td>1</td><td>4</td><td>49</td><td>756</td><td>8</td></tr><tr class="hot"><td>2</td><td>30</td><td>74</td><td>813</td><td>12</td></tr><tr><td>3</td><td>3</td><td>56</td><td>803</td><td>10</td></tr><tr><td>4</td><td>19</td><td>64</td><td>768</td><td>14</td></tr><tr><td>5</td><td>1</td><td>69</td><td>774</td><td>18</td></tr><tr><td>6</td><td>9</td><td>59</td><td>766</td><td>8</td></tr><tr><td>7</td><td>17</td><td>75</td><td>763</td><td>4</td></tr><tr><td>8</td><td>5</td><td>80</td><td>763</td><td>5</td></tr><tr class="curhit"><td>9</td><td>0</td><td>73</td><td>770</td><td>5</td></tr></tbody></table></div></div>
+  <div class="posgrid"><div class="posbox"><h4 class="">第万位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>8</td><td>85</td><td>760</td><td>0</td></tr><tr><td>1</td><td>1</td><td>56</td><td>738</td><td>21</td></tr><tr class="curhit"><td>2</td><td>0</td><td>66</td><td>768</td><td>2</td></tr><tr><td>3</td><td>27</td><td>56</td><td>762</td><td>6</td></tr><tr><td>4</td><td>6</td><td>66</td><td>801</td><td>11</td></tr><tr><td>5</td><td>15</td><td>56</td><td>775</td><td>15</td></tr><tr><td>6</td><td>7</td><td>85</td><td>764</td><td>14</td></tr><tr><td>7</td><td>13</td><td>64</td><td>749</td><td>6</td></tr><tr><td>8</td><td>4</td><td>57</td><td>813</td><td>9</td></tr><tr><td>9</td><td>2</td><td>72</td><td>771</td><td>2</td></tr></tbody></table></div>
+<div class="posbox"><h4 class="">第千位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr class="curhit"><td>0</td><td>0</td><td>76</td><td>747</td><td>19</td></tr><tr><td>1</td><td>1</td><td>66</td><td>767</td><td>0</td></tr><tr><td>2</td><td>3</td><td>58</td><td>748</td><td>7</td></tr><tr><td>3</td><td>14</td><td>55</td><td>788</td><td>8</td></tr><tr><td>4</td><td>13</td><td>63</td><td>792</td><td>28</td></tr><tr><td>5</td><td>10</td><td>60</td><td>745</td><td>25</td></tr><tr><td>6</td><td>5</td><td>73</td><td>758</td><td>1</td></tr><tr><td>7</td><td>4</td><td>59</td><td>768</td><td>3</td></tr><tr><td>8</td><td>6</td><td>75</td><td>788</td><td>10</td></tr><tr><td>9</td><td>16</td><td>56</td><td>800</td><td>14</td></tr></tbody></table></div>
+<div class="posbox"><h4 class="">第百位</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>13</td><td>63</td><td>726</td><td>19</td></tr><tr class="curhit"><td>1</td><td>0</td><td>80</td><td>762</td><td>17</td></tr><tr><td>2</td><td>2</td><td>67</td><td>759</td><td>3</td></tr><tr><td>3</td><td>3</td><td>76</td><td>764</td><td>6</td></tr><tr><td>4</td><td>12</td><td>52</td><td>851</td><td>3</td></tr><tr><td>5</td><td>15</td><td>69</td><td>756</td><td>7</td></tr><tr><td>6</td><td>1</td><td>74</td><td>760</td><td>17</td></tr><tr><td>7</td><td>4</td><td>60</td><td>738</td><td>6</td></tr><tr class="hot"><td>8</td><td>51</td><td>61</td><td>785</td><td>3</td></tr><tr><td>9</td><td>5</td><td>58</td><td>800</td><td>2</td></tr></tbody></table></div>
+<div class="posbox"><h4 class="withChk">第十位<label class="trendChk"><input type="checkbox" class="pl5TrendChk" data-pos="3" data-label="十"> 走势图</label></h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>10</td><td>63</td><td>763</td><td>10</td></tr><tr><td>1</td><td>7</td><td>89</td><td>750</td><td>23</td></tr><tr><td>2</td><td>26</td><td>57</td><td>784</td><td>20</td></tr><tr><td>3</td><td>1</td><td>57</td><td>761</td><td>9</td></tr><tr><td>4</td><td>2</td><td>52</td><td>839</td><td>11</td></tr><tr><td>5</td><td>8</td><td>63</td><td>768</td><td>7</td></tr><tr class="curhit"><td>6</td><td>0</td><td>56</td><td>748</td><td>8</td></tr><tr><td>7</td><td>3</td><td>64</td><td>740</td><td>0</td></tr><tr><td>8</td><td>5</td><td>69</td><td>772</td><td>12</td></tr><tr><td>9</td><td>6</td><td>75</td><td>776</td><td>5</td></tr></tbody></table></div>
+<div class="posbox"><h4 class="withChk">第个位<label class="trendChk"><input type="checkbox" class="pl5TrendChk" data-pos="4" data-label="个"> 走势图</label></h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody><tr><td>0</td><td>2</td><td>74</td><td>725</td><td>5</td></tr><tr><td>1</td><td>4</td><td>49</td><td>756</td><td>8</td></tr><tr class="hot"><td>2</td><td>30</td><td>74</td><td>813</td><td>12</td></tr><tr><td>3</td><td>3</td><td>56</td><td>803</td><td>10</td></tr><tr><td>4</td><td>19</td><td>64</td><td>768</td><td>14</td></tr><tr><td>5</td><td>1</td><td>69</td><td>774</td><td>18</td></tr><tr><td>6</td><td>9</td><td>59</td><td>766</td><td>8</td></tr><tr><td>7</td><td>17</td><td>75</td><td>763</td><td>4</td></tr><tr><td>8</td><td>5</td><td>80</td><td>763</td><td>5</td></tr><tr class="curhit"><td>9</td><td>0</td><td>73</td><td>770</td><td>5</td></tr></tbody></table></div></div>
+</div>
+
+<div class="panel pl5trend" id="pl5TrendPanel">
+  <h3>分位走势图（十位 / 个位）</h3>
+  <div class="filters">
+    <div class="frow"><label>年份：</label><select id="pl5dtYear"></select></div>
+    <div class="frow"><label>近：</label><select id="pl5dtWin">
+      <option value="50">近50期</option>
+      <option value="150" selected>近150期</option>
+      <option value="300">近300期</option>
+      <option value="0">全部</option>
+    </select></div>
+  </div>
+  <div id="pl5dtBox"></div>
 </div>
 
 <div class="panel">
@@ -1066,6 +1107,164 @@ function renderAllTable(){
   var yr=document.getElementById('hzgYear'); if(yr) yr.onchange=function(){ document.getElementById('hzgFrom').value=''; document.getElementById('hzgTo').value=''; HZG.render(); };
   var rs2=document.getElementById('hzgRows'); if(rs2) rs2.onchange=function(){ document.getElementById('hzgYear').value='0'; document.getElementById('hzgFrom').value=''; document.getElementById('hzgTo').value=''; HZG.render(); };
   HZG.render();
+})();
+
+
+var PL5_TREND=(function(){
+  var sns='http://www.w3.org/2000/svg';
+  var WUXING={1:'金',9:'金',2:'木',8:'木',3:'水',7:'水',4:'火',6:'火',5:'土',0:'土'};
+  var ATTRS=[
+    {key:'size小',head:'小',test:function(d){return d<=4;}},{key:'size大',head:'大',test:function(d){return d>4;}},
+    {key:'par奇',head:'奇',test:function(d){return d%2===1;}},{key:'par偶',head:'偶',test:function(d){return d%2===0;}},
+    {key:'pr质',head:'质',test:function(d){return [1,2,3,5,7].indexOf(d)>=0;}},{key:'pr合',head:'合',test:function(d){return [1,2,3,5,7].indexOf(d)<0;}},
+    {key:'r0',head:'0',test:function(d){return d%3===0;}},{key:'r1',head:'1',test:function(d){return d%3===1;}},{key:'r2',head:'2',test:function(d){return d%3===2;}},
+    {key:'bms小',head:'小',test:function(d){return d<=2;}},{key:'bms中',head:'中',test:function(d){return d>2&&d<7;}},{key:'bms大',head:'大',test:function(d){return d>=7;}},
+    {key:'w金',head:'金',test:function(d){return WUXING[d]==='金';}},{key:'w木',head:'木',test:function(d){return WUXING[d]==='木';}},
+    {key:'w水',head:'水',test:function(d){return WUXING[d]==='水';}},{key:'w火',head:'火',test:function(d){return WUXING[d]==='火';}},{key:'w土',head:'土',test:function(d){return WUXING[d]==='土';}},
+    {key:'yin阴',head:'阴',test:function(d){return [0,3,4,6,7].indexOf(d)>=0;}},{key:'yin阳',head:'阳',test:function(d){return [0,3,4,6,7].indexOf(d)<0;}}
+  ];
+  var ATTR_GROUPS=[['大小',2],['奇偶',2],['质合',2],['012路',3],['大中小',3],['五行',5],['阴阳',2]];
+  var ATTR_SEP=new Set([0,2,4,6,9,12,17]);
+  function yearOf(r){return parseInt((''+r[1]).slice(0,4),10);}
+  function monthOf(r){return parseInt((''+r[1]).slice(5,7),10);}
+  function digitAt(r,posIdx){return r[2+posIdx];}
+  function statOf(hitArr){
+    var n=hitArr.length, idx=[]; for(var i=0;i<n;i++) if(hitArr[i]) idx.push(i);
+    var appear=idx.length;
+    var curGap=appear?(n-1)-idx[idx.length-1]:n;
+    var maxGap=appear?idx[0]:0;
+    for(var j=0;j<idx.length-1;j++){var g=idx[j+1]-idx[j]-1; if(g>maxGap)maxGap=g;}
+    if(curGap>maxGap)maxGap=curGap;
+    var avgGap=appear?Math.round((idx[idx.length-1]-(appear-1))/appear):0;
+    var maxCon=0,cur=0; for(var i2=0;i2<n;i2++){if(hitArr[i2]){cur++; if(cur>maxCon)maxCon=cur;} else cur=0;}
+    return {appear:appear,curGap:curGap,maxGap:maxGap,avgGap:avgGap,maxCon:maxCon};
+  }
+  function computeOmit(rows,getv){
+    var gaps=new Array(10).fill(0), map={};
+    rows.forEach(function(r){ var hit=getv(r); for(var v=0;v<10;v++){ if(v===hit) gaps[v]=0; else gaps[v]++; } map[r.issue]=gaps.slice(); });
+    return map;
+  }
+  var CACHE={};
+  function getCache(posIdx){
+    if(CACHE[posIdx]) return CACHE[posIdx];
+    var aggYear={}, yearMonths={};
+    DP5.forEach(function(r){
+      var yy=yearOf(r), t=digitAt(r,posIdx);
+      var o=aggYear[yy]||(aggYear[yy]={dig:new Array(10).fill(0),amp:new Array(10).fill(0),attr:{}});
+      o.dig[t]++;
+      ATTRS.forEach(function(a){ if(a.test(t)) o.attr[a.key]=(o.attr[a.key]||0)+1; });
+      var im=monthOf(r); (yearMonths[yy]||(yearMonths[yy]=new Set())).add(im);
+    });
+    DP5.forEach(function(r,i){ if(i>0){ var t=digitAt(r,posIdx), pt=digitAt(DP5[i-1],posIdx), amp=Math.abs(t-pt); var o=aggYear[yearOf(r)]||(aggYear[yearOf(r)]={dig:new Array(10).fill(0),amp:new Array(10).fill(0),attr:{}}); o.amp[amp]++; } });
+    CACHE[posIdx]={aggYear:aggYear, yearMonths:yearMonths};
+    return CACHE[posIdx];
+  }
+  function block(posIdx,label,yr,win){
+    var rows=DP5.map(function(r){ var d=digitAt(r,posIdx); return {issue:r[0],date:r[1],d:d,balls:''+r[2]+r[3]+r[4]+r[5]+r[6],sum:r[2]+r[3]+r[4]+r[5]+r[6],
+      size:(d<=4)?'小':'大',par:(d%2===1)?'奇':'偶',pr:([1,2,3,5,7].indexOf(d)>=0)?'质':'合',road:d%3,bms:(d<=2)?'小':(d<=6?'中':'大'),wx:WUXING[d],yin:([0,3,4,6,7].indexOf(d)>=0)?'阴':'阳'}; });
+    for(var i=0;i<rows.length;i++) rows[i].amp=(i===0)?null:Math.abs(rows[i].d-rows[i-1].d);
+    var shown=rows;
+    if(yr&&yr!=='0'){ shown=rows.filter(function(r){return (''+r.date).slice(0,4)===yr;}); }
+    else if(win>0){ shown=rows.slice(-win); }
+    var omitDig=computeOmit(rows,function(r){return r.d;});
+    var omitAmp=computeOmit(rows,function(r){return r.amp;});
+    var thead='<thead><tr><th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号码</th><th class="lab-h" rowspan="2">和值</th>';
+    thead+='<th class="grp-h" colspan="10">'+label+'</th>';
+    thead+='<th class="grp-h" colspan="10">振幅</th>';
+    ATTR_GROUPS.forEach(function(ag){ thead+='<th class="grp-h" colspan="'+ag[1]+'">'+ag[0]+'</th>'; });
+    thead+='</tr><tr>';
+    for(var v=0;v<10;v++) thead+='<th'+(v===0?' class="grp-sep"':'')+'>'+v+'</th>';
+    for(var w=0;w<10;w++) thead+='<th'+(w===0?' class="grp-sep"':'')+'>'+w+'</th>';
+    ATTRS.forEach(function(a,ai){ thead+='<th'+(ATTR_SEP.has(ai)?' class="grp-sep"':'')+'>'+a.head+'</th>'; });
+    thead+='</tr></thead>';
+    var tbody='<tbody>';
+    shown.forEach(function(r){
+      tbody+='<tr><td>'+r.issue+'</td><td>'+r.balls+'</td><td>'+r.sum+'</td>';
+      var od=omitDig[r.issue], oa=omitAmp[r.issue];
+      for(var v=0;v<10;v++){ if(v===r.d) tbody+='<td class="mk" data-grp="0" style="background:#8e44ad22;color:#8e44ad;font-weight:700">'+v+'</td>'; else tbody+='<td'+(v===0?' class="grp-sep omission"':' class="omission"')+'>'+(od?od[v]:0)+'</td>'; }
+      for(var w=0;w<10;w++){ if(w===r.amp) tbody+='<td class="mk" data-grp="1" style="background:#2980b922;color:#2980b9;font-weight:700">'+w+'</td>'; else tbody+='<td'+(w===0?' class="grp-sep omission"':' class="omission"')+'>'+(oa?oa[w]:0)+'</td>'; }
+      ATTRS.forEach(function(a,ai){ var hit=a.test(r.d); var cl=(ATTR_SEP.has(ai)?'grp-sep ':'')+(hit?'att-hit':''); tbody+='<td class="'+(cl||'')+'">'+(hit?a.head:'')+'</td>'; });
+      tbody+='</tr>';
+    });
+    tbody+='</tbody>';
+    // 统计
+    var digHit=[],ampHit=[],attrHit=[];
+    for(var v=0;v<10;v++){ (function(vv){ digHit[vv]=rows.map(function(r){return r.d===vv;}); })(v); }
+    for(var w2=0;w2<10;w2++){ (function(ww){ ampHit[ww]=rows.map(function(r){return r.amp!==null&&r.amp===ww;}); })(w2); }
+    ATTRS.forEach(function(a,ai){ attrHit[ai]=rows.map(function(r){return a.test(r.d);}); });
+    var digStats=digHit.map(function(h){return statOf(h);});
+    var ampStats=ampHit.map(function(h){return statOf(h);});
+    var attrStats=attrHit.map(function(h){return statOf(h);});
+    var statNames=['出现次数','当前遗漏','最大遗漏','平均遗漏','最大连出'];
+    var cache=getCache(posIdx); var aggYear=cache.aggYear, yearMonths=cache.yearMonths;
+    function isFull(y){var s=yearMonths[y]; return s&&s.has(1)&&s.has(12);}
+    function meanExcl(y){var yrs=Object.keys(aggYear).map(Number).filter(function(z){return z!==y&&isFull(z);}); var md=new Array(10).fill(0),ma=new Array(10).fill(0),am={}; ATTRS.forEach(function(a){am[a.key]=0;}); if(!yrs.length) return {dig:md,amp:ma,attr:am}; yrs.forEach(function(z){var o=aggYear[z]; for(var v=0;v<10;v++){md[v]+=o.dig[v];ma[v]+=o.amp[v];} ATTRS.forEach(function(a){am[a.key]+=(o.attr[a.key]||0);});}); for(var v=0;v<10;v++){md[v]=md[v]/yrs.length;ma[v]=ma[v]/yrs.length;} ATTRS.forEach(function(a){am[a.key]=am[a.key]/yrs.length;}); return {dig:md,amp:ma,attr:am};}
+    function mDiff(y){var cur=aggYear[y]||{dig:new Array(10).fill(0),amp:new Array(10).fill(0),attr:{}}; var mean=meanExcl(y); var ms=yearMonths[y]; var M=ms?Math.max.apply(null,Array.from(ms)):12; var out={dig:[],amp:[],attr:{}}; for(var v=0;v<10;v++) out.dig[v]=Math.round(cur.dig[v]-mean.dig[v]*(M/12)); for(var w=0;w<10;w++) out.amp[w]=Math.round(cur.amp[w]-mean.amp[w]*(M/12)); ATTRS.forEach(function(a){out.attr[a.key]=Math.round((cur.attr[a.key]||0)-(mean.attr[a.key]||0)*(M/12));}); return out;}
+    var isYearMode=(yr&&yr!=='0');
+    var mDiffArr=isYearMode?mDiff(parseInt(yr,10)):null;
+    var yearRows=[];
+    if(isYearMode){var sy=parseInt(yr,10); var comp=Object.keys(aggYear).map(Number).filter(function(y){return y<sy&&isFull(y);}).sort(function(a,b){return a-b;}).slice(-5).reverse(); comp.forEach(function(y){yearRows.push({year:y,vals:mDiff(y)});});}
+    function statVal(st,sn){ if(sn==='出现次数')return st.appear; if(sn==='当前遗漏')return st.curGap; if(sn==='最大遗漏')return st.maxGap; if(sn==='平均遗漏')return st.avgGap; if(sn==='最大连出')return st.maxCon; return '—'; }
+    function mdiffRow(label,arr){ if(!arr) return ''; var h='<tr class="mrow"><td class="footer-lab" colspan="3">'+label+'</td>'; for(var v=0;v<10;v++){var x=(arr.dig&&arr.dig[v]!=null)?arr.dig[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>';} for(var w=0;w<10;w++){var x2=(arr.amp&&arr.amp[w]!=null)?arr.amp[w]:'—'; h+='<td'+(w===0?' class="grp-sep"':'')+'>'+x2+'</td>';} ATTRS.forEach(function(a,ai){var x3=(arr.attr&&arr.attr[a.key]!=null)?arr.attr[a.key]:'—'; h+='<td'+(ATTR_SEP.has(ai)?' class="grp-sep"':'')+'>'+x3+'</td>';}); return h+'</tr>'; }
+    var tfoot='<tfoot>';
+    statNames.forEach(function(sn){
+      tfoot+='<tr><td class="footer-lab" colspan="3">'+sn+'</td>';
+      for(var v=0;v<10;v++){ tfoot+='<td'+(v===0?' class="grp-sep"':'')+'>'+statVal(digStats[v],sn)+'</td>'; }
+      for(var w=0;w<10;w++){ tfoot+='<td'+(w===0?' class="grp-sep"':'')+'>'+statVal(ampStats[w],sn)+'</td>'; }
+      ATTRS.forEach(function(a,ai){ tfoot+='<td'+(ATTR_SEP.has(ai)?' class="grp-sep"':'')+'>'+statVal(attrStats[ai],sn)+'</td>'; });
+      tfoot+='</tr>';
+    });
+    if(isYearMode) tfoot+=mdiffRow('M差值', mDiffArr);
+    yearRows.forEach(function(r){ tfoot+=mdiffRow(r.year+' M差值', r.vals); });
+    tfoot+='</tfoot>';
+    return '<div class="pl5dt"><h4>第'+label+'位 走势图（号码'+label+'0-9 紫 / 振幅0-9 蓝 · 折线绘于表格内对应列）</h4>'
+      +'<div class="bwScroll"><table id="pl5dtTbl_'+posIdx+'" class="pl5dgt">'+thead+tbody+tfoot+'</table></div>'
+      +'<div class="bwChartWrap"><svg id="pl5dtSvg_'+posIdx+'"></svg></div></div>';
+  }
+  function drawLines(posIdx){
+    var tbl=document.getElementById('pl5dtTbl_'+posIdx); if(!tbl) return;
+    var scroll=tbl.parentElement; if(!scroll||!scroll.querySelector) return;
+    var old=scroll.querySelector('svg.overlay'); if(old) old.remove();
+    var tbody=tbl.tBodies&&tbl.tBodies[0]; if(!tbody) return;
+    var rowsArr=[].slice.call(tbody.rows); if(!rowsArr.length) return;
+    if(!rowsArr[0].cells[0].getBoundingClientRect) return; // 无头桩环境跳过
+    scroll.style.position='relative';
+    var sr=scroll.getBoundingClientRect();
+    var svg=document.createElementNS(sns,'svg');
+    svg.setAttribute('class','overlay'); svg.setAttribute('width',scroll.scrollWidth); svg.setAttribute('height',scroll.scrollHeight);
+    svg.style.position='absolute'; svg.style.left='0'; svg.style.top='0'; svg.style.width=scroll.scrollWidth+'px'; svg.style.height=scroll.scrollHeight+'px'; svg.style.pointerEvents='none'; svg.style.zIndex='5';
+    var p0=[],p1=[];
+    rowsArr.forEach(function(tr){ var m0=tr.querySelector('td.mk[data-grp="0"]'); var m1=tr.querySelector('td.mk[data-grp="1"]'); if(m0){var r=m0.getBoundingClientRect(); p0.push([r.left-sr.left+scroll.scrollLeft+r.width/2, r.top-sr.top+scroll.scrollTop+r.height/2]);} if(m1){var r1=m1.getBoundingClientRect(); p1.push([r1.left-sr.left+scroll.scrollLeft+r1.width/2, r1.top-sr.top+scroll.scrollTop+r1.height/2]);} });
+    [['#8e44ad',p0],['#2980b9',p1]].forEach(function(pr){ if(pr[1].length>1){ var pl=document.createElementNS(sns,'polyline'); pl.setAttribute('points',pr[1].map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ')); pl.setAttribute('fill','none'); pl.setAttribute('stroke',pr[0]); pl.setAttribute('stroke-width','1.8'); pl.setAttribute('opacity','0.95'); svg.appendChild(pl); pr[1].forEach(function(p){ var c=document.createElementNS(sns,'circle'); c.setAttribute('cx',p[0].toFixed(1)); c.setAttribute('cy',p[1].toFixed(1)); c.setAttribute('r','1.7'); c.setAttribute('fill',pr[0]); svg.appendChild(c); }); } });
+    scroll.appendChild(svg);
+    var svg2=document.getElementById('pl5dtSvg_'+posIdx); if(svg2){
+      var tblRect=tbl.getBoundingClientRect(); var W=tbl.scrollWidth, Hc=240;
+      svg2.setAttribute('width',W); svg2.setAttribute('height',Hc); svg2.style.width=W+'px'; svg2.style.height=Hc+'px'; svg2.innerHTML='';
+      var q0=[],q1=[];
+      rowsArr.forEach(function(tr){ var iss=tr.cells[0]; var rr=iss.getBoundingClientRect(); var x=rr.left-tblRect.left+iss.offsetWidth/2; var m0=tr.querySelector('td.mk[data-grp="0"]'); var v0=m0?parseInt(m0.textContent,10):NaN; if(!isNaN(v0)) q0.push(x+','+(Hc-(v0+0.5)/10*Hc)); var m1=tr.querySelector('td.mk[data-grp="1"]'); var v1=m1?parseInt(m1.textContent,10):NaN; if(!isNaN(v1)) q1.push(x+','+(Hc-(v1+0.5)/10*Hc)); });
+      [['#8e44ad',q0],['#2980b9',q1]].forEach(function(pr){ if(pr[1].length>1){ var pl=document.createElementNS(sns,'polyline'); pl.setAttribute('points',pr[1].join(' ')); pl.setAttribute('fill','none'); pl.setAttribute('stroke',pr[0]); pl.setAttribute('stroke-width','1.4'); pl.setAttribute('opacity','0.9'); svg2.appendChild(pl); } });
+    }
+  }
+  function render(){
+    var chks=document.querySelectorAll('.pl5TrendChk');
+    var poses=[]; for(var i=0;i<chks.length;i++){ if(chks[i].checked) poses.push({pos:parseInt(chks[i].getAttribute('data-pos'),10), label:chks[i].getAttribute('data-label')}); }
+    var panel=document.getElementById('pl5TrendPanel'); var box=document.getElementById('pl5dtBox');
+    if(!poses.length){ if(panel)panel.style.display='none'; if(box)box.innerHTML=''; return; }
+    if(panel)panel.style.display='';
+    var yr=document.getElementById('pl5dtYear').value;
+    var win=parseInt(document.getElementById('pl5dtWin').value,10);
+    var html=''; poses.forEach(function(p){ html+=block(p.pos,p.label,yr,win); });
+    box.innerHTML=html;
+    poses.forEach(function(p){ drawLines(p.pos); });
+  }
+  function initYears(){ var sel=document.getElementById('pl5dtYear'); if(!sel) return; var ys={}; DP5.forEach(function(r){ ys[(''+r[1]).slice(0,4)]=1; }); var list=Object.keys(ys).sort().reverse(); var h='<option value="0">全部年份</option>'; list.forEach(function(y){ h+='<option value="'+y+'">'+y+' 年</option>'; }); sel.innerHTML=h; }
+  return {render:render, initYears:initYears};
+})();
+(function(){
+  PL5_TREND.initYears();
+  var chks=document.querySelectorAll('.pl5TrendChk'); for(var i=0;i<chks.length;i++){ chks[i].addEventListener('change', PL5_TREND.render); }
+  var ysel=document.getElementById('pl5dtYear'); if(ysel) ysel.onchange=PL5_TREND.render;
+  var wsel=document.getElementById('pl5dtWin'); if(wsel) wsel.onchange=PL5_TREND.render;
 })();
 
 </script>

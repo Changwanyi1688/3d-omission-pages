@@ -200,6 +200,8 @@
   .bwScroll{overflow-x:auto;width:100%}
   .bwChartWrap{width:100%;overflow-x:auto;margin-top:10px;border-top:1px dashed #cdd5df;padding-top:8px}
   .bwChartWrap svg{display:block}
+  .bwScroll{position:relative}
+  .bwOverlay{position:absolute;left:0;top:0;pointer-events:none;z-index:5}
   /* 直组三码遗漏：四张表（直选三不同/对子 + 组六/组三）四列响应式网格 */
   .zu3Grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:6px}
   @media(max-width:760px){.zu3Grid{grid-template-columns:1fr}}
@@ -594,7 +596,7 @@
 
   <!-- 百位走势图（遗漏组合查询·号码项内，依据 cjcp 3d_weishu-bw 逻辑用数据库历史数据绘制；折线图置于表格下方） -->
   <div class="panel" id="bwPanel" style="display:none">
-    <div class="resTitle">百位走势图｜ 百位0-9(紫) / 振幅0-9(蓝) 连线（折线图位于表格下方）｜ 大小：01234小/56789大 ｜ 大中小：012小/3456中/789大 ｜ 其余属性（奇偶/质合/012路/五行/阴阳）口径见下方说明</div>
+    <div class="resTitle">百位走势图｜ 百位0-9(紫) / 振幅0-9(蓝) 连线（直接绘于表格内 号码列/振幅列 格子上，并在表格下方附独立折线图）｜ 大小：01234小/56789大 ｜ 大中小：012小/3456中/789大 ｜ 其余属性（奇偶/质合/012路/五行/阴阳）口径见下方说明</div>
     <div class="row">
       <span class="lab">期号范围</span>
       <input type="number" id="bwFrom" style="width:90px" placeholder="起期">
@@ -2966,39 +2968,81 @@ function renderBw(shown, all, grp, metaEl, warnEl){
     sumHead:'和值',
     showAttrSub:false,
     metaTitle:'百位走势图',
-    metaExtra:'连线（表格下方独立折线图）：百位(紫)/振幅(蓝) ｜ 振幅=本期百位−上期百位绝对值 ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 表脚 5 项统计与 M差值 覆盖 全部数值列'
+    metaExtra:'连线：① 表格内「号码(紫)/振幅(蓝)」列格子直接连出折线；② 表格下方附独立折线图（纵轴 0-9 数值）。振幅=本期百位−上期百位绝对值 ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 表脚 5 项统计与 M差值 覆盖 全部数值列'
   });
 }
 function drawBwLines(){
-  const tbl=$('bwTable'); const svg=$('bwSvg'); const wrap=$('bwChartWrap');
-  if(!tbl||!svg||!wrap) return;
-  const tbody=tbl.tBodies[0]; if(!tbody){ svg.innerHTML=''; return; }
-  const rows=[...tbody.rows];
-  if(rows.length===0){ svg.innerHTML=''; return; }
-  const W=tbl.scrollWidth; const Hc=240;
-  svg.setAttribute('width',W); svg.setAttribute('height',Hc);
-  svg.style.width=W+'px'; svg.style.height=Hc+'px';
-  svg.innerHTML='';
-  const tblRect=tbl.getBoundingClientRect();
-  const pts0=[],pts1=[];
-  rows.forEach(tr=>{
-    const issTd=tr.cells[0];
-    const rr=issTd.getBoundingClientRect();
-    const x=rr.left-tblRect.left+issTd.offsetWidth/2;
-    const m0=tr.querySelector('td.mk[data-grp="0"]'); const v0=m0?parseInt(m0.textContent,10):null;
-    if(v0!==null&&!isNaN(v0)){ pts0.push(x+','+(Hc-(v0+0.5)/10*Hc)); }
-    const m1=tr.querySelector('td.mk[data-grp="1"]'); const v1=m1?parseInt(m1.textContent,10):null;
-    if(v1!==null&&!isNaN(v1)){ pts1.push(x+','+(Hc-(v1+0.5)/10*Hc)); }
-  });
-  [['#8e44ad',pts0],['#2980b9',pts1]].forEach(([col,pts])=>{
-    if(pts.length>1){
-      const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
-      pl.setAttribute('points',pts.join(' '));
-      pl.setAttribute('fill','none'); pl.setAttribute('stroke',col);
-      pl.setAttribute('stroke-width','1.4'); pl.setAttribute('opacity','0.9');
-      svg.appendChild(pl);
+  const tbl=$('bwTable');
+  if(!tbl) return;
+  // ---- ① 表格内连线：叠在表格上，穿过 号码列(grp0)/振幅列(grp1) 的命中格 ----
+  const scroll=tbl.parentElement;
+  if(scroll && scroll.querySelector){
+    const old=scroll.querySelector('svg.bwOverlay'); if(old) old.remove();
+    const tbody=tbl.tBodies&&tbl.tBodies[0];
+    if(tbody){
+      const rows=[...tbody.rows];
+      if(rows.length){
+        scroll.style.position='relative';
+        const sr=scroll.getBoundingClientRect();
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('class','bwOverlay');
+        svg.setAttribute('width',scroll.scrollWidth); svg.setAttribute('height',scroll.scrollHeight);
+        svg.style.position='absolute'; svg.style.left='0'; svg.style.top='0';
+        svg.style.width=scroll.scrollWidth+'px'; svg.style.height=scroll.scrollHeight+'px';
+        svg.style.pointerEvents='none'; svg.style.zIndex='5';
+        const p0=[],p1=[];
+        rows.forEach(tr=>{
+          const m0=tr.querySelector('td.mk[data-grp="0"]');
+          const m1=tr.querySelector('td.mk[data-grp="1"]');
+          if(m0){const r=m0.getBoundingClientRect(); p0.push([r.left-sr.left+scroll.scrollLeft+r.width/2, r.top-sr.top+scroll.scrollTop+r.height/2]);}
+          if(m1){const r=m1.getBoundingClientRect(); p1.push([r.left-sr.left+scroll.scrollLeft+r.width/2, r.top-sr.top+scroll.scrollTop+r.height/2]);}
+        });
+        [['#8e44ad',p0],['#2980b9',p1]].forEach(([col,pts])=>{
+          if(pts.length>1){
+            const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+            pl.setAttribute('points',pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
+            pl.setAttribute('fill','none'); pl.setAttribute('stroke',col);
+            pl.setAttribute('stroke-width','1.8'); pl.setAttribute('opacity','0.95');
+            svg.appendChild(pl);
+            pts.forEach(p=>{
+              const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+              c.setAttribute('cx',p[0].toFixed(1)); c.setAttribute('cy',p[1].toFixed(1)); c.setAttribute('r','1.7');
+              c.setAttribute('fill',col); svg.appendChild(c);
+            });
+          }
+        });
+        scroll.appendChild(svg);
+      }
     }
-  });
+  }
+  // ---- ② 表格下方独立折线图（纵轴 0-9 数值），作为补充视图 ----
+  const svg2=$('bwSvg'), wrap=$('bwChartWrap');
+  if(svg2&&wrap){
+    const tbody=tbl.tBodies&&tbl.tBodies[0]; if(!tbody){ svg2.innerHTML=''; return; }
+    const rows=[...tbody.rows]; if(rows.length===0){ svg2.innerHTML=''; return; }
+    const W=tbl.scrollWidth; const Hc=240;
+    svg2.setAttribute('width',W); svg2.setAttribute('height',Hc);
+    svg2.style.width=W+'px'; svg2.style.height=Hc+'px'; svg2.innerHTML='';
+    const tblRect=tbl.getBoundingClientRect();
+    const pts0=[],pts1=[];
+    rows.forEach(tr=>{
+      const issTd=tr.cells[0]; const rr=issTd.getBoundingClientRect();
+      const x=rr.left-tblRect.left+issTd.offsetWidth/2;
+      const m0=tr.querySelector('td.mk[data-grp="0"]'); const v0=m0?parseInt(m0.textContent,10):null;
+      if(v0!==null&&!isNaN(v0)){ pts0.push(x+','+(Hc-(v0+0.5)/10*Hc)); }
+      const m1=tr.querySelector('td.mk[data-grp="1"]'); const v1=m1?parseInt(m1.textContent,10):null;
+      if(v1!==null&&!isNaN(v1)){ pts1.push(x+','+(Hc-(v1+0.5)/10*Hc)); }
+    });
+    [['#8e44ad',pts0],['#2980b9',pts1]].forEach(([col,pts])=>{
+      if(pts.length>1){
+        const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+        pl.setAttribute('points',pts.join(' '));
+        pl.setAttribute('fill','none'); pl.setAttribute('stroke',col);
+        pl.setAttribute('stroke-width','1.4'); pl.setAttribute('opacity','0.9');
+        svg2.appendChild(pl);
+      }
+    });
+  }
 }
 window.addEventListener('resize',()=>{ if($('wshzPanel').style.display!=='none') drawWshzLines(); if($('kdPanel').style.display!=='none') drawKdLines(); if($('bwPanel').style.display!=='none') drawBwLines(); });
 

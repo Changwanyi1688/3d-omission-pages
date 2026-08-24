@@ -157,6 +157,18 @@
   #kdTable tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
   #kdTable tr.mrow td:first-child{color:#a0670f}
   #kdTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
+  /* 百位走势图表格：随主页面宽度自适应铺满，无横向滚动；小字号压缩列宽 */
+  #bwTable{width:100%;border-collapse:collapse;font-size:10px;table-layout:auto}
+  #bwTable th,#bwTable td{padding:1px 3px;white-space:nowrap;border:1px solid #e3e8ef}
+  #bwTable .lab-h{background:#27384d;color:#fff;font-weight:700;font-size:10px}
+  #bwTable .grp-h{background:#31475f;color:#fff;font-weight:600;font-size:10px}
+  #bwTable .grp-sep{border-left:2px solid #8fa3b8}
+  #bwTable .mk{font-weight:700}
+  #bwTable td.omission{color:#a8aeb8;font-size:9px}
+  #bwTable .att-hit{background:#dbeafe;color:#1e40af;font-weight:700}
+  #bwTable tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
+  #bwTable tr.mrow td:first-child{color:#a0670f}
+  #bwTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:6px;white-space:nowrap;font-size:10px}
   #kdSvg{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
   .mk-pos{color:#e74c3c;font-weight:700}  /* M差值：高于历史同月均值 */
   .mk-neg{color:#2980b9;font-weight:700}  /* M差值：低于历史同月均值 */
@@ -923,7 +935,7 @@ function theoretical(cat,sub,codes,grp,periodLen){
 
 /* ---------- 类别 / 子项 / 号码宇宙 ---------- */
 const CATS=[
-  {name:'号码',label:'号码',subs:['不定位','百位','十位','个位','百位走势']},
+  {name:'号码',label:'号码',subs:['不定位','百位','十位','个位']},
   {name:'和值',label:'和值',subs:['全']},
   {name:'合值',label:'合值',subs:['全']},
   {name:'跨度',label:'跨度',subs:['全']},
@@ -2719,8 +2731,10 @@ function renderGridChart(shown, all, grp, metaEl, warnEl, cfg){
   grids.forEach(g=>{ thead+='<th class="grp-h" colspan="'+g.n+'">'+g.name+'</th>'; });
   attrGroups.forEach(ag=>{
     let sub='';
-    if(ag[0]==='大小') sub='<span class="zsub">01234小/56789大</span>';
-    else if(ag[0]==='大中小') sub='<span class="zsub">012小/3456中/789大</span>';
+    if(cfg.showAttrSub!==false){
+      if(ag[0]==='大小') sub='<span class="zsub">01234小/56789大</span>';
+      else if(ag[0]==='大中小') sub='<span class="zsub">012小/3456中/789大</span>';
+    }
     thead+='<th class="grp-h" colspan="'+ag[1]+'">'+ag[0]+sub+'</th>';
   });
   thead+='</tr><tr>';
@@ -2950,6 +2964,7 @@ function renderBw(shown, all, grp, metaEl, warnEl){
     keyOf:(a,b,c)=>a,
     grids:[{name:'百位',n:10,get:r=>r.tail,color:'#8e44ad'},{name:'振幅',n:10,get:r=>r.amp,color:'#2980b9'}],
     sumHead:'和值',
+    showAttrSub:false,
     metaTitle:'百位走势图',
     metaExtra:'连线（表格下方独立折线图）：百位(紫)/振幅(蓝) ｜ 振幅=本期百位−上期百位绝对值 ｜ 属性按类分列：大小(小|大) 奇偶(奇|偶) 质合(质|合) 012路(0/1/2) 大中小(小|中|大) 五行(19金/28木/37水/46火/50土) 阴阳(03467阴/12589阳) ｜ 表脚 5 项统计与 M差值 覆盖 全部数值列'
   });
@@ -3029,15 +3044,10 @@ function kdQuery(){
 function query(){
   warnBox.textContent='';
   const cat=curCat, sub=curSub, grp=curGrp;
-
-  // 号码项 → 百位走势图：独立面板，隐藏遗漏表
-  if(cat==='号码' && sub==='百位走势'){
-    $('resPanel').style.display='none';
-    $('bwPanel').style.display='';
-    bwQuery();
-    return;
-  }
-  $('bwPanel').style.display='none';
+  // 号码·百位：上方渲染常规「查询结果表格」，下方追加「百位走势图」（折线图置于表下方）
+  const showBw = (cat==='号码' && sub==='百位');
+  $('bwPanel').style.display = showBw ? '' : 'none';
+  $('resPanel').style.display=''; $('zstPanel').style.display='none';
 
   // ===== 其他组合：改用引擎从开奖号实时计算（不再依赖 17500 快照；号码类型/号码形态 用标准五分类）=====
 
@@ -3091,6 +3101,7 @@ function query(){
   metaBox.textContent=`统计范围：${period[0][0]} ～ ${period[period.length-1][0]}（共 ${period.length} 期）｜ 类型过滤：${grp} ｜ 子项：${sub} ｜ 共 ${lastRows.length} 行`;
   if(truncated)warnBox.textContent=`结果过多，仅显示前 ${MAXROWS} 行。请缩小期号范围。`;
   renderRows();
+  if(showBw) bwQuery();   // 百位项：常规表格渲染后，在其下方追加百位走势图
 }
 
 /* ---------- 事件 ---------- */

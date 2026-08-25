@@ -151,7 +151,8 @@ table.pl5dgt th{background:#1e293b;color:#cbd5e1;font-weight:600}
 table.pl5dgt th.lab-h{background:#26344f}
 table.pl5dgt th.col-issue{width:66px}
 table.pl5dgt th.col-balls{width:58px}
-table.pl5dgt td.col-issue,table.pl5dgt td.col-balls{background:#1b2a44;color:#e2e8f0;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600}
+table.pl5dgt td.col-issue{background:#1b2a44;color:#e2e8f0;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:400}
+table.pl5dgt td.col-balls{background:#1b2a44;color:#e2e8f0;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700}
 table.pl5dgt thead tr:first-child th{position:sticky;top:0;z-index:3}
 table.pl5dgt thead tr:nth-child(2) th{position:sticky;top:23px;z-index:3}
 table.pl5dgt tbody tr:nth-child(even){background:#172033}
@@ -161,7 +162,8 @@ table.pl5dgt td.grp-sep{border-left:2px solid #475569}
 table.pl5dgt td.att-hit{background:#1e3a5f;color:#7dd3fc;font-weight:700}
 table.pl5dgt tfoot td{background:#172033;font-weight:600}
 table.pl5dgt tfoot td.footer-lab{background:#1e293b;color:#e2e8f0;text-align:left;padding-left:6px;white-space:nowrap}
-table.pl5dgt tfoot td.mrow{background:#fdf6e3;color:#b45309;font-weight:700}
+table.pl5dgt tfoot tr.mcur td{background:#fdf6e3;color:#b45309;font-weight:700}
+table.pl5dgt tfoot tr.mcmp td{background:#172033;color:#94a3b8;font-weight:400}
 table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
 .bwChartWrap{width:100%;overflow-x:auto;margin-top:8px;border-top:1px dashed #334155;padding-top:6px}
 .bwChartWrap svg{display:block}
@@ -173,7 +175,7 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-25 21:38</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026226 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">0</div><div class="num s">1</div><div class="num">6</div><div class="num">9</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">0</div><div class="snum">1</div><div class="snum">1</div><div class="snum">3</div><div class="snum">7</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span><span class="tag"><b>对应码</b>19366</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-25 21:43</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026226 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">0</div><div class="num s">1</div><div class="num">6</div><div class="num">9</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">0</div><div class="snum">1</div><div class="snum">1</div><div class="snum">3</div><div class="snum">7</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span><span class="tag"><b>对应码</b>19366</span></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
@@ -1210,7 +1212,7 @@ var PL5_TREND=(function(){
     var yearRows=[];
     if(isYearMode){var sy=parseInt(yr,10); var comp=Object.keys(aggYear).map(Number).filter(function(y){return y<sy&&isFull(y);}).sort(function(a,b){return a-b;}).slice(-5).reverse(); comp.forEach(function(y){yearRows.push({year:y,vals:mDiff(y)});});}
     function statVal(st,sn){ if(sn==='出现次数')return st.appear; if(sn==='当前遗漏')return st.curGap; if(sn==='最大遗漏')return st.maxGap; if(sn==='平均遗漏')return st.avgGap; if(sn==='最大连出')return st.maxCon; return '—'; }
-    function mdiffRow(label,arr){ if(!arr) return ''; var h='<tr class="mrow"><td class="footer-lab" colspan="3">'+label+'</td>'; for(var v=0;v<10;v++){var x=(arr.dig&&arr.dig[v]!=null)?arr.dig[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>';} for(var w=0;w<10;w++){var x2=(arr.amp&&arr.amp[w]!=null)?arr.amp[w]:'—'; h+='<td'+(w===0?' class="grp-sep"':'')+'>'+x2+'</td>';} ATTRS.forEach(function(a,ai){var x3=(arr.attr&&arr.attr[a.key]!=null)?arr.attr[a.key]:'—'; h+='<td'+(ATTR_SEP.has(ai)?' class="grp-sep"':'')+'>'+x3+'</td>';}); return h+'</tr>'; }
+    function mdiffRow(label,arr,isCur){ if(!arr) return ''; var rc=isCur?'mrow mcur':'mrow mcmp'; var h='<tr class="'+rc+'"><td class="footer-lab" colspan="3">'+label+'</td>'; for(var v=0;v<10;v++){var x=(arr.dig&&arr.dig[v]!=null)?arr.dig[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>';} for(var w=0;w<10;w++){var x2=(arr.amp&&arr.amp[w]!=null)?arr.amp[w]:'—'; h+='<td'+(w===0?' class="grp-sep"':'')+'>'+x2+'</td>';} ATTRS.forEach(function(a,ai){var x3=(arr.attr&&arr.attr[a.key]!=null)?arr.attr[a.key]:'—'; h+='<td'+(ATTR_SEP.has(ai)?' class="grp-sep"':'')+'>'+x3+'</td>';}); return h+'</tr>'; }
     var tfoot='<tfoot>';
     statNames.forEach(function(sn){
       tfoot+='<tr><td class="footer-lab" colspan="3">'+sn+'</td>';
@@ -1219,8 +1221,8 @@ var PL5_TREND=(function(){
       ATTRS.forEach(function(a,ai){ tfoot+='<td'+(ATTR_SEP.has(ai)?' class="grp-sep"':'')+'>'+statVal(attrStats[ai],sn)+'</td>'; });
       tfoot+='</tr>';
     });
-    if(isYearMode) tfoot+=mdiffRow('M差值', mDiffArr);
-    yearRows.forEach(function(r){ tfoot+=mdiffRow(r.year+' M差值', r.vals); });
+    if(isYearMode) tfoot+=mdiffRow('M差值', mDiffArr, true);
+    yearRows.forEach(function(r){ tfoot+=mdiffRow(r.year+' M差值', r.vals, false); });
     tfoot+='</tfoot>';
     return '<div class="pl5dt" id="pl5dtBlk_'+posIdx+'"><h4>'+label+'位 走势图（号码'+label+'0-9 紫 / 振幅0-9 蓝 · 折线绘于表格内对应列）</h4>'
       +'<div class="bwScroll"><table id="pl5dtTbl_'+posIdx+'" class="pl5dgt">'+thead+tbody+tfoot+'</table></div>'

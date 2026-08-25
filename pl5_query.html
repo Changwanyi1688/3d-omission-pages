@@ -144,18 +144,23 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 .pl5trend h3{color:#7dd3fc}
 .pl5dt{margin-top:8px;border:1px solid #334155;border-radius:8px;background:#0f172a;padding:8px}
 .pl5dt h4{color:#7dd3fc;font-size:14px;margin:0 0 4px}
-.bwScroll{overflow-x:auto;width:100%;position:relative}
+.bwScroll{overflow-x:auto;overflow-y:auto;max-height:62vh;width:100%;position:relative}
 table.pl5dgt{border-collapse:collapse;font-size:12px;white-space:nowrap;color:#cbd5e1;width:100%;table-layout:fixed}
-table.pl5dgt th,table.pl5dgt td{border:1px solid #2a3a52;padding:2px 1px;text-align:center;overflow:hidden}
+table.pl5dgt th,table.pl5dgt td{border:1px solid #2a3a52;padding:2px 1px;text-align:center;overflow:hidden;box-sizing:border-box}
 table.pl5dgt th{background:#1e293b;color:#cbd5e1;font-weight:600}
 table.pl5dgt th.lab-h{background:#26344f}
 table.pl5dgt th.col-issue{width:66px}
 table.pl5dgt th.col-balls{width:58px}
 table.pl5dgt td.col-issue{background:#1b2a44;color:#e2e8f0;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:400}
 table.pl5dgt td.col-balls{background:#1b2a44;color:#e2e8f0;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700}
-table.pl5dgt thead tr:first-child th{position:sticky;top:0;z-index:3}
-table.pl5dgt thead tr:nth-child(2) th{position:sticky;top:23px;z-index:3}
+table.pl5dgt thead tr:first-child th{position:sticky;top:0;z-index:3;height:22px}
+table.pl5dgt thead tr:nth-child(2) th{position:sticky;top:22px;z-index:3}
 table.pl5dgt tbody tr:nth-child(even){background:#172033}
+/* 鼠标跟随：行+列 十字高亮（不破坏命中格/属性格各自底色，仅叠半透明蒙层） */
+table.pl5dgt td.hl-row{box-shadow:inset 0 0 0 9999px rgba(125,211,252,0.14)}
+table.pl5dgt td.hl-col{box-shadow:inset 0 0 0 9999px rgba(248,113,113,0.12)}
+table.pl5dgt td.hl-row.hl-col{box-shadow:inset 0 0 0 9999px rgba(250,204,21,0.28)}
+table.pl5dgt th.hl-col{box-shadow:inset 0 0 0 9999px rgba(248,113,113,0.22)}
 table.pl5dgt td.mk{font-weight:700}
 table.pl5dgt td.omission{color:#5b6b82;font-size:11px}
 table.pl5dgt td.grp-sep{border-left:2px solid #475569}
@@ -175,7 +180,7 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-25 22:02</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026227 期</span>开奖号码</span><div class="balls"><div class="num">4</div><div class="num">3</div><div class="num s">1</div><div class="num">9</div><div class="num">5</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">0</div><div class="snum">1</div><div class="snum">1</div><div class="snum">3</div><div class="snum">7</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span><span class="tag"><b>对应码</b>19366</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-25 22:12</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026227 期</span>开奖号码</span><div class="balls"><div class="num">4</div><div class="num">3</div><div class="num s">1</div><div class="num">9</div><div class="num">5</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">0</div><div class="snum">1</div><div class="snum">1</div><div class="snum">3</div><div class="snum">7</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">5</div><div class="snum">4</div><div class="snum">5</div><div class="snum">2</div><div class="snum">5</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>05685</span><span class="tag"><b>对应码</b>19366</span></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
@@ -1254,6 +1259,22 @@ var PL5_TREND=(function(){
     }
   }
   var SHOWN={};  // posIdx -> label（点击「走势图」后加入，跳转并显示该分位走势图）
+  function bindCrosshair(tbl){
+    if(!tbl||!tbl.addEventListener) return;
+    var cur=[];
+    function clear(){ for(var i=0;i<cur.length;i++){ cur[i].classList.remove('hl-row'); cur[i].classList.remove('hl-col'); } cur=[]; }
+    var lastKey='';
+    tbl.addEventListener('mousemove', function(e){
+      var cell=(e.target&&e.target.closest)?e.target.closest('td,th'):null;
+      if(!cell||!tbl.contains(cell)){ if(cur.length) clear(); lastKey=''; return; }
+      var tr=cell.parentElement, ci=cell.cellIndex, ri=tr.rowIndex, key=ri+','+ci;
+      if(key===lastKey) return;            // 同一格内移动，跳过重复计算
+      lastKey=key; clear();
+      var rc=tr.cells; for(var i=0;i<rc.length;i++){ rc[i].classList.add('hl-row'); cur.push(rc[i]); }       // 整行高亮
+      var rs=tbl.rows; for(var r=0;r<rs.length;r++){ var c=rs[r].cells[ci]; if(c){ c.classList.add('hl-col'); cur.push(c); } }  // 整列高亮（含表头）
+    });
+    tbl.addEventListener('mouseleave', function(){ clear(); lastKey=''; });
+  }
   function render(){
     var poses=[]; for(var k in SHOWN) poses.push({pos:parseInt(k,10), label:SHOWN[k]});
     var panel=document.getElementById('pl5TrendPanel'); var box=document.getElementById('pl5dtBox');
@@ -1264,6 +1285,7 @@ var PL5_TREND=(function(){
     var html=''; poses.forEach(function(p){ html+=block(p.pos,p.label,yr,win); });
     box.innerHTML=html;
     poses.forEach(function(p){ drawLines(p.pos); });
+    poses.forEach(function(p){ var t=document.getElementById('pl5dtTbl_'+p.pos); bindCrosshair(t); });  // 鼠标跟随 行+列 高亮
   }
   function go(posIdx,label){
     SHOWN[posIdx]=label;          // 点击即显示该分位走势图

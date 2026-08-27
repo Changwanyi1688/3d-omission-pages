@@ -190,6 +190,7 @@
   #lmGrids td.omission{color:#9aa0a6;font-size:11px}
   /* 直选定位两码：三个位置各一张卡片横向并排（每位置100种），小字号自适应页面宽度 */
   .zxCols{display:flex;flex-direction:row;flex-wrap:wrap;gap:5px;align-items:flex-start;margin-top:6px;padding:4px}
+  .zxZuWrap{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;margin-top:6px}
   .zxCol{flex:1 1 300px;min-width:0;background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);overflow-x:auto}
   .zxColTitle{background:linear-gradient(135deg,#3a5b78,#2c3e50);color:#fff;font-weight:600;text-align:center;padding:8px 0;font-size:13px;letter-spacing:1px}
   .zxCol table{width:100%;border-collapse:collapse}
@@ -693,8 +694,10 @@
   <!-- 模式：直/组两码遗漏（直选两码100 + 组选两码55，合并为一项） -->
   <div class="panel" id="zxZuPanel" style="display:none">
     <div class="resTitle">直/组两码遗漏 ｜ 直选两码（100 种有序两码，三位置合并）+ 组选两码（55 种无序两码，不计位置），均按当前遗漏降序</div>
-    <div id="zx2Result" class="zxCols"></div>
-    <div id="zxGroupResult" class="zxCols"></div>
+    <div class="zxZuWrap">
+      <div id="zx2Result" class="zxCols"></div>
+      <div id="zxGroupResult" class="zxCols"></div>
+    </div>
   </div>
 
   <!-- 模式六：1257&1368 出号数分档统计 -->

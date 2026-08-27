@@ -86,7 +86,7 @@ table.hzcat.tp td{white-space:nowrap;padding:2px 5px}
 table.hzcat td.mk{background:#fdf6e3;color:#b45309;font-weight:700}
 table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 /* 全量表 */
-.hzall{margin-top:5px;border:1px solid #334155;border-radius:8px;background:#0f172a;padding:10px 12px;overflow-x:auto}
+.hzall{margin-top:5px;border:1px solid #334155;border-radius:8px;background:#0f172a;padding:10px 12px;overflow-x:hidden}
 .hzall .cz{font-size:13px;color:#e2e8f0;margin:4px 0 3px;font-weight:700}
 .hzall .cz:first-child{margin-top:0}
 .hzall table{border-collapse:collapse;font-size:12px;color:#cbd5e1;width:100%;margin-bottom:6px}
@@ -96,6 +96,11 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 .hzall td.cur{background:#3b2f1f;color:#fbbf24;font-weight:700}
 .hzall td.mk{background:#fdf6e3;color:#b45309;font-weight:700}
 .hzall .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 2px 0}
+/* 全量表·15类（每年出现次数矩阵）：固定布局+首列预留宽度，整表自适应容器宽度，取消横向滚动条 */
+.hzall table.alltbl{table-layout:fixed;font-size:11px}
+.hzall table.alltbl th,.hzall table.alltbl td{padding:2px 2px;line-height:1.15}
+.hzall table.alltbl th{white-space:normal}
+.hzall table.alltbl td.mk{white-space:normal}
 /* 鼠标跟随 行+列 十字高亮（覆盖排五全部表格：和值走势图/分类统计/全量表，不覆盖原底色，用半透明叠加） */
 .hzall table td.hl-row,table.hzg td.hl-row,table.hzstats td.hl-row,table.hzcat td.hl-row{box-shadow:inset 0 0 0 9999px rgba(125,211,252,0.16)}
 .hzall table th.hl-row,table.hzg th.hl-row,table.hzstats th.hl-row,table.hzcat th.hl-row{box-shadow:inset 0 0 0 9999px rgba(125,211,252,0.26)}
@@ -190,7 +195,7 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-27 22:26</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026229 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">8</div><div class="num s">0</div><div class="num">5</div><div class="num">4</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">3</div><div class="snum">0</div><div class="snum">7</div><div class="snum">0</div><div class="snum">9</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span><span class="tag"><b>对应码</b>87795</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-27 22:40</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026229 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">8</div><div class="num s">0</div><div class="num">5</div><div class="num">4</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">3</div><div class="snum">0</div><div class="snum">7</div><div class="snum">0</div><div class="snum">9</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span><span class="tag"><b>对应码</b>87795</span></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
@@ -1132,7 +1137,11 @@ function renderAllTable(){
     });
     rows1+=r+'</tr>';
   });
-  var part1='<h4 class="cz">每年出现次数</h4><table><thead><tr>'+h1+'</tr></thead><tbody>'+rows1+'</tbody></table>';
+  var ncols=1+2*years.length;
+  var cg='<colgroup><col style="width:120px">';
+  for(var ci=1;ci<ncols;ci++) cg+='<col>';
+  cg+='</colgroup>';
+  var part1='<h4 class="cz">每年出现次数</h4><table class="alltbl">'+cg+'<thead><tr>'+h1+'</tr></thead><tbody>'+rows1+'</tbody></table>';
   // Part2：全周期统计（当前遗漏列左侧追加近5年各年 M差值）
   var prior5 = years.filter(function(y){return parseInt(y,10)<curYear;}).slice(-5);
   var priorCols=''; prior5.forEach(function(y){ priorCols+='<th>M差('+y+')</th>'; });

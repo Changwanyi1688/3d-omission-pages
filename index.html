@@ -190,7 +190,10 @@
   #lmGrids td.omission{color:#9aa0a6;font-size:11px}
   /* 直选定位两码：三个位置各一张卡片横向并排（每位置100种），小字号自适应页面宽度 */
   .zxCols{display:flex;flex-direction:row;flex-wrap:wrap;gap:5px;align-items:flex-start;margin-top:6px;padding:4px}
-  .zxZuWrap{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;margin-top:6px}
+  /* 直/组两码遗漏：直选两码(100列) + 组选两码(55列) 左右并列，各自内部横向滚动 */
+  .zxZuWrap{display:flex;flex-wrap:nowrap;gap:20px;align-items:flex-start;margin-top:6px}
+  .zxZuWrap > .zxCols{display:block;flex:1 1 48%;min-width:0;overflow-x:auto;margin-top:0;padding:0}
+  .zxZuWrap > .zxCols > table{width:max-content;min-width:100%}
   .zxCol{flex:1 1 300px;min-width:0;background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);overflow-x:auto}
   .zxColTitle{background:linear-gradient(135deg,#3a5b78,#2c3e50);color:#fff;font-weight:600;text-align:center;padding:8px 0;font-size:13px;letter-spacing:1px}
   .zxCol table{width:100%;border-collapse:collapse}

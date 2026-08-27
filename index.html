@@ -508,8 +508,7 @@
       <div class="cat-btn" id="modeHezhi">和值走势查询</div>
       <div class="cat-btn" id="modeLm">组(三/六)两码</div>
       <div class="cat-btn" id="modeZxLm">直选定位两码</div>
-      <div class="cat-btn" id="modeZx2">直选两码</div>
-      <div class="cat-btn" id="modeZxGroup">组选两码</div>
+      <div class="cat-btn" id="modeZxZu">直/组两码遗漏</div>
       <div class="cat-btn" id="mode1257">1257&amp;1368</div>
       <div class="cat-btn" id="modeZu3">直组三码遗漏</div>
       <div class="cat-btn" id="modeShu">多项数和</div>
@@ -691,15 +690,10 @@
     <div id="zxLmResult" class="zxCols"></div>
   </div>
 
-  <!-- 模式：直选两码（100种有序组合，三位置左→右两两排列合并统计） -->
-  <div class="panel" id="zx2Panel" style="display:none">
-    <div class="resTitle">直选两码（共 100 种有序两码组合）｜ 按开奖号左→右位置两两排列，三位置合并统计，按当前遗漏降序</div>
+  <!-- 模式：直/组两码遗漏（直选两码100 + 组选两码55，合并为一项） -->
+  <div class="panel" id="zxZuPanel" style="display:none">
+    <div class="resTitle">直/组两码遗漏 ｜ 直选两码（100 种有序两码，三位置合并）+ 组选两码（55 种无序两码，不计位置），均按当前遗漏降序</div>
     <div id="zx2Result" class="zxCols"></div>
-  </div>
-
-  <!-- 模式五：组选两码（55种组合，不分位置） -->
-  <div class="panel" id="zxGroupPanel" style="display:none">
-    <div class="resTitle">组选两码（共 55 种两码组合）｜ 不计位置，按当前遗漏降序排列</div>
     <div id="zxGroupResult" class="zxCols"></div>
   </div>
 
@@ -1463,12 +1457,12 @@ function setMode(m){
   $('modeHezhi').classList.toggle('on', m==='hezhi');
   $('modeLm').classList.toggle('on', m==='lm');
   $('modeZxLm').classList.toggle('on', m==='zxlm');
-  $('modeZxGroup').classList.toggle('on', m==='zxgroup');
+  $('modeZxZu').classList.toggle('on', m==='zxzu');
   $('mode1257').classList.toggle('on', m==='1257');
   $('modeZu3').classList.toggle('on', m==='zu3');
   $('modeShu').classList.toggle('on', m==='shu');
   $('mode2348').classList.toggle('on', m==='2348');
-  $('modeZx2').classList.toggle('on', m==='zx2');
+  /* 直选两码/组选两码 已合并为 直/组两码遗漏(modeZxZu) */
   $('omissionCtl').style.display = (m==='omission')?'':'none';
   $('resPanel').style.display     = (m==='omission')?'':'none';
   $('hezhiCtl').style.display     = (m==='hezhi')?'':'none';
@@ -1479,8 +1473,7 @@ function setMode(m){
   $('lmCtl').style.display        = (m==='lm')?'':'none';
   $('lmPanel').style.display      = (m==='lm')?'':'none';
   $('zxLmPanel').style.display    = (m==='zxlm')?'':'none';
-  $('zx2Panel').style.display      = (m==='zx2')?'':'none';
-  $('zxGroupPanel').style.display  = (m==='zxgroup')?'':'none';
+  $('zxZuPanel').style.display     = (m==='zxzu')?'':'none';
   $('panel1257').style.display     = (m==='1257')?'':'none';
   $('panelZu3').style.display      = (m==='zu3')?'':'none';
   $('panelShu').style.display      = (m==='shu')?'':'none';
@@ -1488,8 +1481,7 @@ function setMode(m){
   if(m==='hezhi'){ hezhiQuery(); renderHst(); wshzQuery(); kdQuery(); }
   if(m==='lm'){ lmQuery(); }
   if(m==='zxlm'){ zxLmQuery(); }
-  if(m==='zx2'){ zxDirectQuery(); }
-  if(m==='zxgroup'){ zxGroupQuery(); }
+  if(m==='zxzu'){ zxDirectQuery(); zxGroupQuery(); }
   if(m==='1257'){ query1257(); }
   if(m==='zu3'){ zhiZuSanQuery(); }
   if(m==='shu'){ shuQuery(); }
@@ -3178,8 +3170,7 @@ $('modeOmission').onclick=()=>setMode('omission');
 $('modeHezhi').onclick=()=>setMode('hezhi');
 $('modeLm').onclick=()=>setMode('lm');
 $('modeZxLm').onclick=()=>setMode('zxlm');
-$('modeZx2').onclick=()=>setMode('zx2');
-$('modeZxGroup').onclick=()=>setMode('zxgroup');
+$('modeZxZu').onclick=()=>setMode('zxzu');
 $('mode1257').onclick=()=>setMode('1257');
 $('modeZu3').onclick=()=>setMode('zu3');
 $('modeShu').onclick=()=>setMode('shu');

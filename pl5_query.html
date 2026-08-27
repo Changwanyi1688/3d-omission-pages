@@ -96,12 +96,13 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 .hzall td.cur{background:#3b2f1f;color:#fbbf24;font-weight:700}
 .hzall td.mk{background:#fdf6e3;color:#b45309;font-weight:700}
 .hzall .note{font-size:12px;color:#94a3b8;line-height:1.6;padding:6px 2px 0}
-/* 全量表 鼠标跟随 行+列 十字高亮（不覆盖原底色，用半透明叠加） */
-.hzall table td.hl-row{box-shadow:inset 0 0 0 9999px rgba(125,211,252,0.14)}
-.hzall table th.hl-row{box-shadow:inset 0 0 0 9999px rgba(125,211,252,0.22)}
-.hzall table td.hl-col{box-shadow:inset 0 0 0 9999px rgba(248,113,113,0.20)}
-.hzall table th.hl-col{box-shadow:inset 0 0 0 9999px rgba(248,113,113,0.30)}
-.hzall table td.hl-row.hl-col,.hzall table th.hl-row.hl-col{box-shadow:inset 0 0 0 9999px rgba(250,204,21,0.34)}
+/* 鼠标跟随 行+列 十字高亮（覆盖排五全部表格：和值走势图/分类统计/全量表，不覆盖原底色，用半透明叠加） */
+.hzall table td.hl-row,table.hzg td.hl-row,table.hzstats td.hl-row,table.hzcat td.hl-row{box-shadow:inset 0 0 0 9999px rgba(125,211,252,0.16)}
+.hzall table th.hl-row,table.hzg th.hl-row,table.hzstats th.hl-row,table.hzcat th.hl-row{box-shadow:inset 0 0 0 9999px rgba(125,211,252,0.26)}
+.hzall table td.hl-col,table.hzg td.hl-col,table.hzstats td.hl-col,table.hzcat td.hl-col{box-shadow:inset 0 0 0 9999px rgba(248,113,113,0.24)}
+.hzall table th.hl-col,table.hzg th.hl-col,table.hzstats th.hl-col,table.hzcat th.hl-col{box-shadow:inset 0 0 0 9999px rgba(248,113,113,0.34)}
+.hzall table td.hl-row.hl-col,table.hzg td.hl-row.hl-col,table.hzstats td.hl-row.hl-col,table.hzcat td.hl-row.hl-col,
+.hzall table th.hl-row.hl-col,table.hzg th.hl-row.hl-col,table.hzstats th.hl-row.hl-col,table.hzcat th.hl-row.hl-col{box-shadow:inset 0 0 0 9999px rgba(250,204,21,0.40)}
 /* 和值走势图表顶部筛选区：单行紧凑布局（原 4 个 frow 竖向堆叠占高，改 flex 一排收窄约一半） */
 .filters{display:flex;flex-wrap:wrap;gap:6px 12px;margin:2px 0 6px;align-items:center}
 .frow{display:flex;align-items:center;gap:5px;font-size:12px;color:#cbd5e1}
@@ -189,7 +190,7 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-27 22:09</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026229 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">8</div><div class="num s">0</div><div class="num">5</div><div class="num">4</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">3</div><div class="snum">0</div><div class="snum">7</div><div class="snum">0</div><div class="snum">9</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span><span class="tag"><b>对应码</b>87795</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-27 22:26</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026229 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">8</div><div class="num s">0</div><div class="num">5</div><div class="num">4</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">3</div><div class="snum">0</div><div class="snum">7</div><div class="snum">0</div><div class="snum">9</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">0</div><div class="snum">5</div><div class="snum">0</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>0</span><span class="tag"><b>关注码</b>36898</span><span class="tag"><b>对应码</b>87795</span></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
@@ -833,6 +834,11 @@ var HZG = (function(){
     renderCatStats();
     renderAllTable();
     fitHzgCells();
+    // 鼠标跟随 行+列 十字高亮：绑定 和值走势图主表 / 统计表 / 分类统计表 / 全量表·15类&全周期统计
+    _bindAllTableHL(document.getElementById('hzgTable'));
+    _bindAllTableHL(document.getElementById('hzgStats'));
+    _bindAllTableHL(document.getElementById('hzgCatStats'));
+    _bindAllTableHL(document.getElementById('hzgAll'));
   }
   function initYears(){
     var sel=document.getElementById('hzgYear');
@@ -1106,7 +1112,7 @@ function renderAllTable(){
   // Part1：每年 [M差值 | 出现次数] 矩阵（行=分类；每个年份左侧加一列 M差值）
   function yearMdiff(name, y){
     var s=0,n=0;
-    years.forEach(function(z){ var zi=parseInt(z,10); if(zi===y) return; if(!_isFull(zi)) return; s += (cy[name][z]||0); n++; });
+    years.forEach(function(z){ var zi=parseInt(z,10); if(zi===y) return; s += (cy[name][z]||0); n++; });
     var bm = n? s/n : 0;
     var ms=_YMON[y]; var M=ms?Math.max.apply(null,Array.from(ms)):12;
     return Math.round((cy[name][''+y]||0) - bm*(M/12));

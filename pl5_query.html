@@ -238,22 +238,24 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root .hst-mk-neg{color:#2980b9;font-weight:700}
 #p5c8root .hst-star{color:#f39c12;font-weight:800;margin-left:1px}
 /* ---- 和值走势图（带连线） ---- */
-#p5c8root #p5czstTable{margin:0;border-collapse:collapse;width:100%}
-#p5c8root #p5czstTable th
-#p5c8root #p5czstTable td{border:1px solid #d5dce6;padding:1px 4px;text-align:center;white-space:nowrap;font-size:10.5px;vertical-align:middle;font-variant-numeric:tabular-nums}
-#p5c8root #p5czstTable thead th{position:sticky;top:35px;z-index:2;background:linear-gradient(#3d5a7c,#2c3e50);color:#fff;border-color:#22303f}
+#p5c8root #p5czstTable{margin:0;border-collapse:collapse;width:100%;font-size:10.5px}
+#p5c8root #p5czstTable th,#p5c8root #p5czstTable td{border:1px solid #dde3ec;text-align:center;white-space:nowrap;vertical-align:middle;font-variant-numeric:tabular-nums}
+#p5c8root #p5czstTable th{padding:2px 3px;font-weight:600}
+#p5c8root #p5czstTable td{padding:0 3px;line-height:1.16}            /* 缩小单元格高度 */
+#p5c8root #p5czstTable .c-lab{font-size:9px}                         /* 期号/开奖号 缩小字体 */
+#p5c8root #p5czstTable thead th{position:sticky;top:35px;z-index:2;background:linear-gradient(180deg,#43618a,#2c3e50);color:#fff;border-color:#22303f;box-shadow:0 1px 2px rgba(0,0,0,.18)}
 #p5c8root #p5czstTable .lab-h{background:#27384d;color:#fff;font-weight:700}
 #p5c8root #p5czstTable .grp-h{background:#31475f;color:#fff;font-weight:600}
-#p5c8root #p5czstTable .zsub{display:block;font-size:9px;font-weight:400;color:#c8d6e5}
-#p5c8root #p5czstTable .grp-sep{border-left:2px solid #8fa3b8}
+#p5c8root #p5czstTable .zsub{display:block;font-size:9px;font-weight:400;color:#c8d6e5;line-height:1.1}
+#p5c8root #p5czstTable .grp-sep{border-left:2px solid #9fb3c8}
 #p5c8root #p5czstTable .mk{font-weight:700}
-#p5c8root #p5czstTable td.omission{color:#a8aeb8;font-size:10px}
-#p5c8root #p5czstTable tbody tr:nth-child(even) td{background:#f4f7fb}
+#p5c8root #p5czstTable td.omission{color:#aab0bb;font-size:9.5px}
+#p5c8root #p5czstTable tbody tr:nth-child(even) td{background:#f6f8fb}
 #p5c8root #p5czstTable tbody tr:hover td{background:#eaf1f9}
 #p5c8root #p5czstTable .att-hit{background:#dbeafe;color:#1e40af;font-weight:700}
 #p5c8root #p5czstTable .z3-red{color:#dc2626;font-weight:700}
 #p5c8root .p5red{color:#dc2626;font-weight:800}
-#p5c8root #p5czstTable tfoot td{background:#e9eef5;font-weight:600;color:#33475f;vertical-align:middle}
+#p5c8root #p5czstTable tfoot td{background:#eef2f7;font-weight:600;color:#33475f;vertical-align:middle;padding:1px 3px;line-height:1.16}
 #p5c8root #p5czstTable tfoot tr:hover td{background:#e2e9f2}
 #p5c8root #p5czstTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:8px;white-space:nowrap}
 /* ---- 和值尾走势图（cjcp 复刻） ---- */
@@ -595,7 +597,7 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-28 22:46</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026230 期</span>开奖号码</span><div class="balls"><div class="num">9</div><div class="num">4</div><div class="num s">6</div><div class="num">8</div><div class="num">3</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">7</div><div class="snum">5</div><div class="snum">9</div><div class="snum">2</div><div class="snum">1</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">9</div><div class="snum">6</div><div class="snum">3</div><div class="snum">9</div><div class="snum">9</div></div></div><div class="extras"><span class="tag"><b>金码</b>1</span><span class="tag"><b>关注码</b>12912</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">9</div><div class="snum">6</div><div class="snum">3</div><div class="snum">9</div><div class="snum">9</div></div></div><div class="extras"><span class="tag"><b>金码</b>1</span><span class="tag"><b>关注码</b>12912</span><span class="tag"><b>对应码</b>65993</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-08-28 23:00</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026230 期</span>开奖号码</span><div class="balls"><div class="num">9</div><div class="num">4</div><div class="num s">6</div><div class="num">8</div><div class="num">3</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">7</div><div class="snum">5</div><div class="snum">9</div><div class="snum">2</div><div class="snum">1</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">9</div><div class="snum">6</div><div class="snum">3</div><div class="snum">9</div><div class="snum">9</div></div></div><div class="extras"><span class="tag"><b>金码</b>1</span><span class="tag"><b>关注码</b>12912</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">9</div><div class="snum">6</div><div class="snum">3</div><div class="snum">9</div><div class="snum">9</div></div></div><div class="extras"><span class="tag"><b>金码</b>1</span><span class="tag"><b>关注码</b>12912</span><span class="tag"><b>对应码</b>65993</span></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个 各数字 0-9）</h3>
@@ -3607,7 +3609,7 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
   }
   // 表头（两行：分组标题 + 子标题）
   let thead='<thead><tr>';
-  thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">排五开奖号</th><th class="lab-h" rowspan="2">组选</th>';
+  thead+='<th class="lab-h c-lab" rowspan="2">期号</th><th class="lab-h c-lab" rowspan="2">排五开奖号</th><th class="lab-h" rowspan="2">组选</th>';
   grids.forEach(g=>{ thead+='<th class="grp-h" colspan="'+g.n+'">'+g.name+'</th>'; });
   attrGroups.forEach(ag=>{
     thead+='<th class="grp-h" colspan="'+ag[1]+'">'+ag[0]+(ag[0]==='大中小'?'<span class="zsub">大18-27·中9-17·小0-8</span>':'')+'</th>';
@@ -3620,7 +3622,7 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
   let tbody='<tbody>';
   shownData.forEach(r=>{
     tbody+='<tr>';
-    tbody+='<td>'+r.issue+'</td><td>'+p5DrawCell(r.issue)+'</td><td'+(r.typ==='组三'?' class="z3-red"':'')+'>'+r.typ+'</td>';
+    tbody+='<td class="c-lab">'+r.issue+'</td><td class="c-lab">'+p5DrawCell(r.issue)+'</td><td'+(r.typ==='组三'?' class="z3-red"':'')+'>'+r.typ+'</td>';
     grids.forEach((g,gi)=>{
       const val=g.get(r);
       const om=omitByIssue[gi].get(r.issue);

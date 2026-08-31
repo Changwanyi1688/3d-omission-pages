@@ -387,6 +387,8 @@
   #dashTop .posbox th{background:#eef2f7;color:#475569;font-weight:600}
   #dashTop .posbox tr.hot td:first-child{background:#fde68a;color:#78350f;font-weight:800}
   #dashTop .posbox tr.curhit td:first-child{background:#c92a2a;color:#fff;font-weight:800}
+  #dashTop .posbox.leopard{border:2px solid #c92a2a;background:#fff5f5}
+  #dashTop .posbox.leopard h4{color:#c92a2a;font-weight:700}
   #dashTop .pl3Stamp b{color:#065f46}
   #dashTop .matchFocus{margin:4px 0 0;background:#fff;border:1px solid #e2e8f0;border-left:4px solid #6366f1;border-radius:12px;padding:4px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
   #dashTop .matchFocus .mf-head{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;font-weight:700;color:#1f2d3d}
@@ -3251,8 +3253,8 @@ function renderPos(){
     }
     return res;
   }
-  let h='<h3>分位遗漏（'+(p3?'排三':'3D')+' · 豹子号 ddd（左）：当前遗漏≥历史最大遗漏 琥珀高亮；百/十/个 各数字 0-9：当前遗漏≥30 琥珀高亮；最新开奖数字红底）</h3><div class="posgrid">';
-  // 豹子号遗漏表（最左侧）
+  let h='<h3>分位遗漏（'+(p3?'排三':'3D')+' · 百/十/个 各数字 0-9：当前遗漏≥30 琥珀高亮；最新开奖数字红底；豹子号 ddd（右，红框）：当前遗漏≥历史最大遗漏 琥珀高亮）</h3><div class="posgrid">';
+  // 豹子号遗漏表数据（先算，最后放到最右侧）
   const lp=leopardOmit();
   const isBz=(newest[1]===newest[2] && newest[2]===newest[3]);
   const bzD=isBz?newest[1]:-1;
@@ -3261,7 +3263,6 @@ function renderPos(){
     const cls=[]; if(r.cur>=r.max) cls.push('hot'); if(r.d===bzD) cls.push('curhit');   // 豹子号：当前遗漏≥历史最大遗漏 才高亮（记录级极冷）
     lpRows+='<tr'+(cls.length?(' class="'+cls.join(' ')+'"'):'')+'><td>'+r.d+r.d+r.d+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+r.cnt+'</td><td>'+r.prev+'</td></tr>';
   }
-  h+='<div class="posbox"><h4>豹子号 (ddd)</h4><table><thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+lpRows+'</tbody></table></div>';
   for(let pi=0;pi<3;pi++){
     const om=posOmit(pi);
     const curDigit=newest[1+pi];
@@ -3274,6 +3275,8 @@ function renderPos(){
     }
     h+='<div class="posbox"><h4>'+POS[pi]+'</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
   }
+  // 豹子号遗漏表（最右侧，红框）
+  h+='<div class="posbox leopard"><h4>豹子号 (ddd)</h4><table><thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+lpRows+'</tbody></table></div>';
   h+='</div>';
   const el=document.getElementById('posPanel');
   if(el) el.innerHTML=h;

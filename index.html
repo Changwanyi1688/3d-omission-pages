@@ -2017,29 +2017,30 @@ function zhiZuSanQuery(){
     const prevGap=gaps[gaps.length-1];   // 上一次遗漏期 = 最近一次开出前的遗漏段
     return {total,max,avg,prev:prevGap,cur};
   }
-  function buildRows(cands, occMap){
+  function buildRows(cands, occMap, p){
     return cands.map(cand=>{
       const st=statsOf(occMap[cand]||[]);
-      return {num:cand, total:st.total, cur:st.cur, max:st.max, avg:st.avg, prev:st.prev};
+      return {num:cand, total:st.total, cur:st.cur, max:st.max, avg:st.avg, prev:st.prev, theo:N*p};
     });
   }
   const cats=[
-    {title:'直选三不同（全部720）', cands:ZU3_DIRECT_SET,  occ:occ.directSet,  top:720},
-    {title:'直选对子（全部270）',  cands:ZU3_DIRECT_PAIR, occ:occ.directPair, top:270},
-    {title:'组六（全部120）',     cands:ZU3_GROUP6,       occ:occ.group6,     top:120},
-    {title:'组三（全部90）',      cands:ZU3_GROUP3,       occ:occ.group3,     top:90},
+    {title:'直选三不同（全部720）', cands:ZU3_DIRECT_SET,  occ:occ.directSet,  top:720, p:1/1000},
+    {title:'直选对子（全部270）',  cands:ZU3_DIRECT_PAIR, occ:occ.directPair, top:270, p:1/1000},
+    {title:'组六（全部120）',     cands:ZU3_GROUP6,       occ:occ.group6,     top:120, p:6/1000},
+    {title:'组三（全部90）',      cands:ZU3_GROUP3,       occ:occ.group3,     top:90,  p:3/1000},
   ];
   const yVal=parseInt(ySel.value,10);
   const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
   $('mZu3Diff').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+N+' 期'+yearLabel+' ｜ 点击任意列标题的小三角(▲/▼)可切换升序/降序（默认「最大遗漏」降序，遗漏越大越靠前）｜ 「最大遗漏」已含当前遗漏（若当前遗漏已超过历史最大则取当前）｜ 「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）</div>';
   ZU3_DATA={N, s, e, yVal, yearLabel,
-    cats:cats.map(cat=>({title:cat.title, top:cat.top, rows:buildRows(cat.cands, cat.occ)}))};
+    cats:cats.map(cat=>({title:cat.title, top:cat.top, rows:buildRows(cat.cands, cat.occ, cat.p)}))};
   renderZu3();
 }
 // 直组三码遗漏：列定义（含可点击排序的小三角）
 const ZU3_COLS=[
   {k:'num',  t:'号码',       str:true},
   {k:'total',t:'总出次数',   num:true},
+  {k:'theo', t:'理论次数',   num:true},
   {k:'cur',  t:'当前遗漏',   num:true},
   {k:'max',  t:'最大遗漏',   num:true},
   {k:'avg',  t:'平均遗漏',   num:true},
@@ -2080,12 +2081,12 @@ function renderZu3(){
     });
     h+='</tr></thead><tbody>';
     rows.forEach((r,i)=>{
-      h+='<tr><td class="rank">'+(i+1)+'</td><td class="num">'+r.num+'</td><td>'+r.total+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+r.avg+'</td><td>'+r.prev+'</td></tr>';
+      h+='<tr><td class="rank">'+(i+1)+'</td><td class="num">'+r.num+'</td><td>'+r.total+'</td><td>'+r.theo.toFixed(1)+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+r.avg+'</td><td>'+r.prev+'</td></tr>';
     });
     h+='</tbody></table></div></div>';
     html+=h;
   });
-  $('resZu3').innerHTML=html+'<div class="hint">说明：本页统计四类号码在所选范围内的遗漏情况，按当前排序列（默认「最大遗漏」降序）取前 N 名。直选三不同=三位数字全不同（如 123，共720种）；直选对子=恰两位相同（如 112，共270种，不含豹子）；组六=三不同数字组合（如 1-2-3，共120种）；组三=一对加一单（如 1-1-2，共90种，不含豹子）。「总出次数」=该号码在范围内实际出现期数；「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）；「最大遗漏」=历史最长未出间隔；「平均遗漏」=各次遗漏段均值（不含当前进行中）；「上一次遗漏」=最近一次开出前的遗漏期数。点击任意列标题的小三角(▲/▼)可切换升序/降序排列。</div>';
+  $('resZu3').innerHTML=html+'<div class="hint">说明：本页统计四类号码在所选范围内的遗漏情况，按当前排序列（默认「最大遗漏」降序）取前 N 名。直选三不同=三位数字全不同（如 123，共720种）；直选对子=恰两位相同（如 112，共270种，不含豹子）；组六=三不同数字组合（如 1-2-3，共120种）；组三=一对加一单（如 1-1-2，共90种，不含豹子）。「总出次数」=该号码在范围内实际出现期数；「理论次数」=所选范围内按组合概率计算的期望出现次数（直选三不同/直选对子=期数×1/1000；组六=期数×6/1000；组三=期数×3/1000），与「总出次数」对比可观察冷热偏离；「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）；「最大遗漏」=历史最长未出间隔；「平均遗漏」=各次遗漏段均值（不含当前进行中）；「上一次遗漏」=最近一次开出前的遗漏期数。点击任意列标题的小三角(▲/▼)可切换升序/降序排列。</div>';
 }
 
 /* ===== 模式：多项数和（大小数/奇偶数/质合数和/阴阳数和/大中小数/012路数/波色和/两码差组合三码/两码合组合三码） =====

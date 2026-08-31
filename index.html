@@ -3251,14 +3251,14 @@ function renderPos(){
     }
     return res;
   }
-  let h='<h3>分位遗漏（'+(p3?'排三':'3D')+' · 豹子号 ddd（左）＋ 百/十/个 各数字 0-9：当前遗漏≥30 琥珀高亮、最新开奖数字红底）</h3><div class="posgrid">';
+  let h='<h3>分位遗漏（'+(p3?'排三':'3D')+' · 豹子号 ddd（左）：当前遗漏≥历史最大遗漏 琥珀高亮；百/十/个 各数字 0-9：当前遗漏≥30 琥珀高亮；最新开奖数字红底）</h3><div class="posgrid">';
   // 豹子号遗漏表（最左侧）
   const lp=leopardOmit();
   const isBz=(newest[1]===newest[2] && newest[2]===newest[3]);
   const bzD=isBz?newest[1]:-1;
   let lpRows='';
   for(const r of lp){
-    const cls=[]; if(r.cur>=30) cls.push('hot'); if(r.d===bzD) cls.push('curhit');
+    const cls=[]; if(r.cur>=r.max) cls.push('hot'); if(r.d===bzD) cls.push('curhit');   // 豹子号：当前遗漏≥历史最大遗漏 才高亮（记录级极冷）
     lpRows+='<tr'+(cls.length?(' class="'+cls.join(' ')+'"'):'')+'><td>'+r.d+r.d+r.d+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+r.cnt+'</td><td>'+r.prev+'</td></tr>';
   }
   h+='<div class="posbox"><h4>豹子号 (ddd)</h4><table><thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+lpRows+'</tbody></table></div>';

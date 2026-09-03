@@ -61,8 +61,9 @@
   .attrZst td.zlab{position:sticky;left:0;z-index:2;background:#eef2f7;color:#334;font-weight:600}
   .attrZst td.zdraw{position:sticky;left:54px;z-index:2;background:#eef2f7;color:#1a5276;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700}
   .attrZst td.mk{background:transparent}
-  .attrZst td.mk .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#2b6cb0;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
-  .zstSvg{position:absolute;top:0;left:0;pointer-events:none;z-index:0}
+  .attrZst td.mk .dot{display:none}  /* 圆点改由 SVG 叠层统一绘制，避免表格圆点与连线分层导致断裂/遮挡 */
+  .attrZst tbody tr:hover, .attrZst tbody tr:hover td{background:transparent !important} /* 鼠标悬停行时折线不被背景盖住 */
+  .zstSvg{position:absolute;top:0;left:0;pointer-events:none;z-index:1}
   .attrZst td.zom{color:#9aa3b2;font-variant-numeric:tabular-nums}
   .hint{font-size:12px;color:#888;margin-top:2px}
   /* ---- 顶栏模式切换（独立于查询类型栏） ---- */
@@ -2175,6 +2176,7 @@ function drawShuLines(){
 }
 window.addEventListener('resize',()=>{ if($('panelShu').style.display!=='none') setTimeout(drawShuLines,30); });
 window.addEventListener('resize',()=>{ if($('dualPanel').style.display!=='none') setTimeout(drawAttrGridLines,30); });
+window.addEventListener('load',()=>{ if($('dualPanel').style.display!=='none') setTimeout(drawAttrGridLines,30); });
 
 function shuQuery(){
   const sSel=$('sShuSel'), eSel=$('eShuSel'), ySel=$('yShuSel');
@@ -3184,44 +3186,54 @@ function buildAttrGridHtml(rows, period, win, title){
   head+='</tr></thead><tbody>';
   let body='';
   for(let k=0;k<m;k++){
-    const pi=period.length-1-k;                 // 最新一期置顶
+    const pi=period.length-m+k;                 // 最旧一期置顶（时间正序：上→下 由远及近，与和值走势图一致；倒序展示）
     const d=period[pi];
     body+='<tr><td class="zlab">'+d[0]+'</td><td class="zdraw">'+d[1]+d[2]+d[3]+'</td>';
     rows.forEach(r=>{
       const v=r.series[pi];
-      if(v===0) body+='<td class="mk" data-ord="'+k+'"><span class="dot"></span></td>';
+      if(v===0) body+='<td class="mk" data-ord="'+k+'"></td>';
       else body+='<td class="zom">'+v+'</td>';
     });
     body+='</tr>';
   }
   body+='</tbody></table>';
-  return '<div class="zstTitle">'+title+' · 近 '+m+' 期走势图（圆点=该期开出的组合 · 数字=当前遗漏 · 连线=一期接一期相连，单一蓝色不分组合颜色）</div>'
-       + '<div class="zstScroll"><svg class="zstSvg"></svg>'+head+body+'</div>';
+  return '<div class="zstTitle">'+title+' · 近 '+m+' 期走势图（圆点=该期开出的组合 · 数字=当前遗漏 · 连线=一期接一期相连，单一蓝色不分组合颜色；最旧一期在顶部、最新一期在底部）</div>'
+       + '<div class="zstScroll">'+head+body+'<svg class="zstSvg"></svg></div>';
 }
 // 在表格之上叠一层 SVG，把相邻两期的蓝点连起来（一期接一期）：
-//   同列(前后两期相同组合) → 直线(竖直)；异列(不同组合) → 斜线
+//   同列(前后两期相同组合) → 直线(竖直)；异列(不同组合) → 斜线。
+// 圆点也由 SVG 绘制，确保连线端点被圆点完整覆盖、不被表格单元背景遮挡。
 function drawAttrGridLines(){
   document.querySelectorAll('.zstScroll').forEach(sc=>{
     let svg=sc.querySelector('svg.zstSvg');
-    if(!svg){ svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('class','zstSvg'); sc.insertBefore(svg, sc.firstChild); }
-    svg.style.cssText='position:absolute;top:0;left:0;z-index:0;pointer-events:none'; // 始终绝对定位：避免 SVG 占据表格上方空白
+    if(!svg){ svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('class','zstSvg'); sc.appendChild(svg); }
+    svg.style.cssText='position:absolute;top:0;left:0;z-index:1;pointer-events:none'; // 叠在表格内容之上、但在 sticky 表头/行号之下
     const tbl=sc.querySelector('table'); if(!tbl){ svg.innerHTML=''; return; }
     const W=tbl.scrollWidth, H=tbl.scrollHeight;
     svg.setAttribute('width',W); svg.setAttribute('height',H); svg.style.width=W+'px'; svg.style.height=H+'px'; svg.innerHTML='';
     const rect=sc.getBoundingClientRect(); const sx=sc.scrollLeft, sy=sc.scrollTop;
     const balls=[];
-    tbl.querySelectorAll('td.mk').forEach(td=>{ const r=td.getBoundingClientRect(); balls.push({ord:+td.dataset.ord, col:td.cellIndex, x:(r.left-rect.left+sx+r.width/2).toFixed(1), y:(r.top-rect.top+sy+r.height/2).toFixed(1)}); });
+    tbl.querySelectorAll('td.mk').forEach(td=>{ const r=td.getBoundingClientRect(); balls.push({ord:+td.dataset.ord, col:td.cellIndex, x:r.left-rect.left+sx+r.width/2, y:r.top-rect.top+sy+r.height/2}); });
     balls.sort((a,b)=>a.ord-b.ord);            // 按一期接一期排序
+    // 先画线
     for(let i=1;i<balls.length;i++){
       const a=balls[i-1], b=balls[i];
       const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
-      ln.setAttribute('x1',a.x); ln.setAttribute('y1',a.y);
-      ln.setAttribute('x2',b.x); ln.setAttribute('y2',b.y);
+      ln.setAttribute('x1',a.x.toFixed(1)); ln.setAttribute('y1',a.y.toFixed(1));
+      ln.setAttribute('x2',b.x.toFixed(1)); ln.setAttribute('y2',b.y.toFixed(1));
       ln.setAttribute('stroke', ATTR_LINE_COLOR);
-      ln.setAttribute('stroke-width', a.col===b.col ? '2.2' : '1.5');  // 同列(相同组合)直线略粗，异列斜线略细；均为同一蓝色
-      ln.setAttribute('opacity','0.92');
+      ln.setAttribute('stroke-width', a.col===b.col ? '2.6' : '2.1');
+      ln.setAttribute('stroke-linecap','round');
+      ln.setAttribute('opacity','0.95');
       svg.appendChild(ln);
     }
+    // 再画圆点覆盖端点，避免线与圆点之间出现断层
+    balls.forEach(p=>{
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',p.x.toFixed(1)); c.setAttribute('cy',p.y.toFixed(1)); c.setAttribute('r','6');
+      c.setAttribute('fill', ATTR_LINE_COLOR); c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width','1.2');
+      svg.appendChild(c);
+    });
   });
 }
 // 属性类别：直接渲染「组选」「直选」两张表 + 各自折线图，取消单选/组选子项切换
@@ -3234,7 +3246,7 @@ function renderDual(cat, period, formFlag, grp){
   const blkZx = buildAttrBlock(cat, subZx, period, formFlag, grp, '直选');
   $('dualContainer').innerHTML='<div id="dualZu">'+blkZu.html+buildAttrGridHtml(blkZu.rows, period, win, '组选')+'</div>'
     +'<div id="dualZx">'+blkZx.html+buildAttrGridHtml(blkZx.rows, period, win, '直选')+'</div>';
-  drawAttrGridLines();
+  setTimeout(drawAttrGridLines, 30);   // 等布局稳定再量坐标，避免折线坐标错乱/线条不完整
   metaBox.textContent=`统计范围：${period[0][0]} ～ ${period[period.length-1][0]}（共 ${period.length} 期）｜ 类型过滤：${grp} ｜ 已直接展示「组选 / 直选」两张表（子项合并），每表下方为近 ${win} 期走势图（每行=一期，每列=组合，圆点=该期开出的组合，连线=一期接一期相连；单一蓝色、不分组合颜色）`;
 }
 

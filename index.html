@@ -51,6 +51,8 @@
   .dualBlock .resTitle{position:static;background:#2c3e50;color:#fff;border-radius:6px;padding:6px 10px;margin-bottom:8px;font-size:13px;font-weight:600}
   .tableScroll{overflow-x:auto}
   .dualTbl{font-size:13px}
+  .dualTbl thead th{cursor:pointer;user-select:none;white-space:nowrap;position:relative}
+  .dualTbl thead th:hover{background:#3d5a73}
   .dualTbl td.c0{font-family:ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
   .zstTitle{font-size:12px;color:#556;margin:10px 0 4px;font-weight:600}
   .zstScroll{position:relative;overflow:auto;max-height:46vh;border:1px solid #e3e7ee;border-radius:8px;background:#fff}
@@ -3147,6 +3149,54 @@ function omisAt(hitArr, formFlag){
   for(let i=0;i<n;i++){ if(formFlag[i]&&hitArr[i]) cur=0; else cur++; arr[i]=cur; }
   return arr;
 }
+// 属性类别（组选/直选）统计表的列定义 + 排序支持
+const DUAL_COLS=[
+  {k:'val',    t:'组合',     isStr:true},
+  {k:'actual', t:'实出次数'},
+  {k:'theo',   t:'理论次数'},
+  {k:'f3',     t:'前3次'},
+  {k:'f2',     t:'前2次'},
+  {k:'f1',     t:'前1次'},
+  {k:'cur',    t:'当前遗漏'},
+  {k:'top3',   t:'前三平均'},
+  {k:'avg',    t:'历史平均'},
+  {k:'max',    t:'最大遗漏'},
+  {k:'curC',   t:'当前连出'},
+  {k:'maxC',   t:'最大连出'},
+  {k:'yc',     t:'欲出几率'}
+];
+function dualRowHtml(r){
+  let s='<tr><td class="c0" style="color:'+r.color+';font-weight:700">'+r.val+'</td>';
+  DUAL_COLS.slice(1).forEach(c=>{
+    const v=r[c.k];
+    let cls='';
+    if(c.k==='cur'&&r.cur>0) cls=' class="hl"';
+    else if(c.k==='yc'&&r.yc>=2) cls=' class="hl"';
+    s+='<td'+cls+'>'+v+'</td>';
+  });
+  return s+'</tr>';
+}
+const dualSortState={};
+function dualSort(th){
+  const tbl=th.closest('table'); if(!tbl||!tbl._rows) return;
+  const key=th.dataset.k;
+  const col=DUAL_COLS.find(c=>c.k===key); if(!col) return;
+  const st=dualSortState[tbl.id]||{k:null,d:'desc'};
+  if(st.k===key) st.d = st.d==='asc'?'desc':'asc';
+  else { st.k=key; st.d = col.isStr?'asc':'desc'; }
+  dualSortState[tbl.id]=st;
+  tbl.querySelectorAll('thead th').forEach(td=>{
+    const up=td.querySelector('.up'), dn=td.querySelector('.down');
+    if(up) up.classList.remove('on'); if(dn) dn.classList.remove('on');
+    if(td.dataset.k===key){ (st.d==='asc'?up:dn).classList.add('on'); }
+  });
+  const rows=tbl._rows.slice();
+  rows.sort((a,b)=>{
+    if(col.isStr){ const sa=''+a[key], sb=''+b[key]; return st.d==='asc'?sa.localeCompare(sb,'zh'):sb.localeCompare(sa,'zh'); }
+    const va=+a[key], vb=+b[key]; return st.d==='asc'?va-vb:vb-va;
+  });
+  tbl.querySelector('tbody').innerHTML = rows.map(dualRowHtml).join('');
+}
 // 构建「组选」或「直选」单张表 + 折线数据，返回 {html, rows}
 function buildAttrBlock(cat, sub, period, formFlag, grp, title){
   const combList = universe(cat,sub).map(v=>[v]);
@@ -3163,15 +3213,12 @@ function buildAttrBlock(cat, sub, period, formFlag, grp, title){
       curC:st.curConsec, maxC:st.maxConsec, yc:Math.round(yc*100)/100, series:omisAt(hitArr,formFlag)});
   }
   rows.forEach((r,i)=>r.color=LINE_COLORS[i%LINE_COLORS.length]);
-  const head=['组合','实出次数','理论次数','前3次','前2次','前1次','当前遗漏','前三平均','历史平均','最大遗漏','当前连出','最大连出','欲出几率'];
-  const cols=[r=>r.actual,r=>r.theo,r=>r.f3,r=>r.f2,r=>r.f1,r=>r.cur,r=>r.top3,r=>r.avg,r=>r.max,r=>r.curC,r=>r.maxC,r=>r.yc];
+  const tid = title==='组选' ? 'dualTblZu' : 'dualTblZx';
   let h='<div class="dualBlock"><div class="resTitle">'+title+'口径 · '+cat+'（'+sub+'）</div>';
-  h+='<div class="tableScroll"><table class="resTable dualTbl"><thead><tr>'+head.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>';
-  rows.forEach(r=>{
-    h+='<tr><td class="c0" style="color:'+r.color+';font-weight:700">'+r.val+'</td>';
-    cols.forEach((fn,ci)=>{ const v=fn(r); let cls=''; if(ci===5&&r.cur>0)cls=' class="hl"'; else if(ci===11&&r.yc>=2)cls=' class="hl"'; h+='<td'+cls+'>'+v+'</td>'; });
-    h+='</tr>';
-  });
+  h+='<div class="tableScroll"><table class="resTable dualTbl" id="'+tid+'"><thead><tr>';
+  DUAL_COLS.forEach(c=>{ h+='<th data-k="'+c.k+'" onclick="dualSort(this)">'+c.t+'<span class="sort"><i class="up">▲</i><i class="down">▼</i></span></th>'; });
+  h+='</tr></thead><tbody>';
+  rows.forEach(r=>{ h+=dualRowHtml(r); });
   h+='</tbody></table></div>';
   h+='</div>';
   return {html:h, rows:rows};
@@ -3246,6 +3293,8 @@ function renderDual(cat, period, formFlag, grp){
   const blkZx = buildAttrBlock(cat, subZx, period, formFlag, grp, '直选');
   $('dualContainer').innerHTML='<div id="dualZu">'+blkZu.html+buildAttrGridHtml(blkZu.rows, period, win, '组选')+'</div>'
     +'<div id="dualZx">'+blkZx.html+buildAttrGridHtml(blkZx.rows, period, win, '直选')+'</div>';
+  const tz=document.getElementById('dualTblZu'); if(tz) tz._rows=blkZu.rows;
+  const tx=document.getElementById('dualTblZx'); if(tx) tx._rows=blkZx.rows;
   setTimeout(drawAttrGridLines, 30);   // 等布局稳定再量坐标，避免折线坐标错乱/线条不完整
   metaBox.textContent=`统计范围：${period[0][0]} ～ ${period[period.length-1][0]}（共 ${period.length} 期）｜ 类型过滤：${grp} ｜ 已直接展示「组选 / 直选」两张表（子项合并），每表下方为近 ${win} 期走势图（每行=一期，每列=组合，圆点=该期开出的组合，连线=一期接一期相连；单一蓝色、不分组合颜色）`;
 }

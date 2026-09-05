@@ -172,6 +172,10 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 .pl5oc .p5svg{position:absolute;top:0;left:0;pointer-events:none;z-index:1}
 #p5c8root{background:#f4f6fa;color:#222;font-size:14px;font-family:-apple-system,"Microsoft YaHei",sans-serif;padding:10px 12px;border-radius:10px;margin-top:14px}
 #p5c8root .pl5c-slice{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:6px}
+#p5c8root *{box-sizing:border-box}
+#p5c8root header h1{margin:0;font-size:18px}
+#p5c8root header .sub{font-size:12px;opacity:.9;margin-top:3px}
+#p5c8root .wrap{max-width:1280px;margin:7px auto;padding:0 14px}
 /* 和值走势图 / 和值尾走势图 / 跨度走势图 / 和值×组六/组三×跨度统计：全页面铺满（突破 .wrap 1280 居中限制） */
 #p5c8root #zstPanel
 #p5c8root #wshzPanel
@@ -496,6 +500,76 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root #zxLmResult .missOrange{background:#fde0cc;color:#b5530a;font-weight:700}
 #p5c8root #zxLmResult .comboOrange{background:#fde0cc;color:#b5530a;font-weight:700}
 /* 合并三位组合卡片（含形态分布） */
+#p5c8root .zxMerge{margin:11px 4px 3px;background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);overflow-x:auto}
+#p5c8root .zxMergeTitle{background:linear-gradient(135deg,#6b4773,#8e44ad);color:#fff;font-weight:600;text-align:center;padding:10px 0;font-size:14px;letter-spacing:1px}
+#p5c8root .zxMerge table{width:100%;border-collapse:collapse;margin-top:0;min-width:760px}
+#p5c8root .zxMerge th
+#p5c8root .zxMerge td{padding:3px 4px !important;font-size:11px !important}
+#p5c8root .zxMerge tbody tr:nth-child(even){background:#f7f2fb}
+#p5c8root .zxMerge tbody tr:hover{background:#efe2f7}
+#p5c8root .zxMerge .tnum{color:#8e44ad;font-size:12px !important;letter-spacing:1px}
+#p5c8root .zxMerge .tnum b{font-size:13px}
+#p5c8root .zxMerge .typeTie{background:#fcf3cf;color:#8a6d00;font-weight:700}
+#p5c8root .zxMerge .typeOrange{background:#fde0cc;color:#b5530a;font-weight:700}
+#p5c8root .zxMerge .missTeal{background:#d6f0ec;color:#1a7f6b;font-weight:700}
+/* 百十=十个：青 */
+#p5c8root .zxMerge .typeTeal{background:#d6f0ec;color:#1a7f6b;font-weight:700}
+#p5c8root .zxMerge .patBao{color:#c0392b;font-weight:700}
+/* 豹子：红 */
+#p5c8root .zxMerge .patZ3{color:#2980b9;font-weight:700}
+/* 组三：蓝 */
+#p5c8root .zxMerge .patZ6{color:#27ae60;font-weight:700}
+/* 组六：绿 */
+/* 形态分布 */
+#p5c8root .zxDist{background:#fff;border:1px solid #d8e0ea;border-radius:12px;box-shadow:0 3px 14px rgba(44,62,80,.10);margin:9px 4px 3px;padding:14px 16px}
+#p5c8root .zxDistTitle{font-weight:600;color:#6b4773;font-size:14px;margin-bottom:5px;letter-spacing:1px;border-left:4px solid #8e44ad;padding-left:8px}
+#p5c8root .zxDistGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+#p5c8root .zxDistCard{background:#faf7fc;border:1px solid #ece3f3;border-radius:9px;padding:8px 10px}
+#p5c8root .zxDistH{font-weight:600;color:#6b4773;font-size:13px;margin-bottom:3px}
+#p5c8root .zxDistCard .dx{display:inline-block;margin:2px 6px 2px 0;padding:2px 7px;background:#fff;border:1px solid #e3d8ef;border-radius:20px;font-size:12px;color:#555}
+#p5c8root .zxDistCard .dx b{color:#8e44ad;margin-left:4px;font-size:13px}
+#p5c8root #lmGrids td.lm-hit{font-weight:700}
+#p5c8root #lmGrids tfoot td{background:#f0f3f8;font-weight:600;color:#34495e}
+#p5c8root #lmGrids .footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:left;padding-left:10px}
+/* ===== 顶部概览（照搬 dashboard 前两行：数据看板 + 最新开奖/模拟号） ===== */
+#p5c8root #dashTop{--bg:#f5f7fa;--card:#fff;--ink:#1f2933;--sub:#6b7785;--line:#e5e9f0;--brand:#e11d48;--brand2:#4f46e5;--shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04)}
+#p5c8root #dashTop header{padding:13px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+#p5c8root #dashTop header h1{font-size:20px;margin:0}
+#p5c8root #dashTop header .meta{color:var(--sub);font-size:13px}
+#p5c8root #dashTop .wrap{padding:0 14px;max-width:none;margin:0 auto}
+#p5c8root #dashTop .hero{display:flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 14px;box-shadow:var(--shadow);margin-bottom:0;flex-wrap:wrap}
+#p5c8root #dashTop .hero .issue{font-size:11.5px;color:var(--brand);font-weight:700;margin-right:6px}
+#p5c8root #dashTop .hero .today{font-size:11.5px;color:var(--sub)}
+#p5c8root #dashTop .hero .clock{font-size:11.5px;color:#4f46e5;margin-left:6px;font-variant-numeric:tabular-nums;font-weight:600}
+#p5c8root #dashTop .hero .countdown{font-size:11.5px;color:#e11d48;margin-left:6px;font-variant-numeric:tabular-nums;font-weight:600}
+#p5c8root #dashTop .nums{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin:0}
+#p5c8root #dashTop .grp{display:flex;flex-direction:column;gap:0}
+#p5c8root #dashTop .grp .lab{font-size:11.5px;color:var(--sub);font-weight:600}
+#p5c8root #dashTop .grp .lab i{font-style:normal;font-size:10px;opacity:.75;margin-left:4px}
+#p5c8root #dashTop .grp .balls{display:flex;gap:3px;align-items:center}
+#p5c8root #dashTop .grp.try{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:1px 10px;min-width:170px}
+#p5c8root #dashTop .grp.try .lab{color:#c2410c}
+#p5c8root #dashTop .grp.try .na{font-size:11.5px;color:var(--sub)}
+#p5c8root #dashTop .grp .extras{display:flex;gap:3px;flex-wrap:wrap;margin-top:0}
+#p5c8root #dashTop .grp .tag{font-size:11px;color:var(--sub);background:#f5f7ff;border:1px solid #e2e8f0;border-radius:7px;padding:0 7px;white-space:nowrap}
+#p5c8root #dashTop .grp .tag b{color:var(--brand);font-weight:700;margin-right:4px}
+#p5c8root #dashTop .grp.plan2 .tag b{color:#047857}
+#p5c8root #dashTop .grp .subline{display:flex;align-items:center;gap:3px;margin-top:0}
+#p5c8root #dashTop .grp .slab{font-size:10.5px;color:#c2410c;font-weight:600;background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;padding:0 5px;white-space:nowrap}
+#p5c8root #dashTop .grp.try .balls.sm{gap:3px}
+#p5c8root #dashTop .grp.try .snum{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+#p5c8root #dashTop .grp.try .snum.tb{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+#p5c8root #dashTop .grp.plan2{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1px 10px;min-width:170px}
+#p5c8root #dashTop .grp.plan2 .lab{color:#047857}
+#p5c8root #dashTop .grp.plan2 .snum{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+#p5c8root #dashTop .grp.plan2 .slab{color:#047857;background:#ecfdf5;border-color:#a7f3d0}
+#p5c8root #dashTop .num{width:20px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;background:var(--brand)}
+#p5c8root #dashTop .num.s{background:var(--brand2)}
+#p5c8root #dashTop .heroRow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin-top:0}
+#p5c8root #dashTop .heroLeft{display:flex;flex-direction:column;gap:1px}
+#p5c8root #dashTop .heroTrial{display:flex;align-items:stretch}
+#p5c8root #dashTop .heroPlan2{display:flex;align-items:stretch}
+#p5c8root #dashTop .vsep{flex:0 0 auto;width:1px;align-self:stretch;background:linear-gradient(to bottom,transparent,#cbd5e1 16%,#cbd5e1 84%,transparent);margin:0}
 #p5c8root #dashTop .filterBox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:5px 15px;box-shadow:var(--shadow);margin:5px 0 0}
 #p5c8root #dashTop .fbTitle{font-size:14px;font-weight:700;color:#1f2933;margin-bottom:1px}
 #p5c8root #dashTop .fbDesc{font-size:12px;color:var(--sub);margin-bottom:3px;line-height:1.4}
@@ -545,6 +619,43 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root #dashTop .posbox{flex:1 1 170px;background:#f8fafc;border:1px solid #eef2f7;border-radius:10px;padding:4px}
 #p5c8root #dashTop .posbox h4{font-size:12px;color:#334155;margin:0 0 2px;text-align:center}
 #p5c8root #dashTop .posbox table{width:100%;border-collapse:collapse;font-size:11.5px}
+#p5c8root #dashTop .posbox th
+#p5c8root #dashTop .posbox td{border:1px solid #e2e8f0;padding:1px 3px;text-align:center}
+#p5c8root #dashTop .posbox th{background:#eef2f7;color:#475569;font-weight:600}
+#p5c8root #dashTop .posbox tr.hot td:first-child{background:#fde68a;color:#78350f;font-weight:800}
+#p5c8root #dashTop .posbox tr.curhit td:first-child{background:#c92a2a;color:#fff;font-weight:800}
+#p5c8root #dashTop .posbox.leopard{border:2px solid #c92a2a;background:#fff5f5}
+#p5c8root #dashTop .posbox.leopard h4{color:#c92a2a;font-weight:700}
+#p5c8root #dashTop .pl3Stamp b{color:#065f46}
+#p5c8root #dashTop .matchFocus{margin:4px 0 0;background:#fff;border:1px solid #e2e8f0;border-left:4px solid #6366f1;border-radius:12px;padding:4px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+#p5c8root #dashTop .matchFocus .mf-head{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;font-weight:700;color:#1f2d3d}
+#p5c8root #dashTop .matchFocus .mf-gen{font-size:11.5px;font-weight:500;color:#94a3b8}
+#p5c8root #dashTop .matchFocus .mf-link{margin-left:auto;font-size:12.5px;font-weight:700;color:#6366f1;text-decoration:none;border:1px solid #c7d2fe;border-radius:8px;padding:3px 10px}
+#p5c8root #dashTop .matchFocus .mf-link:hover{background:#eef2ff}
+#p5c8root #dashTop .matchFocus .mf-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+#p5c8root #dashTop .matchFocus .mf-chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:3px 11px;color:#334155}
+#p5c8root #dashTop .matchFocus .mf-chip b{color:#64748b;font-weight:700}
+#p5c8root #dashTop .matchFocus .mf-chip i{font-style:normal;font-weight:700;color:#475569}
+#p5c8root #dashTop .matchFocus .mf-chip.mf-mid{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+#p5c8root #dashTop .matchFocus .mf-chip.mf-mid i{color:#c2410c}
+#p5c8root #dashTop .matchFocus .mf-chip.mf-hot{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+#p5c8root #dashTop .matchFocus .mf-chip.mf-hot i{color:#dc2626}
+#p5c8root #dashTop .matchFocus .mf-best{margin-top:2px;font-size:11.5px;color:#64748b;line-height:1.6}
+#p5c8root #dashTop .matchFocus .mf-best b{color:#334155}
+#p5c8root #dashTop .heroFormYear{flex:0 0 auto;display:flex;align-items:stretch}
+#p5c8root #dashTop .formYearLink{display:flex;flex-direction:column;justify-content:center;gap:5px;text-decoration:none;background:#fff;border:1px solid #22c55e;border-left:4px solid #22c55e;border-radius:12px;padding:6px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:158px;transition:background .15s}
+#p5c8root #dashTop .formYearLink:hover{background:#f0fdf4}
+#p5c8root #dashTop .formYearLink .lab{font-size:13.5px;font-weight:700;color:#166534;display:flex;align-items:center;gap:4px}
+#p5c8root #dashTop .formYearLink .fy-sub{font-size:11.5px;color:#16a34a}
+#p5c8root #dashTop .formYearLink .fy-arrow{font-weight:700}
+/* 排五：主站切换框选中后，在主看板内以 iframe 展示排五数据看板 */
+#p5c8root #pl5View{display:none;width:100%;margin:0;padding:0}
+#p5c8root #pl5Frame{width:100%;height:92vh;border:0;background:#0f172a;border-radius:10px}
+#p5c8root body.pl5mode #dashTop .wrap{display:none}
+#p5c8root body.pl5mode #mainTitle{display:none}
+#p5c8root body.pl5mode #mainWrap{display:none}
+#p5c8root body.pl5mode #pl5View{display:block}
+#p5c8root .lotteryNotice.p5{background:#eef2ff;border:1px solid #6366f1;color:#3730a3}
 
 .hero{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:1px 14px;margin:2px 0 4px}
 .hero .topLine{width:100%;font-size:11.5px;color:#94a3b8;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:0}
@@ -623,7 +734,7 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
 </style></head><body><div class="wrap">
 <h1>排列五 · 数据看板</h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-09-05 20:34</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026237 期</span>开奖号码</span><div class="balls"><div class="num">9</div><div class="num">5</div><div class="num s">0</div><div class="num">8</div><div class="num">1</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">7</div><div class="snum">0</div><div class="snum">6</div><div class="snum">0</div><div class="snum">4</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">8</div><div class="snum">8</div><div class="snum">3</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06893</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">8</div><div class="snum">8</div><div class="snum">3</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06893</span><span class="tag"><b>对应码</b>07689</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-09-05 21:04</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026237 期</span>开奖号码</span><div class="balls"><div class="num">9</div><div class="num">5</div><div class="num s">0</div><div class="num">8</div><div class="num">1</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">7</div><div class="snum">0</div><div class="snum">6</div><div class="snum">0</div><div class="snum">4</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">8</div><div class="snum">8</div><div class="snum">3</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06893</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">4</div><div class="snum">8</div><div class="snum">8</div><div class="snum">3</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06893</span><span class="tag"><b>对应码</b>07689</span></div></div></div></div>
 
 <div class="panel">
   <h3>分位遗漏（万/千/百/十/个：当前遗漏≥30 琥珀高亮；前三/中三/后三 豹子号 ddd（右侧）：当前遗漏≥历史最大遗漏 琥珀高亮）</h3>
@@ -716,32 +827,6 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
       <div class="cat-btn" id="p5cmode2348">2345678</div>
     </div>
   </div>
-    <div class="row">
-      <span class="lab">查询类型</span>
-      <div id="p5ccatBox" class="catbar"></div>
-    </div>
-    <div class="row" id="p5csubRow">
-      <span class="lab">子项</span>
-      <div id="p5csubBox" class="catbar"></div>
-    </div>
-    <div class="row">
-      <span class="lab">形态过滤</span>
-      <div id="p5cgrpBox" class="catbar"></div>
-    </div>
-    <hr class="sep">
-    <div class="row">
-      <span class="lab">期号范围</span>
-      <input type="number" id="p5cfromIss" style="width:90px" placeholder="起期">
-      <span>—</span>
-      <input type="number" id="p5ctoIss" style="width:90px" placeholder="止期">
-      <button class="btn sec" id="p5csearchBtn" title="放大镜：按范围筛查">&#128269; 筛查</button>
-      <span class="lab">按年份</span>
-      <select id="p5cyearSel"></select>
-    <div class="meta" id="p5cmetaBox"></div>
-    <div class="warn" id="p5cwarnBox"></div>
-  </div>
-
-  <!-- 模式二：和值走势查询（独立栏，独立于查询类型栏外） -->
   <div class="panel" id="p5chezhiCtl" style="display:none">
     <div class="row">
       <span class="lab">期号范围</span>
@@ -756,54 +841,46 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
       <span class="lab">形态过滤</span>
       <div id="p5chzGrpBox" class="catbar"></div>
       <span class="lab">显示最近</span>
-      <tbody id="p5cresBody"></tbody>
-    </table>
-  </div>
-
-  <!-- 模式一补充：属性类别（大小/奇偶/质合/阴阳/012路/大中小）组选+直选双表、其他组合（号码类型/号码形态）双表 + 各自折线走势图 -->
-      <input type="number" id="p5cwzFrom" style="width:90px" placeholder="起期">
-      <span>—</span>
-      <input type="number" id="p5cwzTo" style="width:90px" placeholder="止期">
-      <button class="btn sec" id="p5cwzSearchBtn" title="按范围筛查">&#128269; 筛查</button>
-      <span class="lab">按年份</span>
-      <select id="p5cwzYearSel"></select>
+      <input type="number" id="p5chzWin" style="width:90px" value="200">
       <span>期（仅连线可视范围）</span>
-      <button class="btn go" id="p5cwzQueryBtn">查 询</button>
+      <button class="btn go" id="p5chzQueryBtn">查 询</button>
     </div>
-    <div class="meta" id="p5cwzMetaBox"></div>
-    <table id="p5cwshzTable" style="position:relative;z-index:0"></table>
+    <div class="meta" id="p5chzMetaBox"></div>
+    <div class="warn" id="p5chzWarnBox"></div>
   </div>
-
-  <!-- 跨度走势图（同和值尾逻辑，主指标=跨度） -->
+  <div class="panel" id="p5clmCtl" style="display:none">
     <div class="row">
       <span class="lab">期号范围</span>
-      <input type="number" id="p5ckdFrom" style="width:90px" placeholder="起期">
+      <input type="number" id="p5clmFrom" style="width:90px" placeholder="起期">
       <span>—</span>
-      <input type="number" id="p5ckdTo" style="width:90px" placeholder="止期">
-      <button class="btn sec" id="p5ckdSearchBtn" title="按范围筛查">&#128269; 筛查</button>
+      <input type="number" id="p5clmTo" style="width:90px" placeholder="止期">
+      <button class="btn sec" id="p5clmSearchBtn" title="放大镜：按范围筛查">&#128269; 筛查</button>
       <span class="lab">按年份</span>
-      <input type="number" id="p5ckdWin" style="width:80px" value="100">
-      <span>期（仅默认初始窗口）</span>
-      <button class="btn go" id="p5ckdQueryBtn">查 询</button>
+      <select id="p5clmYearSel"></select>
     </div>
-    <div class="meta" id="p5ckdMetaBox"></div>
-    <div class="warn" id="p5ckdWarnBox"></div>
-    <svg id="p5ckdSvg"></svg>
-    <table id="p5ckdTable" style="position:relative;z-index:0"></table>
+    <div class="row">
+      <span class="lab">显示最近</span>
+      <input type="number" id="p5clmWin" style="width:90px" value="50">
+      <span>期（仅连线可视范围，默认 50）</span>
+      <button class="btn go" id="p5clmQueryBtn">查 询</button>
+    </div>
+    <div class="meta" id="p5clmMetaBox"></div>
+    <div class="warn" id="p5clmWarnBox"></div>
   </div>
-
-  <!-- 模式二补充：和值×组六/组三×跨度 统计（位于和值走势图下方，随 3D/排三 切换） -->
+  <div class="panel scroller" id="p5czstPanel" style="display:none;position:relative">
+    <div class="resTitle">和值走势图（带连线）｜ 和值0-27(红) / 和尾0-9(蓝) / 跨度0-9(绿) 连线，其余属性列（组选/奇偶/大小/质合/012路/大中小）各按类分列</div>
+    <svg id="p5czstSvg"></svg>
+    <table id="p5czstTable" style="position:relative;z-index:0"></table>
+  </div>
   <div class="panel" id="p5chstPanel" style="display:none">
     <div class="resTitle" id="p5chstTitle">3D 和值 × 组六/组三 × 跨度 统计（不含今年；M值：跨度M值 + 和值M值）</div>
+    <div class="sub" style="margin:0 0 8px;font-size:12px;color:#66707a">口径：历史=2004~2025（不含2026）；出现次数=历史命中期数；最大/平均遗漏期=历史最大间隔/各段遗漏均值（不含当前进行中）；每年M值(2021~2025)=该年实际次数−平均年（<span class="hst-mk-pos">红=偏热</span>/<span class="hst-mk-neg">蓝=偏冷</span>）；正值年份数≤1 的5格标<span style="background:#fff3cd;padding:0 3px;border-radius:3px">浅黄</span>（近5年长期偏冷）；当前遗漏=截至最新一期(含2026)距上次出现间隔（<span class="hst-star">★</span>=创史上最冷）；今年M值=今年次数−平均年×(今年最新月/12)。粒度=(和值,类型,跨度)，豹子已排除。<b>跨度M值</b>(浅蓝表头)=按(和值,类型,跨度)单元算，6列紧接「跨度」右侧；<b>和值M值</b>(绿表头)=按(和值,类型)组合算(对应组三/组六分开统计)，6列置于表尾（与「和值」列同绿）；「跨」列（含表头）浅蓝底，与跨度M值块同色；今年M值(跨度块)/今年出现/和值M值块今年M值 三列加粗框线；跨度右侧8列(当前遗漏+跨度M值块6列+号码)以跨度为口径、表尾7列(今年出现+和值M值块6列)以和值为口径，列宽与字体已缩小；「跨」右侧「当前遗漏」按(跨度,类型)口径(和值不限)、平均遗漏期之后「当前遗漏」按(和值,类型)口径(跨度不限)，均对应组三/组六分开统计，两列口径不同；本表「一行一个组选号码」：号码列每行列一个号码，紧靠其后新增该号码自身的8列(当前遗漏/今年出现/今年M值/21~25M值)；历史出现/年均出现/最大遗漏期/平均遗漏期改为该号码自身统计；「当前遗漏(跨)/(和值)」与「跨度M值块/和值M值块」仍按该号码所属类别统计(作上下文)；已删除号码数列；每号码自身「当前遗漏」按该号码口径(达/超该号码平均遗漏标红，<span class="hst-star">★</span>=超该号码历史最大遗漏)。</div>
+    <div class="hst-scroll"><table class="hst-table" id="p5chstTable"><thead></thead><tbody></tbody></table></div>
   </div>
-
-  <!-- 模式三结果：两码走势图（组六/组三 两张合并网格） -->
   <div class="panel scroller" id="p5clmPanel" style="display:none;position:relative">
     <div class="resTitle">组（六、三）两码走势｜ 命中格显示二码，其余格为遗漏数（灰字小号）</div>
     <div id="p5clmGrids"></div>
   </div>
-
-  <!-- 模式四：直选定位两码（百十/百个/十个 三张表并排呈现，每位置100种） -->
   <div class="panel" id="p5czxLmPanel" style="display:none">
     <div class="resTitle">直选定位两码（每位置 100 种）｜ 百十 / 百个 / 十个 三个位置各一张表，按当前遗漏降序排列</div>
     <div id="p5czxLmResult" class="zxCols"></div>
@@ -815,8 +892,6 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
       <div id="p5czxGroupResult" class="zxCols"></div>
     </div>
   </div>
-
-  <!-- 模式六：1257&1368 出号数分档统计 -->
   <div class="panel" id="p5cpanel1257" style="display:none">
     <div class="row">
       <span class="lab">按年份</span>
@@ -830,10 +905,45 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
     <div class="meta" id="p5cm1257Diff"></div>
     <div id="p5cres1257" class="zxCols"></div>
   </div>
-
-  <!-- 模式：2345678 组三/组六 出现勾选表 -->
   <div class="panel" id="p5cpanel2348" style="display:none">
     <div class="row">
+      <span class="lab">按年份</span>
+      <select id="p5cy2348Sel"></select>
+      <span class="lab">期号范围</span>
+      <input id="p5cs2348Sel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <span class="lab">至</span>
+      <input id="p5ce2348Sel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <button class="btn sec" id="p5cquery2348Btn" type="button" style="padding:4px 12px">查询</button>
+    </div>
+    <div class="meta" id="p5cm2348"></div>
+    <div id="p5cres2348"></div>
+  </div>
+  <div class="panel" id="p5cpanelZu3" style="display:none">
+    <div class="row">
+      <span class="lab">按年份</span>
+      <select id="p5cyZu3Sel"></select>
+      <span class="lab">期号范围</span>
+      <input id="p5csZu3Sel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <span class="lab">至</span>
+      <input id="p5ceZu3Sel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <button class="btn sec" id="p5cqueryZu3Btn" type="button" style="padding:4px 12px">查询</button>
+    </div>
+    <div class="meta" id="p5cmZu3Diff"></div>
+    <div id="p5cresZu3" class="zu3Grid"></div>
+  </div>
+  <div class="panel" id="p5cpanelShu" style="display:none">
+    <div class="row">
+      <span class="lab">按年份</span>
+      <select id="p5cyShuSel"></select>
+      <span class="lab">期号范围</span>
+      <input id="p5csShuSel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <span class="lab">至</span>
+      <input id="p5ceShuSel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
+      <button class="btn sec" id="p5cqueryShuBtn" type="button" style="padding:4px 12px">查询</button>
+    </div>
+    <div class="meta" id="p5cmShu"></div>
+    <div id="p5cresShu" class="shuStack"></div>
+  </div>
 </div><div id="hzgAll"></div>
 </div>
 
@@ -2386,39 +2496,6 @@ function lmRebuild(){
   for(const k in LM_MAP) delete LM_MAP[k];
   (LM||[]).forEach(r=>{ LM_MAP[r[0]]=r; });
 }
-    <div id="resZu3" class="zu3Grid"></div>
-  </div>
-  <div class="panel" id="panelShu" style="display:none">
-    <div class="row">
-      <span class="lab">按年份</span>
-      <select id="yShuSel"></select>
-      <span class="lab">期号范围</span>
-      <input id="sShuSel" type="text" inputmode="numeric" placeholder="起始期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
-      <span class="lab">至</span>
-      <input id="eShuSel" type="text" inputmode="numeric" placeholder="截止期" style="width:96px;padding:3px 6px;border:1px solid #c8c8c8;border-radius:4px;font-size:13px;box-sizing:border-box" />
-<script>
-const REF_THEO = __REF_THEO__;       // 17500 不定位理论次数基准：{形态:{数字串:理论次数}}
-const REF_OTHER = __REF_OTHER__;     // 17500 「其他组合」官方统计基准：{子项:{形态:{标签:[12项]}}}
-const REF_RYCX_THEO = __REF_RYCX_THEO__; // 17500 「任意组合」官方理论次数(抓取期数下)：{子项:{形态:{组合:V0}}}
-const REF_RYCX_FULL = __REF_RYCX_FULL__; // 17500 「任意组合」官方全 12 项统计（与官网逐字一致，直接采用）
-const REF_N = __REF_N__;             // 抓取 ref 时的总期数，用于理论次数随期数线性缩放
-const D3 = __DATA__;            // [[issue,a,b,c,date(YYYY-MM-DD)],...] 升序（福彩3D）
-const DP3 = __DATA_P3__;        // 排三(P3) 同结构数据集（桌面 pl3.xls 导入 pl3_data）
-let D = D3;                      // 当前生效数据集，由 setLottery() 切换
-const PL3_LAST_UPDATE = __PL3_LAST_UPDATE__;   // 排三开奖最近一次自动更新时间（看板页脚展示）
-const SIM_TOP = __SIM__;      // 模拟号最新一期（试机/开机/方案二），供顶部概览块
-const MATCH = __MATCH__;      // 关联匹配综合重点号单（predict_match_model 导出 match_summary.json），供顶部嵌入
-const LM = __LM_DATA__;          // 两码走势命中(17500 规则抓取)：格式 [issue, g0,g1,g2,g3]，g* 为组内命中列下标列表
-const LM_P3 = __LM_DATA_P3__;    // 排三同口径
-const LM_HEADS = __LM_HEADS__;   // [h0(16),h1(7),h2(11),h3(5)] 组六分类二码/组六分类二码2/组三分类二码/组三分类二码2
-const LM_MAP = {};
-function lmRebuild(){
-  for(const k in LM_MAP) delete LM_MAP[k];
-  const src = (D === DP3 && LM_P3 && LM_P3.length) ? LM_P3 : LM;   // 排三用排三两码数据，3D 用 3D 数据
-  (src||[]).forEach(r=>{ LM_MAP[r[0]] = r; });
-}
-lmRebuild();   // issue -> 命中列（按当前彩种选源：P3=排三 / 3D=3D，两码走势不串台）
-// 两组网格定义（组六 = 组0+组1 共23列；组三 = 组2+组3 共16列），配色与 17500 一致
 const lmGrids = [
   {name:'组六',  heads:LM_HEADS[0].concat(LM_HEADS[1]),  color:'#e74c3c'},
   {name:'组三',  heads:LM_HEADS[2].concat(LM_HEADS[3]),  color:'#2980b9'},
@@ -2428,13 +2505,6 @@ function lmHits(rec, gi){
   if(!rec) return [];
   return (gi===0) ? rec[1].concat(rec[2].map(x=>x+16)) : rec[3].concat(rec[4].map(x=>x+11));
 }
-let YEARS = __YEARS__;
-let FIRST = __FIRST__, LAST = __LAST__;
-const YEARS_P3 = __YEARS_P3__;
-const FIRST_P3 = __FIRST_P3__, LAST_P3 = __LAST_P3__;
-const HAS_P3 = (__DATA_P3__ && __DATA_P3__.length > 0);
-
-/* ---------- 指标函数 ---------- */
 function bigsmall(x){return x<=4?'小':'大';}
 function odd(x){return x%2===0?'偶':'奇';}
 function prime(x){return [1,2,3,5,7].includes(x)?'质':'合';}
@@ -2564,61 +2634,61 @@ function hitOf(codes,d){
 function theoretical(cat,sub,codes,grp,periodLen){
   let total=0,hit=0;
   for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++){
+    if(grp!=='全'){const t=typeOf(a,b,c); if(t!==grp)continue;}
     total++;
     const d=[0,a,b,c]; const v=attr(cat,sub,d);
+    if(matchCodes(codes,v))hit++;
+  }
+  const p=total?hit/total:0;
   return periodLen*p;
 }
 
 /* ---------- 类别 / 子项 / 号码宇宙 ---------- */
 const CATS=[
   {name:'号码',label:'号码',subs:['不定位','百位','十位','个位']},
-      b.classList.add('on');
-      fillSub();
-      query();
-    };
-    catBox.appendChild(b);
-  });
+  {name:'和值',label:'和值',subs:['全']},
+  {name:'合值',label:'合值',subs:['全']},
+  {name:'跨度',label:'跨度',subs:['全']},
+  {name:'两码和',label:'两码和',subs:['任意两码和','百十和','百个和','十个和']},
+  {name:'两码差',label:'两码差',subs:['任意两码差','百十差','百个差','十个差']},
+  {name:'大小',label:'大小',subs:['大小单选','大小组选']},
+  {name:'奇偶',label:'奇偶',subs:['奇偶单选','奇偶组选']},
+  {name:'质合',label:'质合',subs:['质合单选','质合组选']},
+  {name:'阴阳',label:'阴阳',subs:['阴阳单选','阴阳组选']},
+  {name:'012路',label:'012路',subs:['012路单选','012路组选']},
+  {name:'大中小',label:'大中小',subs:['大中小单选','大中小组选']},
+  {name:'其他',label:'其他组合',subs:['号码类型','号码形态']},
+  {name:'多码任意组合',label:'任意组合查询',subs:['两码','三码','四码','五码','六码','七码','八码','九码']}
+];
+/* 属性类别：取消「单选/组选」子项，直接展示「组选」「直选」两张表 + 各自折线走势图 */
+const ATTR_CATS=['大小','奇偶','质合','阴阳','012路','大中小'];
+/* 折线图线条配色（饱和、白底可读；表格「组合」列同色以便对照） */
+const LINE_COLORS=['#e03131','#1971c2','#f08c00','#2f9e44','#9c36b5','#0c8599','#e8590c','#5f3dc4','#c2255c','#1098ad','#f59f00','#2b8a3e','#d6336c','#1864ab','#e8590c'];
+function universe(cat,sub){
+  switch(cat){
+    case '号码': return [0,1,2,3,4,5,6,7,8,9];
+    case '和值': return Array.from({length:28},(_,i)=>i);
+    case '合值': case '跨度': case '两码差': return [0,1,2,3,4,5,6,7,8,9];
+    case '两码和': return Array.from({length:19},(_,i)=>i);
+    case '大小': case '奇偶': case '质合': case '阴阳': case '012路': case '大中小':
+      return comboUniverse(cat,sub);
+    case '其他': return (sub==='号码类型')?['豹子','组三','全顺','半顺','杂六']:['平行','上升','下降','凸起','凹下'];
+    case '多码任意组合': { const k={'两码':2,'三码':3,'四码':4,'五码':5,'六码':6,'七码':7,'八码':8,'九码':9}[sub]; return combos([0,1,2,3,4,5,6,7,8,9], k); }
+  }
+  return [0,1,2,3,4,5,6,7,8,9];
 }
-function fillSub(){
-  const cat=CATS.find(c=>c.name===curCat);
-  const subRow=document.getElementById('subRow');
-  const subBoxEl=document.getElementById('subBox');
-  // 属性类别 / 其他组合：取消子项选择，直接展示多张表（属性=组选+直选；其他组合=号码类型+号码形态），故隐藏子项行
-  if(ATTR_CATS.includes(curCat) || curCat==='其他'){ if(subRow)subRow.style.display='none'; if(subBoxEl)subBoxEl.style.display='none'; return; }
-  if(subRow)subRow.style.display=''; if(subBoxEl)subBoxEl.style.display='';
-  if(!cat.subs.includes(curSub))curSub=cat.subs[0];
-  subBox.innerHTML='';
-  cat.subs.forEach(s=>{
-    const b=document.createElement('div');
-    b.className='cat-btn'+(s===curSub?' on':'');
-    b.textContent=s; b.dataset.sub=s;
-    b.onclick=()=>{
-      curSub=s;
-      subBox.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('on'));
-      query();
-    };
-    subBox.appendChild(b);
-  });
-}
-function fillGrp(){
-  grpBox.innerHTML='';
-  ['全','组三','组六'].forEach(g=>{
-    const b=document.createElement('div');
-    b.className='cat-btn'+(g===curGrp?' on':'');
-    b.textContent=g; b.dataset.grp=g;
-    b.onclick=()=>{
-      curGrp=g;
-      grpBox.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('on'));
-      b.classList.add('on');
-      query();
-    };
-    grpBox.appendChild(b);
-  });
-}
-function fillYear(){
-  yearSel.innerHTML='<option value="0">全部年份</option>';
-  YEARS.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y+'年';yearSel.appendChild(o);});
-}
+const $=id=>document.getElementById('p5c'+id);
+const catBox=$('catBox'),subBox=$('subBox'),grpBox=$('grpBox'),
+      fromIss=$('fromIss'),toIss=$('toIss'),yearSel=$('yearSel'),
+      metaBox=$('metaBox'),warnBox=$('warnBox'),headRow=$('headRow'),resBody=$('resBody');
+const hzFrom=$('hzFrom'),hzTo=$('hzTo'),hzYearSel=$('hzYearSel'),
+      hzWin=$('hzWin'),hzMetaBox=$('hzMetaBox'),hzWarnBox=$('hzWarnBox'),hzGrpBox=$('hzGrpBox');
+const lmFrom=$('lmFrom'),lmTo=$('lmTo'),lmYearSel=$('lmYearSel'),
+      lmWin=$('lmWin'),lmMetaBox=$('lmMetaBox'),lmWarnBox=$('lmWarnBox');
+let curCat='多码任意组合',curSub='全',curGrp='全';
+let mode='omission', hezhiGrp='全';
+let lastRows=[],headCols=[],sortKey=null,sortDir='asc'; const headTh={};
+const SIZE_CN=['','单码','两码','三码','四码','五码','六码','七码'];
 function fillHzYear(){
   hzYearSel.innerHTML='<option value="0">全部年份</option>';
   YEARS.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y+'年';hzYearSel.appendChild(o);});
@@ -2642,7 +2712,6 @@ function fillLmYear(){
   lmYearSel.innerHTML='<option value="0">全部年份</option>';
   YEARS.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y+'年';lmYearSel.appendChild(o);});
 }
-/* ---------- 和值走势查询（顶栏独立模式） ---------- */
 function hezhiQuery(){
   hzWarnBox.textContent='';
   const f=parseInt(hzFrom.value||FIRST,10), t=parseInt(hzTo.value||LAST,10);
@@ -2754,6 +2823,7 @@ function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
     thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号</th>';
     thead+='<th class="grp-h" colspan="'+n+'">'+g.name+'</th></tr><tr>';
     for(let v=0;v<n;v++) thead+='<th'+(v===0?' class="grp-sep"':'')+'>'+g.heads[v]+'</th>';
+    thead+='</tr></thead>';
     // 表体（仅窗口内行）
     let tbody='<tbody>';
     shown.forEach(d=>{
@@ -2801,7 +2871,6 @@ function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
   metaEl.textContent='组（六、三）两码走势｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）';
   warnEl.textContent='';   // 用户要求：删除橙色「提示」及后面的说明文字
 }
-/* ---------- 和值×组六/组三×跨度 统计（和值走势面板下方，随 D 切换 3D/排三） ---------- */
 function renderHst(){
   const t=$('hstTable'); if(!t) return;
   // 面板标题随 3D/排三 切换：前缀「3D」/「排三」
@@ -3026,6 +3095,7 @@ function renderHst(){
       +'<td class="hst-num hst-narrow">'+r.c_tcount+'</td>'
       +'<td class="hst-num hst-narrow">'+cmdcell+'</td>'
       +cm5
+      +'<td class="hst-num">'+r.c_appear+'</td>'
       +'<td class="hst-num">'+pyRound1(r.c_avg_year)+'</td>'
       +'<td class="hst-num">'+cmg+'</td>'
       +'<td class="hst-num">'+cav+'</td>'
@@ -3068,8 +3138,6 @@ function setMode(m){
   if(m==='shu'){ shuQuery(); }
   if(m==='2348'){ query2348(); }
 }
-
-/* ===== 模式四：直选定位两码（每位置100种） ===== */
 const ZX_GROUPS=[
   {key:'百十', get:d=>d[1]+'-'+d[2]},
   {key:'百个', get:d=>d[1]+'-'+d[3]},
@@ -3269,7 +3337,6 @@ function zxGroupQuery(){
   html+='<div class="hint" style="flex-basis:100%">组选两码：不计位置，只看某两个数字是否同时出现在开奖号中（如开奖 5-9-1 命中两码 59/51/19；开奖 5-5-1 命中 55/51）。共 55 种组合（相同两码 00~99 共10种 + 不同两码 C(10,2)=45种），全部列出按当前遗漏降序。『平均遗漏』＝每次遗漏期数之和 ÷ 出现次数（每段遗漏以一次开出结束，不含当前进行中的遗漏；除不尽四舍五入取整）。『历史最大遗漏』为该组合在全部历史中曾达到的最大遗漏期数（不含当前进行中遗漏）；从未开出的组合记为「—」。『上次遗漏值』= 该组合最近一次开出前所经历的遗漏期数（仅出现≥2次的组合有值，否则记「—」）。<b>红底★</b>：当前遗漏 > 历史最大遗漏。</div>';
   $('zxGroupResult').innerHTML=html;
 }
-
 /* ===== 模式六：1257&1368 出号数分档统计 ===== */
 function cntOf(arr, set){ let n=0; for(const x of arr){ if(set.has(x)) n++; } return n; }
 function build1257Stats(period, set){
@@ -3386,7 +3453,6 @@ function query1257(){
   $('m1257Diff').innerHTML=mHtml;
   $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝该范围内出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期偏多(正值)或偏少(负值)；所有 M差值 行统一用同色高亮，数值正负表示方向。表底另列最近五年的逐年 M差值（年份置前），逐年与完整年基准比较。</div>';
 }
-
 /* ===== 模式：2345678 组三/组六 出现勾选表 ===== */
 const S2348 = new Set([2,3,4,5,6,7,8]);
 /* 组选30码（组六，不定位）：018 028 035 036 038 057 058 059 | 127 134 139 149 156 158 159 169 179 | 237 238 248 259 268 289 | 347 357 369 378 456 458 459 */
@@ -3523,7 +3589,6 @@ function query2348(){
     + (showM ? 'M差值=当年出现次数−完整年(含1&12月)均值×(当年月份/12)，三列（组六/组选30码/组三）均计算，黄底行=当年及近5年偏离（正=高于/负=低于历史同期）。' : '选择具体年份后，表脚附「当年 M差值」与「近5年 M差值」行（黄底高亮，三列均计算）。')
     +'</div>';
 }
-
 /* ===== 模式七：直组三码遗漏（直选三不同/对子 + 组六/组三，按最大遗漏排名） ===== */
 const ZU3_DIRECT_SET=[];   // 直选三不同：三位全不同，720 种，形如 "123"
 for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++){ if(a!==b&&b!==c&&a!==c) ZU3_DIRECT_SET.push(''+a+b+c); }
@@ -3661,7 +3726,6 @@ function renderZu3(){
   });
   $('resZu3').innerHTML=html+'<div class="hint">说明：本页统计四类号码在所选范围内的遗漏情况，按当前排序列（默认「最大遗漏」降序）取前 N 名。直选三不同=三位数字全不同（如 123，共720种）；直选对子=恰两位相同（如 112，共270种，不含豹子）；组六=三不同数字组合（如 1-2-3，共120种）；组三=一对加一单（如 1-1-2，共90种，不含豹子）。「总出次数」=该号码在范围内实际出现期数；「理论次数」=所选范围内按组合概率计算的期望出现次数（直选三不同/直选对子=期数×1/1000；组六=期数×6/1000；组三=期数×3/1000），与「总出次数」对比可观察冷热偏离；「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）；「最大遗漏」=历史最长未出间隔；「平均遗漏」=各次遗漏段均值（不含当前进行中）；「上一次遗漏」=最近一次开出前的遗漏期数。点击任意列标题的小三角(▲/▼)可切换升序/降序排列。</div>';
 }
-
 /* ===== 模式：多项数和（大小数/奇偶数/质合数和/阴阳数和/大中小数/012路数/波色和/两码差组合三码/两码合组合三码） =====
    照搬 17500 走势：每行一期，子类和横向分组，命中格标值（圆球），其余显示遗漏，表脚六指标。 */
 const SHU_TRIPLES=(function(){
@@ -3709,8 +3773,6 @@ function drawShuLines(){
   });
 }
 
-
-window.addEventListener('load',()=>{ if($('dualPanel').style.display!=='none') setTimeout(drawAttrGridLines,30); });
 
 function shuQuery(){
   const sSel=$('sShuSel'), eSel=$('eShuSel'), ySel=$('yShuSel');
@@ -3877,55 +3939,56 @@ function shuQuery(){
   const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
   $('mShu').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+all.length+' 期 ｜ 显示最近 '+shown.length+' 期'+yearLabel+' ｜ 默认当前50期，可用上方「按年份」与「期号范围(起~止)」筛选</div>';
   $('resShu').innerHTML=html+'<div class="hint">说明：照搬 17500 走势图。每个指标按分类数字的「和值」画走势：命中格为圆球并标出和值，其余格显示当前遗漏；表脚给出出现次数、当前遗漏、平均遗漏、历史最大遗漏、最大连出、欲出几率。两码差/合组合三码：取每期三对数字的绝对差/和值尾，排序成三码后对应 220 个组合走势。</div>';
-    th.onclick=()=>{
-      if(sortKey===c.k){sortDir=sortDir==='asc'?'desc':'asc';}
-      else{sortKey=c.k;sortDir='asc';}
-      renderRows();
-    };
-    headTh[c.k]=th;
-    headRow.appendChild(th);
+  setTimeout(drawShuLines, 30);
+}
+/* ===== 模式：直选两码（100种有序组合，三位置左→右两两排列合并统计） ===== */
+let ZX2_CACHE=null;
+function zxDirectBuild(){
+  // 按开奖号左→右顺序取有序两码：ab(百十)/ac(百个)/bc(十个) 三组合并统计（直选，保留顺序，35≠53）
+  // 共 100 种有序组合（00~99）。例：开奖123 命中 12/13/23，开奖253 命中 25/23/53，二者都含 23。
+  const N=D.length, occ={};
+  D.forEach((d,i)=>{
+    const a=d[1], b=d[2], c=d[3];
+    const seen=new Set();
+    [[a,b],[a,c],[b,c]].forEach(([x,y])=>{ seen.add(x+'-'+y); });
+    seen.forEach(k=>{ (occ[k]=occ[k]||[]).push(i); });
   });
-  updateHeadHi();
-}
-function updateHeadHi(){
-  Object.values(headTh).forEach(th=>th.querySelectorAll('.up,.down').forEach(e=>e.classList.remove('on')));
-  const th=headTh[sortKey];
-  if(th){const sel=th.querySelector('.'+(sortDir==='asc'?'up':'down'));if(sel)sel.classList.add('on');}
-}
-function renderRows(){
-  if(!lastRows.length){resBody.innerHTML='';return;}
-  let rows=lastRows.slice();
-  if(sortKey){
-    const col=headCols.find(c=>c.k===sortKey);
-    rows.sort((a,b)=>{
-      const va=col.nkey?a[col.nkey]:a[sortKey];
-      const vb=col.nkey?b[col.nkey]:b[sortKey];
-      const isNum=col.n||(typeof va==='number'&&typeof vb==='number');
-      if(isNum){
-        const na=(va==='-'||va==null)?-Infinity:Number(va);
-        const nb=(vb==='-'||vb==null)?-Infinity:Number(vb);
-        return sortDir==='asc'?na-nb:nb-na;
-      }
-      const sa=''+(va??''),sb=''+(vb??'');
-      return sortDir==='asc'?sa.localeCompare(sb,'zh'):sb.localeCompare(sa,'zh');
-    });
+  const rows=[];
+  for(let p=0;p<=9;p++)for(let q=0;q<=9;q++){
+    const k=p+'-'+q, has=occ[k]!==undefined;
+    let total=0, miss=N, maxMiss=null, prevMiss=null, avg=null;
+    if(has){
+      const arr=occ[k];
+      total=arr.length;
+      miss=N-1-arr[arr.length-1];
+      // 历史最大遗漏：首段（首次开出前）与相邻间隔，不含当前进行中遗漏
+      let mx=arr[0];
+      for(let j=0;j<arr.length-1;j++){ const gap=arr[j+1]-arr[j]-1; if(gap>mx) mx=gap; }
+      maxMiss=mx;
+      if(arr.length>=2) prevMiss=arr[arr.length-1]-arr[arr.length-2]-1; // 上次遗漏值：最近一次开出前经历的遗漏期数
+      // 平均遗漏 = 每次遗漏期数之和 ÷ 出现次数（每段遗漏以一次开出结束，不含当前进行中的遗漏；四舍五入取整）
+      const sumGaps=arr[arr.length-1]-(arr.length-1);
+      avg=Math.round(sumGaps/arr.length);
+    }
+    rows.push({combo:k, total, miss, max:maxMiss, prev:prevMiss, avg});
   }
-  resBody.innerHTML='';
-  rows.forEach(r=>{
-    const tr=document.createElement('tr');
-    headCols.forEach(c=>{
-      const td=document.createElement('td');
-      const v=r[c.k];
-      td.textContent=v==='-'?'-':v;
-      if(c.k==='cur'&&v!=='-'&&v>0)td.className='hl';
-      if(c.k==='yc'&&typeof r.yc==='number'&&r.yc>=2)td.className='hl';
-      tr.appendChild(td);
-    });
-    resBody.appendChild(tr);
-  });
-  updateHeadHi();
+  rows.sort((a,b)=> b.miss-a.miss || (a.combo<b.combo?-1:1));
+  return rows;
 }
-
+function zxDirectQuery(){
+  if(!ZX2_CACHE) ZX2_CACHE=zxDirectBuild();
+  const rows=ZX2_CACHE;
+  let html='<div class="zxCol" style="flex:1 1 100%"><div class="zxColTitle">直选两码（按左→右顺序两两排列，三位置合并，共 100 种）</div>';
+  html+='<table><thead><tr><th>排名</th><th>两码</th><th>出现总次数</th><th>当前遗漏</th><th>平均遗漏</th><th>历史最大遗漏</th><th>上次遗漏值</th></tr></thead><tbody>';
+  rows.forEach((r,i)=>{
+    const newHigh = (r.max!==null && r.miss>r.max);
+    const cellCls = newHigh?'missMax':'missCur';
+    html+='<tr><td class="rk">'+(i+1)+'</td><td><b>'+r.combo.replace('-','')+'</b></td><td>'+r.total+'</td><td class="'+cellCls+'">'+r.miss+(newHigh?' ★':'')+'</td><td class="avg">'+(r.avg===null?'—':r.avg)+'</td><td class="miss">'+(r.max===null?'—':r.max)+'</td><td>'+(r.prev===null?'—':r.prev)+'</td></tr>';
+  });
+  html+='</tbody></table></div>';
+  html+='<div class="hint" style="flex-basis:100%">直选两码：按开奖号码左→右顺序依次取「百位-十位 / 百位-个位 / 十位-个位」三个<strong>有序</strong>两码组合并合并统计（35 与 53 视为不同组合）。共 100 种（00~99）。例：开奖 123 命中 12/13/23；开奖 253 命中 25/23/53，二者都含 23。每期最多贡献 3 次（三个位置各计一次，含重复——如 112 的 11 计两次）。『平均遗漏』＝每次遗漏期数之和 ÷ 出现次数（每段遗漏以一次开出结束，不含当前进行中的遗漏；除不尽四舍五入取整）。『历史最大遗漏』为该组合在全部历史中曾达到的最大遗漏期数（不含当前进行中遗漏）；从未开出的组合记为「—」。『上次遗漏值』= 该组合最近一次开出前所经历的遗漏期数（仅出现≥2次的组合有值，否则记「—」）。<b>红底★</b>：当前遗漏 > 历史最大遗漏。</div>';
+  $('zx2Result').innerHTML=html;
+}
 /* ---------- 和值走势图（带连线） ---------- */
 // 由期号推导年/月：前4位=年，后3位=年内序号(3D 每日开奖≈年内第几天)
 function issueMonthOf(dateStr){
@@ -4105,6 +4168,57 @@ function renderZst(shown, all, grp, totalN, metaEl, warnEl){
     tfoot+='</tr>';
   });
   // M差值 行：主行(单年模式) + 近五年(不含当年)行，统一 .mrow 同色高亮
+  function zstMDiffRow(label, arr){
+    if(!arr) return '';
+    let h='<tr class="mrow"><td class="footer-lab" colspan="3">'+label+'</td>';
+    grids.forEach((g,gi)=>{
+      for(let v=0;v<g.n;v++){
+        const x=(arr.grids[gi]&&arr.grids[gi][v]!==null&&arr.grids[gi][v]!==undefined)?arr.grids[gi][v]:'—';
+        h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>';
+      }
+    });
+    attrs.forEach((a,ai)=>{
+      const x=(arr.attrs&&arr.attrs[ai]!==null&&arr.attrs[ai]!==undefined)?arr.attrs[ai]:'—';
+      h+='<td'+(attrSep.has(ai)?' class="grp-sep"':'')+'>'+x+'</td>';
+    });
+    return h+'</tr>';
+  }
+  if(isYearMode) tfoot+=zstMDiffRow('M差值', mDiff);
+  hzYearRows.forEach(r=>{ tfoot+=zstMDiffRow(r.year+' M差值', r.vals); });
+  tfoot+='</tfoot>';
+  $('zstTable').innerHTML=thead+tbody+tfoot;
+  metaEl.textContent='和值走势图（带连线）｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）｜ 形态：'+grp+' ｜ 连线：和值(红)/和尾(蓝)/跨度(绿) ｜ 属性列：奇偶(奇/偶)/大小(小/大)/质合(质/合)/012路(0/1/2)/大中小(大18-27·中9-17·小0-8) 各按类分列，仅所属列显示 ｜ 合值(和尾)=跨度 时该两格红底 ｜ 表脚 5 项统计与 M差值 覆盖 和值/和尾/跨度 及全部属性列';
+  let warn='';
+  warnEl.textContent=warn;
+  setTimeout(drawZstLines,30);
+}
+
+function drawZstLines(){
+  const scroller=$('zstPanel'), svg=$('zstSvg'), tbl=$('zstTable');
+  if(!tbl) return;
+  const W=tbl.scrollWidth, H=tbl.scrollHeight;
+  svg.setAttribute('width',W); svg.setAttribute('height',H);
+  svg.style.width=W+'px'; svg.style.height=H+'px';
+  svg.innerHTML='';
+  const cRect=scroller.getBoundingClientRect();
+  const sx=scroller.scrollLeft, sy=scroller.scrollTop;
+  const groups={};
+  document.querySelectorAll('#zstTable td.mk').forEach(td=>{
+    const g=td.dataset.grp, r=td.getBoundingClientRect();
+    const x=r.left-cRect.left+sx+r.width/2, y=r.top-cRect.top+sy+r.height/2;
+    (groups[g]=groups[g]||[]).push(x+','+y);
+  });
+  const colors=['#e74c3c','#2980b9','#27ae60'];
+  for(const g in groups){
+    const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    pl.setAttribute('points',groups[g].join(' '));
+    pl.setAttribute('fill','none');
+    pl.setAttribute('stroke',colors[+g]||'#888');
+    pl.setAttribute('stroke-width','1.3');
+    pl.setAttribute('opacity','0.85');
+    svg.appendChild(pl);
+  }
+}
   // ===== 切片切换 + 模式切换 + 初始化 =====
   function refreshMode(){
     fillHzYear(); fillHzGrp(); fillLmYear();

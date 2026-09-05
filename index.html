@@ -967,12 +967,12 @@ function hitOf(codes,d){
   return [d[1],d[2],d[3]].every(x=>comboSet.has(x)); // 集合包含：开奖号每一位数字都属于该组合(draw⊆combo)
 }
 function theoretical(cat,sub,codes,grp,periodLen){
-  let total=0,hit=0;
+  let total=0,hit=0; // 多码任意组合须与实出同口径用 hitOf(两码多重集/k>=3集合包含)，否则4~9码恒0
   for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++){
     if(grp!=='全'){const t=typeOf(a,b,c); if(t!==grp)continue;}
     total++;
-    const d=[0,a,b,c]; const v=attr(cat,sub,d);
-    if(matchCodes(codes,v))hit++;
+    const d=[0,a,b,c]; const h=(cat==='多码任意组合')?hitOf(codes,d):matchCodes(codes,attr(cat,sub,d));
+    if(h)hit++;
   }
   const p=total?hit/total:0;
   return periodLen*p;

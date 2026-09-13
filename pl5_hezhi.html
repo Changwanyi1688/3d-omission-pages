@@ -157,8 +157,8 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root header h1{margin:0;font-size:18px}
 #p5c8root header .sub{font-size:12px;opacity:.9;margin-top:3px}
 #p5c8root .wrap{max-width:1280px;margin:7px auto;padding:0 14px}
-/* 和值走势图 / 和值尾走势图 / 跨度走势图 / 和值×组六/组三×跨度统计：全页面铺满（突破 .wrap 1280 居中限制） */
-#p5c8root #p5czstPanel,#p5c8root #p5cwshzPanel,#p5c8root #p5ckdPanel,#p5c8root #p5chstPanel{
+/* 和值走势图 / 和值尾走势图 / 跨度走势图 / 和值×组六/组三×跨度统计 / 组（六、三）两码走势：全页面铺满（突破 .wrap 1280 居中限制） */
+#p5c8root #p5czstPanel,#p5c8root #p5cwshzPanel,#p5c8root #p5ckdPanel,#p5c8root #p5chstPanel,#p5c8root #p5clmPanel{
     width:100%;max-width:none;margin-left:0
   }
 #p5c8root .panel{background:#fff;border:1px solid #e3e7ee;border-radius:10px;padding:12px 14px;margin:5px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
@@ -366,6 +366,8 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root #p5clmGrids .lab-h{background:#2c3e50;color:#fff;font-weight:600}
 #p5c8root #p5clmGrids .grp-h{background:#34495e;color:#fff;font-weight:600}
 #p5c8root #p5clmGrids .grp-sep{border-left:2px solid #90a4ae}
+#p5c8root #p5clmGrids .grp-sepRed{border-left:3px solid #e74c3c}
+/* 合并单表: 组六|组三 中缝红竖线 */
 #p5c8root #p5clmGrids td.omission{color:#9aa0a6;font-size:11px}
 /* 直选定位两码：三个位置各一张卡片横向并排（每位置100种），小字号自适应页面宽度 */
 #p5c8root .zxCols{display:flex;flex-direction:row;flex-wrap:wrap;gap:5px;align-items:flex-start;margin-top:6px;padding:4px}
@@ -640,7 +642,7 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 </style></head><body><div class="wrap">
 <h1>排列五 · 和值走势图<span class="tag">含7项比例列</span></h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-09-13 21:55</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026246 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">8</div><div class="num s">6</div><div class="num">6</div><div class="num">5</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">6</div><div class="snum">8</div><div class="snum">5</div><div class="snum">8</div><div class="snum">2</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">9</div><div class="snum">4</div><div class="snum">2</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06927</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">9</div><div class="snum">4</div><div class="snum">2</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06927</span><span class="tag"><b>对应码</b>63980</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-09-13 23:10</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026246 期</span>开奖号码</span><div class="balls"><div class="num">2</div><div class="num">8</div><div class="num s">6</div><div class="num">6</div><div class="num">5</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">6</div><div class="snum">8</div><div class="snum">5</div><div class="snum">8</div><div class="snum">2</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">9</div><div class="snum">4</div><div class="snum">2</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06927</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">8</div><div class="snum">9</div><div class="snum">4</div><div class="snum">2</div><div class="snum">7</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>06927</span><span class="tag"><b>对应码</b>63980</span></div></div></div></div>
 
 <div class="panel">
   <h3>排五 · 和值表（5位总和 0-45 走势）</h3>
@@ -1266,7 +1268,7 @@ var HZG = (function(){
     renderCatStats();
     renderAllTable();
     fitHzgCells();
-    // 鼠标跟随 行+列 十字高亮：绑定 和值走势图主表 / 统计表 / 分类统计表 / 全量表·15类&全周期统计
+    // 鼠标跟随 行+列 十字高亮：绑定 和值走势图主表 / 统计表 / 分类统计表 / 全量表·15类
     _bindAllTableHL(document.getElementById('hzgTable'));
     _bindAllTableHL(document.getElementById('hzgStats'));
     _bindAllTableHL(document.getElementById('hzgCatStats'));
@@ -1510,7 +1512,7 @@ function renderCatStats(){
     +'</div>';
 }
 
-// ===== 全量表：5大/5小/5奇/5偶/5阴/5阳/5大(789)/5中(3456)/5小(012)/5红/5蓝/5绿/5个0路/5个1路/5个2路 的每年出现次数 + 全周期统计 =====
+// ===== 全量表：5大/5小/5奇/5偶/5阴/5阳/5大(789)/5中(3456)/5小(012)/5红/5蓝/5绿/5个0路/5个1路/5个2路 的每年出现次数 =====
 var ALLCATS=[
   {name:'5大(56789)', set:[5,6,7,8,9]},
   {name:'5小(01234)', set:[0,1,2,3,4]},
@@ -1618,25 +1620,10 @@ function renderAllTable(){
   for(var ci=1;ci<ncols;ci++) cg+='<col>';
   cg+='</colgroup>';
   var part1='<h4 class="cz">每年出现次数</h4><table class="alltbl">'+cg+'<thead><tr>'+h1+'</tr></thead><tbody>'+rows1+'</tbody></table>';
-  // Part2：全周期统计（当前遗漏列右侧追加近5年各年 M差值，按 2025→2021 倒序）
-  var prior5 = years.filter(function(y){return parseInt(y,10)<curYear;}).slice(-5).reverse();
-  var priorCols=''; prior5.forEach(function(y){ priorCols+='<th>M差('+y+')</th>'; });
-  var h2='<th class="cat">类别</th><th>全周期次数</th><th>最大遗漏</th><th>最大连出</th><th>平均遗漏</th><th>年均出现次数</th><th>'+curYear+'出现值</th><th>M差值('+curYear+')</th><th>当前遗漏</th>'+priorCols;
-  var rows2='';
-  ALLCATS.forEach(function(c){
-    var os=omitStats(occ[c.name]);
-    var yv=cy[c.name][''+curYear]||0;
-    var bm=baseMean(c.name);
-    var md=Math.round(yv - bm*(M/12));
-    var priorVals=''; prior5.forEach(function(y){ priorVals+='<td class="mk">'+yearMdiff(c.name, parseInt(y,10))+'</td>'; });
-    rows2+='<tr><td class="cat">'+c.name+'</td><td>'+os.total+'</td><td>'+os.maxOmit+'</td><td>'+os.maxCon+'</td><td>'+os.avgOmit+'</td><td>'+bm.toFixed(1)+'</td><td>'+yv+'</td><td class="mk">'+md+'</td><td>'+os.curOmit+'</td>'+priorVals+'</tr>';
-  });
-  var part2='<h4 class="cz">全周期统计（最大遗漏/最大连出/平均遗漏/当前遗漏为全周期口径；M差值为当年口径）</h4>'
-    +'<table><thead><tr>'+h2+'</tr></thead><tbody>'+rows2+'</tbody></table>';
+  // 2026-09-13：按用户要求删除原 Part2「全周期统计」表（含 近5年M差值 列），全量表仅保留 Part1「每年出现次数」矩阵。
   var _allHtml='<div class="hzall">'
-    +'<h4 class="cz">全量表 · 15 类「5位同属性」每年出现次数与全周期统计</h4>'
-    + part1 + part2
-    +'<div class="note">各类=五位开奖数字全部属于该集合：5大(56789)=五位均∈{5,6,7,8,9}；5小(01234)=五位均∈{0,1,2,3,4}；5奇=五位全奇数；5偶=五位全偶数；5阴=五位均∈{0,3,4,6,7}；5阳=五位均∈{1,2,5,8,9}；5大(789)=五位均∈{7,8,9}；5中(3456)=五位均∈{3,4,5,6}；5小(012)=五位均∈{0,1,2}；5红=五位均∈{1,2,7,8}；5蓝=五位均∈{0,3,4,9}；5绿=五位均∈{5,6}；5个0路=五位均∈{0,3,6,9}；5个1路=五位均∈{1,4,7}；5个2路=五位均∈{2,5,8}。全周期统计基于全部 '+N+' 期；年均出现次数=除当年('+curYear+')外其余完整年份(1~12月都有数据)出现次数的均值；'+curYear+'出现值=当年实际出现次数；M差值='+curYear+'出现值−年均出现次数×(当年月份/12)；最大遗漏=历史最长遗漏（含首段与当前进行中）；平均遗漏=各段遗漏均值（不含当前进行中）；最大连出=最长连续开出期数；当前遗漏=全部历史中距最近一次开出的间隔期数。每年列左侧为该年 M差值（=当年次数−完整年次数均值(剔除该年)×(当年月份/12)）；全周期统计表「当前遗漏」右侧为近5年各年 M差值（按 2025→2021 倒序）。全周期统计与「全量明细」表同口径。</div>'
+    +'<h4 class="cz">全量表 · 15 类「5位同属性」每年出现次数</h4>'
+    + part1
     +'</div>';
   _allTableCache=_allHtml;
   box.innerHTML=_allHtml;
@@ -2549,59 +2536,59 @@ function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
     return {appear,curGap,maxGap,avgGap,maxCon};
   });
   const statNames=['出现次数','M差值','当前遗漏','最大遗漏','平均遗漏','最大连出'];
-  // 逐组渲染为独立表格
-  let html='';
-  lmGrids.forEach((g,gi)=>{
-    const n=g.heads.length;
-    // 表头（两行：组名 + 列头）
-    let thead='<table><thead><tr>';
-    thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号</th>';
-    thead+='<th class="grp-h" colspan="'+n+'">'+g.name+'</th></tr><tr>';
-    for(let v=0;v<n;v++) thead+='<th'+(v===0?' class="grp-sep"':'')+'>'+g.heads[v]+'</th>';
-    thead+='</tr></thead>';
-    // 表体（仅窗口内行）
-    let tbody='<tbody>';
-    shown.forEach(d=>{
-      const rec=LM_MAP[d[0]];
-      const hits=lmHits(rec,gi);
-      const om=omitByIssue[gi].get(d[0]);
-      tbody+='<tr><td>'+d[0]+'</td><td>'+d[1]+' '+d[2]+' '+d[3]+'</td>';
-      for(let v=0;v<n;v++){
-        if(hits.includes(v)) tbody+='<td class="lm-hit" style="background:'+g.color+';color:#fff;font-weight:700">'+g.heads[v]+'</td>';
-        else tbody+='<td class="omission">'+om[v]+'</td>';
+  // 合并为单表：组六(23列) + 组三(16列)，两组之间用红色竖线(.grp-sepRed)分隔
+  const lmCols=[]; lmGrids.forEach((g,gi)=>g.heads.forEach((h,v)=>lmCols.push([gi,v])));
+  let html='<div class="lmGridBlock">';
+  let thead='<table><thead><tr>';
+  thead+='<th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号</th>';
+  lmGrids.forEach((g,gi)=>{ thead+='<th class="grp-h'+(gi>0?' grp-sepRed':'')+'" colspan="'+g.heads.length+'">'+g.name+'</th>'; });
+  thead+='</tr><tr>';
+  lmCols.forEach(c=>{ thead+='<th'+(c[1]===0?(c[0]>0?' class="grp-sepRed"':' class="grp-sep"'):'')+'>'+lmGrids[c[0]].heads[c[1]]+'</th>'; });
+  thead+='</tr></thead>';
+  let tbody='<tbody>';   // 表体：仅窗口内行
+  shown.forEach(d=>{
+    tbody+='<tr><td>'+d[0]+'</td><td>'+d[1]+' '+d[2]+' '+d[3]+'</td>';
+    lmGrids.forEach((g,gi)=>{
+      const hits=lmHits(LM_MAP[d[0]],gi), om=omitByIssue[gi].get(d[0]);
+      for(let v=0;v<g.heads.length;v++){
+        const sep=(gi>0&&v===0)?' grp-sepRed':'';
+        if(hits.includes(v)) tbody+='<td class="lm-hit'+sep+'" style="background:'+g.color+';color:#fff;font-weight:700">'+g.heads[v]+'</td>';
+        else tbody+='<td class="omission'+sep+'">'+om[v]+'</td>';
       }
-      tbody+='</tr>';
     });
-    tbody+='</tbody>';
-    // 表脚统计
-    let tfoot='<tfoot>';
-    const rowStats=['出现次数','当前遗漏','最大遗漏','平均遗漏','最大连出'];
-    rowStats.forEach(sn=>{
-      tfoot+='<tr><td class="footer-lab" colspan="2">'+sn+'</td>';
-      for(let v=0;v<n;v++){
-        const st=gridStats[gi];
-        let val='—', cls=(v===0?' class="grp-sep"':'');
+    tbody+='</tr>';
+  });
+  tbody+='</tbody>';
+  // 表脚统计（合并后跨全部 39 列）
+  let tfoot='<tfoot>';
+  const rowStats=['出现次数','当前遗漏','最大遗漏','平均遗漏','最大连出'];
+  rowStats.forEach(sn=>{
+    tfoot+='<tr><td class="footer-lab" colspan="2">'+sn+'</td>';
+    lmGrids.forEach((g,gi)=>{
+      const st=gridStats[gi];
+      for(let v=0;v<g.heads.length;v++){
+        let val='—';
         if(sn==='出现次数')val=st.appear[v];
         else if(sn==='当前遗漏')val=st.curGap[v];
         else if(sn==='最大遗漏')val=st.maxGap[v];
         else if(sn==='平均遗漏')val=st.avgGap[v];
         else if(sn==='最大连出')val=st.maxCon[v];
-        tfoot+='<td'+cls+'>'+val+'</td>';
+        tfoot+='<td'+(gi>0&&v===0?' class="grp-sepRed"':'')+'>'+val+'</td>';
       }
-      tfoot+='</tr>';
     });
-    // M差值 行：主行(单年模式) + 近五年(不含当年)行，统一 .mrow 同色高亮
-    function lmMDiffRow(label, arr){
-      if(!arr) return '';
-      let h='<tr class="mrow"><td class="footer-lab" colspan="2">'+label+'</td>';
-      for(let v=0;v<n;v++){ const x=(arr[v]!==null&&arr[v]!==undefined)?arr[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>'; }
-      return h+'</tr>';
-    }
-    if(mDiff) tfoot+=lmMDiffRow('M差值', mDiff[gi]);
-    (lmYearRows||[]).forEach(r=>{ tfoot+=lmMDiffRow(r.year+' M差值', r.vals[gi]); });
-    tfoot+='</tfoot>';
-    html+='<div class="lmGridBlock"><div class="resTitle">'+g.name+'（'+n+' 列）</div>'+thead+tbody+tfoot+'</table></div>';
+    tfoot+='</tr>';
   });
+  // M差值 行：主行(单年模式) + 近五年(不含当年)行，统一 .mrow 同色高亮
+  function lmMDiffRow(label, arr){
+    if(!arr) return '';
+    let h='<tr class="mrow"><td class="footer-lab" colspan="2">'+label+'</td>';
+    lmGrids.forEach((g,gi)=>{ for(let v=0;v<g.heads.length;v++){ const x=(arr[gi][v]!==null&&arr[gi][v]!==undefined)?arr[gi][v]:'—'; h+='<td'+(v===0?(gi>0?' class="grp-sepRed"':' class="grp-sep"'):'')+'>'+x+'</td>'; } });
+    return h+'</tr>';
+  }
+  if(mDiff) tfoot+=lmMDiffRow('M差值', mDiff);
+  (lmYearRows||[]).forEach(r=>{ tfoot+=lmMDiffRow(r.year+' M差值', r.vals); });
+  tfoot+='</tfoot>';
+  html+='<div class="resTitle">两码走势（组六 23 列 ＋ 组三 16 列；中缝红色竖线分隔）</div>'+thead+tbody+tfoot+'</table></div>';
   $('lmGrids').innerHTML=html;
   metaEl.textContent='组（六、三）两码走势｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）';
   warnEl.textContent='';   // 用户要求：删除橙色「提示」及后面的说明文字

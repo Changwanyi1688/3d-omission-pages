@@ -375,6 +375,7 @@
   /* 区间图例（各区段数值范围） */
   #qjLegend{margin:6px 0 0;font-size:11px;color:#6b7785;line-height:1.9}
   #qjLegend span.qjseg{display:inline-block;margin:0 8px 2px 0;padding:1px 6px;border-radius:4px;background:#f0f3f8;color:#34495e;font-family:Consolas,Menlo,monospace}
+  #qjLegend span.qjseg b.qjno{color:#e74c3c;font-weight:700;margin-right:2px}
   /* ===== 顶部概览（照搬 dashboard 前两行：数据看板 + 最新开奖/模拟号） ===== */
   #dashTop{--bg:#f5f7fa;--card:#fff;--ink:#1f2933;--sub:#6b7785;--line:#e5e9f0;--brand:#e11d48;--brand2:#4f46e5;--shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04)}
   #dashTop header{padding:13px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
@@ -4011,9 +4012,9 @@ function renderQj(reset){
   yearRows.forEach(r=>{ tfoot+=mDiffRow(r.year+' M差值', r.vals); });
   tfoot+='</tfoot>';
   html+=thead+tbody+tfoot+'</table></div>';
-  // 区间段图例
+  // 区间段图例（带区号：如「1区 000-249」）
   html+='<div id="qjLegend"><b>区间'+k+' 分段：</b>';
-  ranges.forEach(([s,e],i)=>{ html+='<span class="qjseg">'+String(s).padStart(3,'0')+'-'+String(e).padStart(3,'0')+'</span>'; });
+  ranges.forEach(([s,e],i)=>{ html+='<span class="qjseg"><b class="qjno">'+(i+1)+'区</b> '+String(s).padStart(3,'0')+'-'+String(e).padStart(3,'0')+'</span>'; });
   html+='</div>';
   gridEl.innerHTML=html;
   const grpTxt=(QJ_SHAPE_SEL.size===0||QJ_SHAPE_SEL.size===3)?'全形态':[...QJ_SHAPE_SEL].join('+');

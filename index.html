@@ -3513,14 +3513,14 @@ function renderPos(){
   if(!N){ const el=document.getElementById('posPanel'); if(el) el.innerHTML=''; return; }
   const newest = dd[N-1];                       // 最新一期 [期号,百,十,个,日期]
   function posOmit(pi){
-    const last=[], maxg=[], cnt=[], prevg=[];
-    for(let d=0;d<10;d++){ last[d]=-1; maxg[d]=0; cnt[d]=0; prevg[d]=0; }
+    const last=[], maxg=[], cnt=[], prevg=[], sumg=[];
+    for(let d=0;d<10;d++){ last[d]=-1; maxg[d]=0; cnt[d]=0; prevg[d]=0; sumg[d]=0; }
     for(let i=0;i<N;i++){
       const x=dd[i][1+pi];
       if(x<0||x>9) continue;
       cnt[x]++;
-      if(last[x]>=0){ const g=i-last[x]-1; prevg[x]=g; if(g>maxg[x])maxg[x]=g; }
-      else { prevg[x]=i; }                       // 首次出现：数据起点到首现间隔
+      if(last[x]>=0){ const g=i-last[x]-1; prevg[x]=g; sumg[x]+=g; if(g>maxg[x])maxg[x]=g; }
+      else { prevg[x]=i; sumg[x]+=i; }           // 首次出现：数据起点到首现间隔（计入平均遗漏）
       last[x]=i;
     }
     const res=[];
@@ -3528,26 +3528,29 @@ function renderPos(){
       let cur;
       if(cnt[d]===0) cur=N;
       else { cur=(N-1)-last[d]; if(cur>maxg[d])maxg[d]=cur; }
-      res.push({d:d, cur:cur, max:maxg[d], cnt:cnt[d], prev:prevg[d]});
+      // 历史平均遗漏 =（首段遗漏 + 各相邻间隔）÷ 出现次数（不含当前进行中；四舍五入取整）
+      const avg=cnt[d]?Math.round(sumg[d]/cnt[d]):null;
+      res.push({d:d, cur:cur, max:maxg[d], cnt:cnt[d], prev:prevg[d], avg:avg});
     }
     return res;
   }
   // 豹子号 ddd 遗漏：将整期看作「0-9 共 10 个豹子号」，出现=该期三位全同且=该数字
   function leopardOmit(){
-    const last=[], maxg=[], cnt=[], prevg=[];
-    for(let d=0;d<10;d++){ last[d]=-1; maxg[d]=0; cnt[d]=0; prevg[d]=0; }
+    const last=[], maxg=[], cnt=[], prevg=[], sumg=[];
+    for(let d=0;d<10;d++){ last[d]=-1; maxg[d]=0; cnt[d]=0; prevg[d]=0; sumg[d]=0; }
     for(let i=0;i<N;i++){
       const a=dd[i][1], b=dd[i][2], c=dd[i][3];
       if(a===b && b===c){ const x=a; cnt[x]++;
-        if(last[x]>=0){ const g=i-last[x]-1; prevg[x]=g; if(g>maxg[x])maxg[x]=g; }
-        else { prevg[x]=i; }
+        if(last[x]>=0){ const g=i-last[x]-1; prevg[x]=g; sumg[x]+=g; if(g>maxg[x])maxg[x]=g; }
+        else { prevg[x]=i; sumg[x]+=i; }
         last[x]=i;
       }
     }
     const res=[];
     for(let d=0;d<10;d++){
       let cur; if(cnt[d]===0) cur=N; else { cur=(N-1)-last[d]; if(cur>maxg[d])maxg[d]=cur; }
-      res.push({d:d, cur:cur, max:maxg[d], cnt:cnt[d], prev:prevg[d]});
+      const avg=cnt[d]?Math.round(sumg[d]/cnt[d]):null;
+      res.push({d:d, cur:cur, max:maxg[d], cnt:cnt[d], prev:prevg[d], avg:avg});
     }
     return res;
   }
@@ -3559,7 +3562,7 @@ function renderPos(){
   let lpRows='';
   for(const r of lp){
     const cls=[]; if(r.cur>=r.max) cls.push('hot'); if(r.d===bzD) cls.push('curhit');   // 豹子号：当前遗漏≥历史最大遗漏 才高亮（记录级极冷）
-    lpRows+='<tr'+(cls.length?(' class="'+cls.join(' ')+'"'):'')+'><td>'+r.d+r.d+r.d+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+r.cnt+'</td><td>'+r.prev+'</td></tr>';
+    lpRows+='<tr'+(cls.length?(' class="'+cls.join(' ')+'"'):'')+'><td>'+r.d+r.d+r.d+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+((r.avg===null)?'—':r.avg)+'</td><td>'+r.cnt+'</td><td>'+r.prev+'</td></tr>';
   }
   for(let pi=0;pi<3;pi++){
     const om=posOmit(pi);
@@ -3569,12 +3572,12 @@ function renderPos(){
       const cls=[];
       if(r.cur>=30) cls.push('hot');
       if(r.d===curDigit) cls.push('curhit');
-      rows+='<tr'+(cls.length?(' class="'+cls.join(' ')+'"'):'')+'><td>'+r.d+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+r.cnt+'</td><td>'+r.prev+'</td></tr>';
+      rows+='<tr'+(cls.length?(' class="'+cls.join(' ')+'"'):'')+'><td>'+r.d+'</td><td>'+r.cur+'</td><td>'+r.max+'</td><td>'+((r.avg===null)?'—':r.avg)+'</td><td>'+r.cnt+'</td><td>'+r.prev+'</td></tr>';
     }
-    h+='<div class="posbox"><h4>'+POS[pi]+'</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    h+='<div class="posbox"><h4>'+POS[pi]+'</h4><table><thead><tr><th>数字</th><th>当前遗漏</th><th>最大遗漏</th><th>历史平均遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
   }
   // 豹子号遗漏表（最右侧，红框）
-  h+='<div class="posbox leopard"><h4>豹子号 (ddd)</h4><table><thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+lpRows+'</tbody></table></div>';
+  h+='<div class="posbox leopard"><h4>豹子号 (ddd)</h4><table><thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>历史平均遗漏</th><th>出现</th><th>上次遗漏</th></tr></thead><tbody>'+lpRows+'</tbody></table></div>';
   h+='</div>';
   const el=document.getElementById('posPanel');
   if(el) el.innerHTML=h;

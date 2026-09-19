@@ -365,8 +365,10 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root #p5cbwTable tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
 #p5c8root #p5cbwTable tr.mrow td:first-child{color:#a0670f}
 #p5c8root #p5cbwTable .footer-lab{background:#27384d;color:#fff;font-weight:700;text-align:left;padding-left:6px;white-space:nowrap;font-size:10px}
-/* 列表头随动：纵向滚动时整块表头（期号行+分组行）固定在顶部，不被滚走 */
-#p5c8root #p5cbwTable thead{position:sticky;top:0;z-index:20}
+/* 列表头随动：纵向滚动时整块表头（期号行+分组行）固定，不被滚走。
+     ⚠ 前提：#bwPanel 必须带 scroller 类（提供纵向滚动容器），否则 .bwScroll 只横向滚动、
+     sticky 无纵向滚动轴可用，表头会被整块带走。top 取 35px 让开 sticky 的 .resTitle。 */
+#p5c8root #p5cbwTable thead{position:sticky;top:35px;z-index:20}
 #p5c8root #p5cbwTable thead th{background:#27384d}
 /* 兜底底色，避免 sticky 时透出下方折线 */
 #p5c8root #p5cbwTable thead .grp-h{background:#31475f}
@@ -1048,7 +1050,7 @@ table.pl5dgt tfoot td.grp-sep{border-left:2px solid #475569}
   </div>
 
   <!-- 百位走势图（遗漏组合查询·号码项内，依据 cjcp 3d_weishu-bw 逻辑用数据库历史数据绘制；折线图置于表格下方） -->
-  <div class="panel" id="p5cbwPanel" style="display:none">
+  <div class="panel scroller" id="p5cbwPanel" style="display:none">
     <div class="resTitle" id="p5cbwTitle">走势图｜ 号码0-9(紫) / 振幅0-9(蓝) 连线（直接绘于表格内 号码列/振幅列 格子上，并在表格下方附独立折线图）</div>
     <div class="row">
       <span class="lab">期号范围</span>

@@ -322,11 +322,14 @@
   #lmGrids tfoot td{background:#f0f3f8;font-weight:600;color:#34495e}
   #lmGrids .footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:left;padding-left:10px}
   /* ===== 偏移走势图（模式十一）===== */
-  #pyPanel{overflow:auto;padding:0 10px 12px}
+  /* ⚠ 必须保留 .scroller 的滚动语义：面板自身不得再设 overflow:auto，
+     否则滚动条落在内层 div，表头 sticky 的参照容器错位（表现为表头不随动）。 */
+  #pyPanel{padding:0 10px 12px}
   .pyBlock{margin:6px 0 0}
   table.pyTable{border-collapse:collapse;font-size:12px;white-space:nowrap;margin:0 auto}
   table.pyTable th,table.pyTable td{border:1px solid #dfe6ee;text-align:center;padding:2px 3px;min-width:34px}
-  table.pyTable thead th{background:#eef2f8;color:#34495e;font-weight:600;position:sticky;top:0;z-index:2}
+  /* 表头纵向随动：吸附在 .scroller 顶部标题栏(resTitle, 约35px)之下 */
+  table.pyTable thead th{background:#eef2f8;color:#34495e;font-weight:600;position:sticky;top:35px;z-index:2}
   table.pyTable thead th.py-h{background:#e8eef7;color:#31506e;font-family:Consolas,Menlo,monospace;font-weight:700}
   table.pyTable thead th.lab-h{background:#2c3e50;color:#fff}
   table.pyTable td.iss{background:#f7f9fc;color:#2c3e50;font-weight:600}

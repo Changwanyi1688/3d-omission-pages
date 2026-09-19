@@ -12,7 +12,7 @@
   header .sub{font-size:12px;opacity:.9;margin-top:3px}
   .wrap{max-width:1280px;margin:7px auto;padding:0 14px}
   /* 和值走势图 / 和值尾走势图 / 跨度走势图 / 和值×组六/组三×跨度统计 / 组（六、三）两码走势：全页面铺满（突破 .wrap 1280 居中限制） */
-  #zstPanel,#wshzPanel,#kdPanel,#hstPanel,#lmPanel{
+  #zstPanel,#wshzPanel,#kdPanel,#hstPanel,#lmPanel,#pyPanel,#pyCtl{
     width:100vw;max-width:none;margin-left:calc(50% - 50vw)
   }
   .panel{background:#fff;border:1px solid #e3e7ee;border-radius:10px;padding:12px 14px;margin:5px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
@@ -321,6 +321,23 @@
   #lmGrids td.lm-hit{font-weight:700}
   #lmGrids tfoot td{background:#f0f3f8;font-weight:600;color:#34495e}
   #lmGrids .footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:left;padding-left:10px}
+  /* ===== 偏移走势图（模式十一）===== */
+  #pyPanel{overflow:auto;padding:0 10px 12px}
+  .pyBlock{margin:6px 0 0}
+  table.pyTable{border-collapse:collapse;font-size:12px;white-space:nowrap;margin:0 auto}
+  table.pyTable th,table.pyTable td{border:1px solid #dfe6ee;text-align:center;padding:2px 3px;min-width:34px}
+  table.pyTable thead th{background:#eef2f8;color:#34495e;font-weight:600;position:sticky;top:0;z-index:2}
+  table.pyTable thead th.py-h{background:#e8eef7;color:#31506e;font-family:Consolas,Menlo,monospace;font-weight:700}
+  table.pyTable thead th.lab-h{background:#2c3e50;color:#fff}
+  table.pyTable td.iss{background:#f7f9fc;color:#2c3e50;font-weight:600}
+  table.pyTable td.nums{background:#fffaf4;color:#b5530a;font-weight:700}
+  table.pyTable td.py-type{background:#eef7f0;color:#1e7a45;font-weight:700;font-family:Consolas,Menlo,monospace}
+  table.pyTable td.py-hit{background:#e74c3c;color:#fff;font-weight:700;font-family:Consolas,Menlo,monospace}
+  table.pyTable td.omission{background:#fbfcfe;color:#94a3b8}
+  table.pyTable tfoot td{background:#f0f3f8;font-weight:600;color:#34495e}
+  table.pyTable tfoot td.footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:right;padding-right:8px}
+  table.pyTable tfoot tr.mrow td{background:#fff7e0;color:#8a5a00;font-weight:700}
+  table.pyTable tfoot tr.mrow td.footer-lab{background:#8a5a00;color:#fff}
   /* ===== 顶部概览（照搬 dashboard 前两行：数据看板 + 最新开奖/模拟号） ===== */
   #dashTop{--bg:#f5f7fa;--card:#fff;--ink:#1f2933;--sub:#6b7785;--line:#e5e9f0;--brand:#e11d48;--brand2:#4f46e5;--shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04)}
   #dashTop header{padding:13px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
@@ -545,6 +562,7 @@
       <div class="cat-btn" id="modeZu3">直组三码遗漏</div>
       <div class="cat-btn" id="modeShu">多项数和</div>
       <div class="cat-btn" id="mode2348">2345678</div>
+      <div class="cat-btn" id="modePianyi">偏移走势图</div>
     </div>
   </div>
 
@@ -619,6 +637,35 @@
     </div>
     <div class="meta" id="lmMetaBox"></div>
     <div class="warn" id="lmWarnBox"></div>
+  </div>
+
+  <!-- 模式十一：偏移走势图（某位数字相对上期的偏移：偏左/ 相同| 偏右\；三位组合共 3^3=27 种类型） -->
+  <div class="panel" id="pyCtl" style="display:none">
+    <div class="row">
+      <span class="lab">形态</span>
+      <div id="pyGrpBox" class="catbar"></div>
+      <span class="lab">期号范围</span>
+      <input type="number" id="pyFrom" style="width:90px" placeholder="起期">
+      <span>—</span>
+      <input type="number" id="pyTo" style="width:90px" placeholder="止期">
+      <button class="btn sec" id="pySearchBtn" title="放大镜：按范围筛查">&#128269; 筛查</button>
+      <span class="lab">按年份</span>
+      <select id="pyYearSel"></select>
+    </div>
+    <div class="row">
+      <span class="lab">显示最近</span>
+      <input type="number" id="pyWin" style="width:90px" value="100">
+      <span>期（窗口内逐期明细）</span>
+      <button class="btn go" id="pyQueryBtn">查 询</button>
+      <span class="hint">偏移规则：某位数字相对「上期同一位」——变小记 /（偏左）、相同记 |（直落）、变大记 \（偏右）；三位依次拼接，如 5→9 记 \、5→5 记 |、5→0 记 /。</span>
+    </div>
+    <div class="meta" id="pyMetaBox"></div>
+    <div class="warn" id="pyWarnBox"></div>
+  </div>
+
+  <div class="panel scroller" id="pyPanel" style="display:none">
+    <div class="resTitle" id="pyTitle">偏移走势图（27 类）</div>
+    <div id="pyGrids"></div>
   </div>
 
   <div class="panel scroller" id="resPanel">
@@ -1516,6 +1563,7 @@ function setMode(m){
   $('modeZu3').classList.toggle('on', m==='zu3');
   $('modeShu').classList.toggle('on', m==='shu');
   $('mode2348').classList.toggle('on', m==='2348');
+  $('modePianyi').classList.toggle('on', m==='pianyi');
   /* 直选两码/组选两码 已合并为 直/组两码遗漏(modeZxZu) */
   $('omissionCtl').style.display = (m==='omission')?'':'none';
   $('resPanel').style.display     = (m==='omission')?'':'none';
@@ -1532,6 +1580,8 @@ function setMode(m){
   $('panelZu3').style.display      = (m==='zu3')?'':'none';
   $('panelShu').style.display      = (m==='shu')?'':'none';
   $('panel2348').style.display      = (m==='2348')?'':'none';
+  $('pyCtl').style.display          = (m==='pianyi')?'':'none';
+  $('pyPanel').style.display        = (m==='pianyi')?'':'none';
   if(m==='hezhi'){ hezhiQuery(); renderHst(); wshzQuery(); kdQuery(); }
   if(m==='lm'){ lmQuery(); }
   if(m==='zxlm'){ zxLmQuery(); }
@@ -1540,6 +1590,7 @@ function setMode(m){
   if(m==='zu3'){ zhiZuSanQuery(); }
   if(m==='shu'){ shuQuery(); }
   if(m==='2348'){ query2348(); }
+  if(m==='pianyi'){ pyQuery(); }
 }
 
 /* ===== 模式四：直选定位两码（每位置100种） ===== */
@@ -3472,6 +3523,9 @@ $('lmQueryBtn').onclick=lmQuery;
 $('yearSel').onchange=query;
 $('hzYearSel').onchange=hezhiQuery;
 $('lmYearSel').onchange=lmQuery;
+$('pySearchBtn').onclick=pyQuery;
+$('pyQueryBtn').onclick=pyQuery;
+$('pyYearSel').onchange=pyQuery;
 $('modeOmission').onclick=()=>setMode('omission');
 $('modeHezhi').onclick=()=>setMode('hezhi');
 $('modeLm').onclick=()=>setMode('lm');
@@ -3481,6 +3535,177 @@ $('mode1257').onclick=()=>setMode('1257');
 $('modeZu3').onclick=()=>setMode('zu3');
 $('modeShu').onclick=()=>setMode('shu');
 $('mode2348').onclick=()=>setMode('2348');
+$('modePianyi').onclick=()=>setMode('pianyi');
+
+/* ---------- 模式十一：偏移走势图（某位数字相对上期的偏移；三位组合 3^3=27 类） ----------
+   偏移规则：某位数字相对「上期同一位」——变小记 /（偏左）、相同记 |（直落）、变大记 \（偏右）。
+   三位依次拼接成一个「偏移类型」串（共 27 种），如 5→9 记 \、5→5 记 |、5→0 记 /。
+   口径：类型按「百位串·十位串·个位串」三位拼接，字典序枚举（/ 在 | 在 \ 之前）。
+   与参考站彩经网 pl3_pianyi 逐期比对一致。                                  */
+const PY_SYMS=['/','|','\\'];
+const PY_HEADS=(()=>{ const a=[]; for(const x of PY_SYMS) for(const y of PY_SYMS) for(const z of PY_SYMS) a.push(x+y+z); return a; })();
+// 计算某期三位偏移类型串
+function pyTypeOf(cur, prev){
+  let s='';
+  for(let i=0;i<3;i++){
+    if(cur[i]<prev[i]) s+='/';
+    else if(cur[i]===prev[i]) s+='|';
+    else s+='\\';
+  }
+  return s;
+}
+// 形态判定（组三/组六/豹子；三个数字）
+function pyShapeOf(a,b,c){ const s=new Set([a,b,c]); return s.size===1?'豹子':(s.size===2?'组三':'组六'); }
+// 构建每期记录（需上一期；故首期无偏移类型）
+function pyBuildRecords(D){
+  const out=[];
+  for(let i=0;i<D.length;i++){
+    const d=D[i];
+    const a=d[1],b=d[2],c=d[3];
+    let typ=null;
+    if(i>0){ const p=D[i-1]; typ=pyTypeOf([a,b,c],[p[1],p[2],p[3]]); }
+    out.push({issue:d[0], date:d[4], a:a,b:b,c:c, type:typ, shape:pyShapeOf(a,b,c)});
+  }
+  return out;
+}
+// 形态按钮（组六/组三，可多选=并集；空选=不限）——注册于 catbar
+let PY_GRP_SEL=new Set(['组六','组三']);
+function pyGrpInit(){
+  const box=$('pyGrpBox'); if(!box) return;
+  if(!box.dataset.init){
+    box.dataset.init='1';
+    ['组六','组三','豹子'].forEach(k=>{
+      const el=document.createElement('div');
+      el.className='cat-btn'+(PY_GRP_SEL.has(k)?' on':''); el.textContent=k; el.dataset.k=k;
+      el.onclick=()=>{ if(PY_GRP_SEL.has(k)){PY_GRP_SEL.delete(k); el.classList.remove('on');} else {PY_GRP_SEL.add(k); el.classList.add('on');} pyQuery(); };
+      box.appendChild(el);
+    });
+  } else {
+    // 已初始化：按当前 PY_GRP_SEL 同步高亮（切片切换后保持选择）
+    Array.prototype.forEach.call(box.children, el=>{ el.classList.toggle('on', PY_GRP_SEL.has(el.dataset.k)); });
+  }
+}
+// 年份下拉：每次按当前 D 重建（排五切片切换后年份集合可能不同）
+function pyYearInit(){
+  const sel=$('pyYearSel'); if(!sel) return;
+  const ys=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const keep=sel.value||'0';
+  sel.innerHTML='<option value="0">全部年份</option>'+ys.slice().reverse().map(y=>'<option value="'+y+'">'+y+' 年</option>').join('');
+  sel.value=[...sel.options].some(o=>o.value===keep)? keep : '0';
+  sel.dataset.init='1';
+}
+// 主查询：筛选 → 渲染
+function pyQuery(){ renderPy(true); }
+// 起止期/窗口初值：仅在未设置时填充（避免切片切换后覆盖用户输入）
+function pyCtlInit(){
+  const F=$('pyFrom'), T=$('pyTo'), W=$('pyWin');
+  if(F && !F.value) F.value=FIRST;
+  if(T && !T.value) T.value=LAST;
+  if(W && !W.value) W.value=100;
+}
+function renderPy(reset){
+  pyGrpInit(); pyYearInit(); pyCtlInit();
+  const metaEl=$('pyMetaBox'), warnEl=$('pyWarnBox'), gridEl=$('pyGrids');
+  if(!gridEl) return;
+  metaEl.textContent=''; warnEl.textContent='';
+  const f=parseInt($('pyFrom').value||FIRST,10), t=parseInt($('pyTo').value||LAST,10);
+  const y=parseInt($('pyYearSel').value,10);
+  // 全量含偏移类型的记录（用于统计口径：完整历史）
+  const ALLREC=pyBuildRecords(D).filter(r=>r.type!==null);
+  let period=ALLREC.filter(r=>r.issue>=f&&r.issue<=t&&(y===0||Math.floor(r.issue/1000)===y));
+  if(PY_GRP_SEL.size && PY_GRP_SEL.size<3) period=period.filter(r=>PY_GRP_SEL.has(r.shape));
+  if(period.length===0){ warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围或恢复形态选择。'; gridEl.innerHTML=''; return; }
+  let W=parseInt($('pyWin').value||100,10); if(!(W>0))W=100;
+  const shown=(period.length>W)?period.slice(period.length-W):period;
+  // ===== 统计（基于完整历史 ALLREC，不受窗口/形态筛选影响，与站内其他板口径一致）=====
+  const N=PY_HEADS.length;
+  const appear=Array(N).fill(0);              // 出现次数
+  const gapsArr=Array.from({length:N},()=>[]);// 各次间隔（用于最大/平均遗漏）
+  const curGap=Array(N).fill(0);              // 当前遗漏
+  const curRun=Array(N).fill(0), maxRun=Array(N).fill(0); // 连出
+  // 逐期遗漏记录（供表格体显示）
+  const omitByIssue=new Map();
+  {
+    const g=Array(N).fill(0);
+    ALLREC.forEach(r=>{
+      const idx=PY_HEADS.indexOf(r.type);
+      for(let v=0;v<N;v++){
+        if(v===idx){ gapsArr[v].push(g[v]); g[v]=0; curRun[v]++; if(curRun[v]>maxRun[v])maxRun[v]=curRun[v]; appear[v]++; }
+        else { g[v]++; curRun[v]=0; }
+      }
+      omitByIssue.set(r.issue, g.slice());
+    });
+    for(let v=0;v<N;v++) curGap[v]=g[v];
+  }
+  const maxGap=Array(N).fill(0), avgGap=Array(N).fill(0);
+  for(let v=0;v<N;v++){
+    maxGap[v]= gapsArr[v].length? Math.max(Math.max(...gapsArr[v]),curGap[v]) : curGap[v];
+    avgGap[v]= gapsArr[v].length? Math.round(gapsArr[v].reduce((x,z)=>x+z,0)/gapsArr[v].length) : 0;
+  }
+  // ===== M差值：口径与「两码走势」完全一致 =====
+  // M差值(v) = 该年命中次数(v) − 完整年平均数(v) × (该年最新月份 / 12)，四舍五入
+  const pyAggYear={}; const pyYearMonths={};
+  ALLREC.forEach(r=>{
+    const yy=Math.floor(r.issue/1000), idx=PY_HEADS.indexOf(r.type);
+    const a=pyAggYear[yy]||(pyAggYear[yy]=Array(N).fill(0)); a[idx]++;
+    const im=issueMonthOf(r.date);
+    (pyYearMonths[yy]||(pyYearMonths[yy]=new Set())).add(im.month);
+  });
+  const pyIsFull=yy=>{ const ms=pyYearMonths[yy]; return ms && ms.has(1) && ms.has(12); };
+  function pyYearMDiff(Y){
+    let mx=0,rec=null; D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){mx=d[0];rec=d;} });
+    const M=rec? issueMonthOf(rec[4]).month : 12;
+    const yearList=Object.keys(pyAggYear).map(Number).filter(yy=> yy!==Y && pyIsFull(yy));
+    const curYear=pyAggYear[Y]||Array(N).fill(0);
+    const mean=Array(N).fill(0);
+    yearList.forEach(yy=>{ const o=pyAggYear[yy]; for(let v=0;v<N;v++) mean[v]+=o[v]; });
+    for(let v=0;v<N;v++) mean[v]= yearList.length? mean[v]/yearList.length : 0;
+    return curYear.map((cnt,i)=> Math.round(cnt - mean[i]*(M/12)));
+  }
+  const mDiff=(y!==0)? pyYearMDiff(y) : null;
+  const allYearsL=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const curYearL=allYearsL[allYearsL.length-1];
+  const last5L=allYearsL.filter(yy=> yy<curYearL && pyIsFull(yy)).slice(-5).reverse();
+  const yearRows=last5L.filter(yy=> yy!==y).map(yy=>({year:yy, vals:pyYearMDiff(yy)}));
+  // ===== 渲染 =====
+  let html='<div class="pyBlock">';
+  let thead='<table class="pyTable"><thead><tr>';
+  thead+='<th class="lab-h">期号</th><th class="lab-h">开奖号</th><th class="lab-h">偏移类型</th>';
+  PY_HEADS.forEach(h=>{ thead+='<th class="py-h">'+h+'</th>'; });
+  thead+='</tr></thead>';
+  let tbody='<tbody>';
+  shown.forEach(r=>{
+    const om=omitByIssue.get(r.issue)||Array(N).fill(0);
+    tbody+='<tr><td class="iss">'+r.issue+'</td><td class="nums">'+r.a+' '+r.b+' '+r.c+'</td><td class="py-type">'+r.type+'</td>';
+    for(let v=0;v<N;v++){
+      if(v===PY_HEADS.indexOf(r.type)) tbody+='<td class="py-hit">'+r.type+'</td>';
+      else tbody+='<td class="omission">'+om[v]+'</td>';
+    }
+    tbody+='</tr>';
+  });
+  tbody+='</tbody>';
+  // 表脚 7 行（与用户指定一致）
+  const rows=[['出现次数',appear],['最大遗漏期',maxGap],['最大连初期',maxRun],['平均遗漏期',avgGap],['当前遗漏期',curGap]];
+  let tfoot='<tfoot>';
+  rows.forEach(([lab,arr])=>{
+    tfoot+='<tr><td class="footer-lab" colspan="3">'+lab+'</td>';
+    for(let v=0;v<N;v++) tfoot+='<td>'+arr[v]+'</td>';
+    tfoot+='</tr>';
+  });
+  function mDiffRow(label,arr){
+    if(!arr) return '';
+    let h='<tr class="mrow"><td class="footer-lab" colspan="3">'+label+'</td>';
+    for(let v=0;v<N;v++){ h+='<td>'+((arr[v]===null||arr[v]===undefined)?'—':arr[v])+'</td>'; }
+    return h+'</tr>';
+  }
+  if(mDiff) tfoot+=mDiffRow('M差值', mDiff);
+  yearRows.forEach(r=>{ tfoot+=mDiffRow(r.year+' M差值', r.vals); });
+  tfoot+='</tfoot>';
+  html+=thead+tbody+tfoot+'</table></div>';
+  gridEl.innerHTML=html;
+  const grpTxt=(PY_GRP_SEL.size===0||PY_GRP_SEL.size===3)?'全形态':[...PY_GRP_SEL].join('+');
+  metaEl.textContent='偏移走势图（27 类）｜ 范围：'+ALLREC[0].issue+' ～ '+ALLREC[ALLREC.length-1].issue+'（完整 '+ALLREC.length+' 期）｜ 形态：'+grpTxt+' ｜ 明细显示最近 '+shown.length+' 期';
+}
 
 /* ---------- 初始化 ---------- */
 curCat='多码任意组合';
@@ -3918,6 +4143,7 @@ function renderAll(){
   // 组三
   renderZu3();
   if(mode==='2348') query2348();
+  if(mode==='pianyi') renderPy();
   // 数据看板概览
   renderHero();
   renderPos();   // 分位遗漏表（随 排三/3D 切换）

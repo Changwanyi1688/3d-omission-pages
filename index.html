@@ -11,8 +11,8 @@
   header h1{margin:0;font-size:18px}
   header .sub{font-size:12px;opacity:.9;margin-top:3px}
   .wrap{max-width:1280px;margin:7px auto;padding:0 14px}
-  /* 和值走势图 / 和值尾走势图 / 跨度走势图 / 和值×组六/组三×跨度统计 / 组（六、三）两码走势：全页面铺满（突破 .wrap 1280 居中限制） */
-  #zstPanel,#wshzPanel,#kdPanel,#hstPanel,#lmPanel,#pyPanel,#pyCtl{
+  /* 和值走势图 / 和值尾走势图 / 跨度走势图 / 和值×组六/组三×跨度统计 / 组（六、三）两码走势 / 偏移走势图 / 区间走势图：全页面铺满（突破 .wrap 1280 居中限制） */
+  #zstPanel,#wshzPanel,#kdPanel,#hstPanel,#lmPanel,#pyPanel,#pyCtl,#qjPanel,#qjCtl{
     width:100vw;max-width:none;margin-left:calc(50% - 50vw)
   }
   .panel{background:#fff;border:1px solid #e3e7ee;border-radius:10px;padding:12px 14px;margin:5px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
@@ -343,6 +343,38 @@
   table.pyTable tfoot td.footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:right;padding-right:8px}
   table.pyTable tfoot tr.mrow td{background:#fff7e0;color:#8a5a00;font-weight:700}
   table.pyTable tfoot tr.mrow td.footer-lab{background:#8a5a00;color:#fff}
+  /* ===== 区间走势图（模式十二）=====
+     结构与「偏移走势图」同构：面板必须带 .scroller（提供纵向滚动容器）、
+     面板自身不得再设 overflow:auto、表头 sticky 的 top 取 35px（让开 resTitle）。 */
+  #qjPanel{padding:0 10px 12px}
+  .qjBlock{margin:6px 0 0}
+  /* 铺满整页、左右不留白：表格宽度 100%，各区间列均分剩余空间 */
+  table.qjTable{border-collapse:collapse;font-size:12px;white-space:nowrap;width:100%;table-layout:fixed}
+  table.qjTable th,table.qjTable td{border:1px solid #dfe6ee;text-align:center;padding:2px 3px;overflow:hidden;text-overflow:ellipsis}
+  /* 前 3 列（期号/开奖号/区间）定宽，其余区间列均分 */
+  table.qjTable col.c-iss{width:76px}
+  table.qjTable col.c-nums{width:96px}
+  table.qjTable col.c-cur{width:52px}
+  table.qjTable thead th{background:#eef2f8;color:#34495e;font-weight:600;position:sticky;top:35px;z-index:2}
+  /* 表头分两行：第一行「区间分布」跨列 / 第二行各区号。两行都要吸顶，第二行贴在第一行下面 */
+  table.qjTable thead tr:nth-child(1) th{top:35px}
+  table.qjTable thead tr:nth-child(2) th{top:57px}
+  table.qjTable thead th.lab-h{background:#2c3e50;color:#fff}
+  table.qjTable thead th.qj-h{background:#e8eef7;color:#31506e;font-weight:700;min-width:30px}
+  table.qjTable td.iss{background:#f7f9fc;color:#2c3e50;font-weight:600}
+  table.qjTable td.nums{background:#fffaf4;color:#b5530a;font-weight:700}
+  table.qjTable td.qj-cur{background:#f3f6fb;color:#31506e;font-weight:700}
+  table.qjTable td.qj-hit{background:#e74c3c;color:#fff;font-weight:700}
+  table.qjTable td.omission{background:#fbfcfe;color:#94a3b8}
+  table.qjTable tbody tr:hover td{background:#eef4ff}
+  table.qjTable tbody tr:hover td.qj-hit{background:#c0392b;color:#fff}
+  table.qjTable tfoot td{background:#f0f3f8;font-weight:600;color:#34495e}
+  table.qjTable tfoot td.footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:right;padding-right:8px}
+  table.qjTable tfoot tr.mrow td{background:#fff7e0;color:#8a5a00;font-weight:700}
+  table.qjTable tfoot tr.mrow td.footer-lab{background:#8a5a00;color:#fff}
+  /* 区间图例（各区段数值范围） */
+  #qjLegend{margin:6px 0 0;font-size:11px;color:#6b7785;line-height:1.9}
+  #qjLegend span.qjseg{display:inline-block;margin:0 8px 2px 0;padding:1px 6px;border-radius:4px;background:#f0f3f8;color:#34495e;font-family:Consolas,Menlo,monospace}
   /* ===== 顶部概览（照搬 dashboard 前两行：数据看板 + 最新开奖/模拟号） ===== */
   #dashTop{--bg:#f5f7fa;--card:#fff;--ink:#1f2933;--sub:#6b7785;--line:#e5e9f0;--brand:#e11d48;--brand2:#4f46e5;--shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04)}
   #dashTop header{padding:13px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
@@ -568,6 +600,7 @@
       <div class="cat-btn" id="modeShu">多项数和</div>
       <div class="cat-btn" id="mode2348">2345678</div>
       <div class="cat-btn" id="modePianyi">偏移走势图</div>
+      <div class="cat-btn" id="modeQujian">区间走势图</div>
     </div>
   </div>
 
@@ -671,6 +704,39 @@
   <div class="panel scroller" id="pyPanel" style="display:none">
     <div class="resTitle" id="pyTitle">偏移走势图（27 类）</div>
     <div id="pyGrids"></div>
+  </div>
+
+  <!-- 模式十二：区间走势图（000-999 均分为 4/5/8/10/20/25/40 个区段，标识每期落在第几区） -->
+  <div class="panel" id="qjCtl" style="display:none">
+    <div class="row">
+      <span class="lab">区间</span>
+      <div id="qjGrpBox" class="catbar"></div>
+      <span class="lab">形态</span>
+      <div id="qjShapeBox" class="catbar"></div>
+    </div>
+    <div class="row">
+      <span class="lab">期号范围</span>
+      <input type="number" id="qjFrom" style="width:90px" placeholder="起期">
+      <span>—</span>
+      <input type="number" id="qjTo" style="width:90px" placeholder="止期">
+      <button class="btn sec" id="qjSearchBtn" title="放大镜：按范围筛查">&#128269; 筛查</button>
+      <span class="lab">按年份</span>
+      <select id="qjYearSel"></select>
+    </div>
+    <div class="row">
+      <span class="lab">显示最近</span>
+      <input type="number" id="qjWin" style="width:90px" value="30">
+      <span>期（仅默认窗口；选年份/改期号后显示全部）</span>
+      <button class="btn go" id="qjQueryBtn">查 询</button>
+      <span class="hint">区间规则：将 000–999 按均等数额切为若干区段，每期开奖号落在其中一区；命中列显示区号（红字），其余列显示遗漏期数。</span>
+    </div>
+    <div class="meta" id="qjMetaBox"></div>
+    <div class="warn" id="qjWarnBox"></div>
+  </div>
+
+  <div class="panel scroller" id="qjPanel" style="display:none">
+    <div class="resTitle" id="qjTitle">区间走势图</div>
+    <div id="qjGrids"></div>
   </div>
 
   <div class="panel scroller" id="resPanel">
@@ -1569,6 +1635,7 @@ function setMode(m){
   $('modeShu').classList.toggle('on', m==='shu');
   $('mode2348').classList.toggle('on', m==='2348');
   $('modePianyi').classList.toggle('on', m==='pianyi');
+  $('modeQujian').classList.toggle('on', m==='qujian');
   /* 直选两码/组选两码 已合并为 直/组两码遗漏(modeZxZu) */
   $('omissionCtl').style.display = (m==='omission')?'':'none';
   $('resPanel').style.display     = (m==='omission')?'':'none';
@@ -1587,6 +1654,8 @@ function setMode(m){
   $('panel2348').style.display      = (m==='2348')?'':'none';
   $('pyCtl').style.display          = (m==='pianyi')?'':'none';
   $('pyPanel').style.display        = (m==='pianyi')?'':'none';
+  $('qjCtl').style.display          = (m==='qujian')?'':'none';
+  $('qjPanel').style.display        = (m==='qujian')?'':'none';
   if(m==='hezhi'){ hezhiQuery(); renderHst(); wshzQuery(); kdQuery(); }
   if(m==='lm'){ lmQuery(); }
   if(m==='zxlm'){ zxLmQuery(); }
@@ -1596,6 +1665,7 @@ function setMode(m){
   if(m==='shu'){ shuQuery(); }
   if(m==='2348'){ query2348(); }
   if(m==='pianyi'){ pyQuery(); }
+  if(m==='qujian'){ qjQuery(); }
 }
 
 /* ===== 模式四：直选定位两码（每位置100种） ===== */
@@ -3541,6 +3611,10 @@ $('modeZu3').onclick=()=>setMode('zu3');
 $('modeShu').onclick=()=>setMode('shu');
 $('mode2348').onclick=()=>setMode('2348');
 $('modePianyi').onclick=()=>setMode('pianyi');
+$('modeQujian').onclick=()=>setMode('qujian');
+$('qjSearchBtn').onclick=qjQuery;
+$('qjQueryBtn').onclick=qjQuery;
+$('qjYearSel').onchange=qjQuery;
 
 /* ---------- 模式十一：偏移走势图（某位数字相对上期的偏移；三位组合 3^3=27 类） ----------
    偏移规则：某位数字相对「上期同一位」——变小记 /（偏左）、相同记 |（直落）、变大记 \（偏右）。
@@ -3734,6 +3808,247 @@ function renderPy(reset){
   const grpTxt=(PY_GRP_SEL.size===0||PY_GRP_SEL.size===3)?'全形态':[...PY_GRP_SEL].join('+');
   metaEl.textContent='偏移走势图（27 类）｜ 统计范围：'+period[0].issue+' ～ '+period[period.length-1].issue
     +'（'+period.length+' 期，表脚 7 行按此范围统计）｜ 形态：'+grpTxt+' ｜ 明细显示 '+shown.length+' 期';
+}
+
+/* ---------- 模式十二：区间走势图（000-999 均分为 4/5/8/10/20/25/40 个区段） ----------
+   区间规则（蛹哥指定，7 档）：
+     区间4 ：每 250 一区（000-249, 250-499, 500-749, 750-999）
+     区间5 ：每 200 一区（000-199, …, 800-999）
+     区间8 ：每 125 一区（000-124, …, 875-999）
+     区间10：每 100 一区（000-099, …, 900-999）
+     区间20：每 50 一区（000-049, …, 950-999）
+     区间25：每 40 一区（000-039, …, 960-999）
+     区间40：每 25 一区（000-024, …, 975-999）
+   ⚠ 注意：区间4/5/8 的区宽能整除 1000（分区恰好整齐）；区间10/20/25/40 亦整除。
+     但「区间5」宽 200，第 N 区 = floor(num/200)+1，完美整除，无边界特例。
+   表格形态照参考站彩经网 3d_qujian：一行一期，横向平铺 N 个区间列；
+     命中列显示「区号」（红底白字），其余列显示该区当前遗漏期数。
+   表脚 7 行 = 出现次数 / 最大遗漏期 / 最大连初期 / 平均遗漏期 / 当前遗漏期 / M差值 / 近五年M差值，
+     统计口径与「偏移走势图」完全一致（出现次数等 5 项基于当前筛选范围 period；M差值聚合基于全史）。 */
+const QJ_KINDS=[4,5,8,10,20,25,40];
+// 各区间的区段定义：[起始, 结束]（闭区间），按 0 基区内序号排列
+function qjRanges(k){
+  const w=1000/k, out=[];
+  for(let i=0;i<k;i++){ out.push([i*w, (i+1)*w-1]); }
+  return out;
+}
+// 数字 → 区号（1 基）
+function qjIndexOf(num, k){ return Math.floor(num/(1000/k))+1; }
+let QJ_KIND=4;                            // 当前区间档
+let QJ_SHAPE_SEL=new Set(['组六','组三']); // 形态（组六/组三/豹子，多选并集；空=不限）
+function qjShapeOf(a,b,c){ const s=new Set([a,b,c]); return s.size===1?'豹子':(s.size===2?'组三':'组六'); }
+// 构建每期记录（区间档无关；type=区号 1 基，在渲染时按当前 k 算）
+function qjBuildRecords(D){
+  const out=[];
+  for(let i=0;i<D.length;i++){
+    const d=D[i], a=d[1],b=d[2],c=d[3];
+    out.push({issue:d[0], date:d[4], a:a,b:b,c:c, num:a*100+b*10+c, shape:qjShapeOf(a,b,c)});
+  }
+  return out;
+}
+// 区间档按钮
+function qjGrpInit(){
+  const box=$('qjGrpBox'); if(!box) return;
+  if(!box.dataset.init){
+    box.dataset.init='1';
+    QJ_KINDS.forEach(k=>{
+      const el=document.createElement('div');
+      el.className='cat-btn'+(k===QJ_KIND?' on':''); el.textContent='区间'+k; el.dataset.k=k;
+      el.onclick=()=>{ QJ_KIND=k; Array.prototype.forEach.call(box.children,c=>c.classList.toggle('on', +c.dataset.k===k)); qjQuery(); };
+      box.appendChild(el);
+    });
+  } else {
+    Array.prototype.forEach.call(box.children, el=>{ el.classList.toggle('on', +el.dataset.k===QJ_KIND); });
+  }
+}
+// 形态按钮（组六/组三/豹子，可多选=并集；空选=不限）
+function qjShapeInit(){
+  const box=$('qjShapeBox'); if(!box) return;
+  if(!box.dataset.init){
+    box.dataset.init='1';
+    ['组六','组三','豹子'].forEach(k=>{
+      const el=document.createElement('div');
+      el.className='cat-btn'+(QJ_SHAPE_SEL.has(k)?' on':''); el.textContent=k; el.dataset.k=k;
+      el.onclick=()=>{ if(QJ_SHAPE_SEL.has(k)){QJ_SHAPE_SEL.delete(k); el.classList.remove('on');} else {QJ_SHAPE_SEL.add(k); el.classList.add('on');} qjQuery(); };
+      box.appendChild(el);
+    });
+  } else {
+    Array.prototype.forEach.call(box.children, el=>{ el.classList.toggle('on', QJ_SHAPE_SEL.has(el.dataset.k)); });
+  }
+}
+// 年份下拉
+function qjYearInit(){
+  const sel=$('qjYearSel'); if(!sel) return;
+  const ys=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const keep=sel.value||'0';
+  sel.innerHTML='<option value="0">全部年份</option>'+ys.slice().reverse().map(y=>'<option value="'+y+'">'+y+' 年</option>').join('');
+  sel.value=[...sel.options].some(o=>o.value===keep)? keep : '0';
+  sel.dataset.init='1';
+}
+function qjQuery(){ renderQj(true); }
+function refreshQjIfActive(){ if(mode==='qujian') renderQj(); }
+function qjCtlInit(){
+  const F=$('qjFrom'), T=$('qjTo'), W=$('qjWin');
+  if(F && !F.value) F.value=FIRST;
+  if(T && !T.value) T.value=LAST;
+  if(W && !W.value) W.value=30;
+}
+function renderQj(reset){
+  qjGrpInit(); qjShapeInit(); qjYearInit(); qjCtlInit();
+  const metaEl=$('qjMetaBox'), warnEl=$('qjWarnBox'), gridEl=$('qjGrids');
+  if(!gridEl) return;
+  metaEl.textContent=''; warnEl.textContent='';
+  const k=QJ_KIND, N=k;
+  const f=parseInt($('qjFrom').value||FIRST,10), t=parseInt($('qjTo').value||LAST,10);
+  const y=parseInt($('qjYearSel').value,10);
+  const ALLREC=qjBuildRecords(D);
+  let period=ALLREC.filter(r=>r.issue>=f&&r.issue<=t&&(y===0||Math.floor(r.issue/1000)===y));
+  if(QJ_SHAPE_SEL.size && QJ_SHAPE_SEL.size<3) period=period.filter(r=>QJ_SHAPE_SEL.has(r.shape));
+  if(period.length===0){ warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围或恢复形态选择。'; gridEl.innerHTML=''; return; }
+  // 「显示最近N期」仅为默认初始窗口：一旦按年份筛选或修改期号范围，则显示该范围内全部期数
+  const defF=D[Math.max(0,D.length-100)][0], defT=D[D.length-1][0];
+  const userFiltered = (y!==0) || ($('qjFrom').value!==String(defF)) || ($('qjTo').value!==String(defT));
+  let W = userFiltered ? 999999 : (parseInt($('qjWin').value||30,10)||30);
+  const shown=(period.length>W)?period.slice(period.length-W):period;
+  // ===== 统计 =====
+  //   表脚 5 项：基于当前筛选范围 period（随区间档/年份/期号范围切换而变化）；
+  //   表格体格子的遗漏数字：按全史 ALLREC 在该区间档下累加（真实历史遗漏）。
+  const appear=Array(N).fill(0);
+  const gapsArr=Array.from({length:N},()=>[]);
+  const curGap=Array(N).fill(0);
+  const curRun=Array(N).fill(0), maxRun=Array(N).fill(0);
+  const omitByIssue=new Map();   // issue -> 各区遗漏数组（全史口径）
+  {
+    const g=Array(N).fill(0);
+    ALLREC.forEach(r=>{
+      const idx=qjIndexOf(r.num,k)-1;
+      for(let v=0;v<N;v++){
+        if(v===idx){ g[v]=0; } else { g[v]++; }
+      }
+      omitByIssue.set(r.issue, g.slice());
+    });
+  }
+  {
+    const g=Array(N).fill(0);
+    period.forEach(r=>{
+      const idx=qjIndexOf(r.num,k)-1;
+      for(let v=0;v<N;v++){
+        if(v===idx){ gapsArr[v].push(g[v]); g[v]=0; curRun[v]++; if(curRun[v]>maxRun[v])maxRun[v]=curRun[v]; appear[v]++; }
+        else { g[v]++; curRun[v]=0; }
+      }
+    });
+    for(let v=0;v<N;v++) curGap[v]=g[v];
+  }
+  const maxGap=Array(N).fill(0), avgGap=Array(N).fill(0);
+  for(let v=0;v<N;v++){
+    maxGap[v]= gapsArr[v].length? Math.max(Math.max(...gapsArr[v]),curGap[v]) : curGap[v];
+    avgGap[v]= gapsArr[v].length? Math.round(gapsArr[v].reduce((x,z)=>x+z,0)/gapsArr[v].length) : 0;
+  }
+  // ===== M差值：口径与「偏移走势图 / 两码走势」一致（聚合基于全史，年度指标）=====
+  const qjAggYear={}; const qjYearMonths={};
+  ALLREC.forEach(r=>{
+    const yy=Math.floor(r.issue/1000), idx=qjIndexOf(r.num,k)-1;
+    const a=qjAggYear[yy]||(qjAggYear[yy]=Array(N).fill(0)); a[idx]++;
+    const im=issueMonthOf(r.date);
+    (qjYearMonths[yy]||(qjYearMonths[yy]=new Set())).add(im.month);
+  });
+  const qjIsFull=yy=>{ const ms=qjYearMonths[yy]; return ms && ms.has(1) && ms.has(12); };
+  function qjYearMDiff(Y){
+    let mx=0,rec=null; D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){mx=d[0];rec=d;} });
+    const M=rec? issueMonthOf(rec[4]).month : 12;
+    const yearList=Object.keys(qjAggYear).map(Number).filter(yy=> yy!==Y && qjIsFull(yy));
+    const curYear=qjAggYear[Y]||Array(N).fill(0);
+    const mean=Array(N).fill(0);
+    yearList.forEach(yy=>{ const o=qjAggYear[yy]; for(let v=0;v<N;v++) mean[v]+=o[v]; });
+    for(let v=0;v<N;v++) mean[v]= yearList.length? mean[v]/yearList.length : 0;
+    return curYear.map((cnt,i)=> Math.round(cnt - mean[i]*(M/12)));
+  }
+  const mDiff=(y!==0)? qjYearMDiff(y) : null;
+  const allYearsL=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const curYearL=allYearsL[allYearsL.length-1];
+  const last5L=allYearsL.filter(yy=> yy<curYearL && qjIsFull(yy)).slice(-5).reverse();
+  const yearRows=last5L.filter(yy=> yy!==y).map(yy=>({year:yy, vals:qjYearMDiff(yy)}));
+  // ===== 渲染 =====
+  const ranges=qjRanges(k);
+  let html='<div class="qjBlock">';
+  // colgroup：前 3 列定宽（期号/开奖号/区间），其后 N 个区间列均分剩余宽度 → 表格铺满整页
+  let cg='<colgroup><col class="c-iss"><col class="c-nums"><col class="c-cur">';
+  for(let v=0;v<N;v++) cg+='<col>';
+  cg+='</colgroup>';
+  let thead='<table class="qjTable">'+cg+'<thead>'
+    +'<tr><th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号</th>'
+    +'<th class="lab-h" rowspan="2">区间</th>'
+    +'<th class="qj-h" colspan="'+N+'">区间分布（'+k+' 区）</th></tr><tr>';
+  for(let v=1;v<=N;v++) thead+='<th class="qj-h">'+v+'</th>';
+  thead+='</tr></thead>';
+  let tbody='<tbody>';
+  shown.forEach(r=>{
+    const om=omitByIssue.get(r.issue)||Array(N).fill(0);
+    const hitIdx=qjIndexOf(r.num,k)-1;
+    tbody+='<tr><td class="iss">'+r.issue+'</td><td class="nums">'+r.a+' '+r.b+' '+r.c+'</td><td class="qj-cur">'+(hitIdx+1)+'</td>';
+    for(let v=0;v<N;v++){
+      if(v===hitIdx) tbody+='<td class="qj-hit">'+(v+1)+'</td>';
+      else tbody+='<td class="omission">'+om[v]+'</td>';
+    }
+    tbody+='</tr>';
+  });
+  tbody+='</tbody>';
+  // 表脚 7 行
+  const rows=[['出现次数',appear],['最大遗漏期',maxGap],['最大连初期',maxRun],['平均遗漏期',avgGap],['当前遗漏期',curGap]];
+  let tfoot='<tfoot>';
+  rows.forEach(([lab,arr])=>{
+    tfoot+='<tr><td class="footer-lab" colspan="3">'+lab+'</td>';
+    for(let v=0;v<N;v++) tfoot+='<td>'+arr[v]+'</td>';
+    tfoot+='</tr>';
+  });
+  function mDiffRow(label,arr){
+    if(!arr) return '';
+    let h='<tr class="mrow"><td class="footer-lab" colspan="3">'+label+'</td>';
+    for(let v=0;v<N;v++){ h+='<td>'+((arr[v]===null||arr[v]===undefined)?'—':arr[v])+'</td>'; }
+    return h+'</tr>';
+  }
+  if(mDiff) tfoot+=mDiffRow('M差值', mDiff);
+  yearRows.forEach(r=>{ tfoot+=mDiffRow(r.year+' M差值', r.vals); });
+  tfoot+='</tfoot>';
+  html+=thead+tbody+tfoot+'</table></div>';
+  // 区间段图例
+  html+='<div id="qjLegend"><b>区间'+k+' 分段：</b>';
+  ranges.forEach(([s,e],i)=>{ html+='<span class="qjseg">'+String(s).padStart(3,'0')+'-'+String(e).padStart(3,'0')+'</span>'; });
+  html+='</div>';
+  gridEl.innerHTML=html;
+  const grpTxt=(QJ_SHAPE_SEL.size===0||QJ_SHAPE_SEL.size===3)?'全形态':[...QJ_SHAPE_SEL].join('+');
+  const ttl=$('qjTitle'); if(ttl) ttl.textContent='区间走势图（区间'+k+'，'+N+' 区）';
+  metaEl.textContent='区间走势图（区间'+k+'，'+N+' 区）｜ 统计范围：'+period[0].issue+' ～ '+period[period.length-1].issue
+    +'（'+period.length+' 期，表脚 7 行按此范围统计）｜ 形态：'+grpTxt+' ｜ 明细显示 '+shown.length+' 期';
+  qjDrawLines();
+}
+// 折线连线（命中格中心相连），与站内其他走势图一致
+function qjDrawLines(){
+  const gridEl=$('qjGrids'); if(!gridEl) return;
+  const tbl=gridEl.querySelector('table.qjTable'); if(!tbl) return;
+  const panel=$('qjPanel'); if(!panel) return;
+  const old=gridEl.querySelector('svg.qjLines'); if(old) old.remove();
+  const NS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('class','qjLines');
+  svg.style.cssText='position:absolute;left:0;top:0;pointer-events:none;z-index:1';
+  const pr=panel.getBoundingClientRect(), sr=panel.scrollLeft, st=panel.scrollTop;
+  const pts=[];
+  tbl.querySelectorAll('td.qj-hit').forEach(td=>{
+    const r=td.getBoundingClientRect();
+    pts.push((r.left-pr.left+sr+r.width/2)+','+(r.top-pr.top+st+r.height/2));
+  });
+  if(pts.length>1){
+    const pl=document.createElementNS(NS,'polyline');
+    pl.setAttribute('points', pts.join(' '));
+    pl.setAttribute('fill','none');
+    pl.setAttribute('stroke','#e74c3c');
+    pl.setAttribute('stroke-width','1.3');
+    pl.setAttribute('opacity','0.75');
+    svg.appendChild(pl);
+  }
+  gridEl.style.position='relative';
+  gridEl.appendChild(svg);
 }
 
 /* ---------- 初始化 ---------- */
@@ -4174,6 +4489,7 @@ function renderAll(){
   if(mode==='2348') query2348();
   if(mode==='pianyi') renderPy();
   refreshPyIfActive();   // 偏移走势图同步刷新（跟随彩种/数据源切换）
+  refreshQjIfActive();   // 区间走势图同步刷新（跟随彩种/数据源切换）
   // 数据看板概览
   renderHero();
   renderPos();   // 分位遗漏表（随 排三/3D 切换）
@@ -4184,6 +4500,9 @@ lmFrom.value=FIRST; lmTo.value=LAST; lmWin.value=50;
 if($('pyFrom')) $('pyFrom').value=FIRST;
 if($('pyTo'))   $('pyTo').value=LAST;
 if($('pyWin'))  $('pyWin').value=100;   // 偏移走势图：默认窗口 100 期
+if($('qjFrom')) $('qjFrom').value=FIRST;
+if($('qjTo'))   $('qjTo').value=LAST;
+if($('qjWin'))  $('qjWin').value=30;    // 区间走势图：默认展示 30 期
 renderHero(); renderPos(); updateClock();
 (function(){
   const sel=document.getElementById('lotterySel');

@@ -754,7 +754,7 @@
       <span class="lab">显示最近</span>
       <input type="number" id="dualWin" style="width:80px" value="50">
       <span>期（折线走势窗口，默认 50）</span>
-      <span class="hint">说明：取消子项后直接并排展示各子项统计表（属性类别=「组选/直选」；其他组合=「号码类型/号码形态」），每表下方为该表近 N 期折线走势图（每行=一期、每列=组合、圆点=开出、连线=一期接一期）；走势图表脚含数据统计与 M差值（选择年份筛查时显示当年 M差值 主行，并附 近5年 M差值 行）。</span>
+      <span class="hint">说明：取消子项后直接并排展示各子项统计表（属性类别=「组选/直选」；其他组合=「号码类型/号码形态」），每表下方为该表折线走势图（每行=一期、每列=组合、圆点=开出、连线=一期接一期）；<b>窗口口径</b>：「显示最近 N 期」仅在「年份=全部 + 期号范围未改动」时生效，一旦在上方选定年份或修改期号范围，走势图即显示该范围<b>全部期数</b>（按年查询）；走势图表脚含数据统计与 M差值（选择年份筛查时显示当年 M差值 主行，并附 近5年 M差值 行）。</span>
     </div>
     <div id="dualContainer"></div>
   </div>
@@ -3481,7 +3481,13 @@ function drawAttrGridLines(){
 // 每张表 = 12 列统计表(可排序) + 走势网格折线图（走势网格表脚含 数据统计5项 + M差值：选择年份时当年主行 + 近5年行，黄底）。
 function renderDual(cat, period, formFlag, grp){
   const catDef=CATS.find(c=>c.name===cat);
-  const win = Math.max(2, parseInt(dualWin.value||50,10));
+  // 窗口口径统一（与 和值尾/跨度/偏移/区间 四块一致）：
+  //   「显示最近 N 期」仅在「年份=全部 且 期号范围未被改动」时生效；
+  //   一旦选择年份或修改期号范围，走势图显示该范围全部期数（同时表脚出现「M差值」主行 + 近5年 M差值 行）。
+  const _y=parseInt(yearSel.value,10)||0;
+  const _userFiltered=(_y!==0)||((fromIss.value||'').trim()!=='')||((toIss.value||'').trim()!=='');
+  const win = _userFiltered ? 999999 : Math.max(2, parseInt(dualWin.value||50,10));
+  const winTxt = _userFiltered ? '全部 '+period.length+' 期（按年份/期号范围）' : ('近 '+win+' 期');
   let pairs;
   if(cat==='其他'){
     pairs=catDef.subs.map((sub,idx)=>({sub, lab:sub, tid: idx===0?'dualTblQ1':'dualTblQ2'}));
@@ -3501,7 +3507,7 @@ function renderDual(cat, period, formFlag, grp){
   pairs.forEach(p=>{ const t=document.getElementById(p.tid); if(t) t._rows=blks[p.tid].rows; });
   setTimeout(drawAttrGridLines, 30);   // 等布局稳定再量坐标，避免折线坐标错乱/线条不完整
   const tblTxt=pairs.map(p=>p.lab).join(' / ');
-  metaBox.textContent=`统计范围：${period[0][0]} ～ ${period[period.length-1][0]}（共 ${period.length} 期）｜ 类型过滤：${grp} ｜ 已直接展示「${tblTxt}」共 ${pairs.length} 张表（子项合并），每表下方为近 ${win} 期走势图（每行=一期，每列=组合，圆点=该期开出的组合，连线=一期接一期相连；单一蓝色、不分组合颜色）｜ 走势图表脚：数据统计（出现次数/当前遗漏/最大遗漏/平均遗漏/最大连出，按筛选后完整范围计算）+ M差值（=某年该组合命中数 − 完整年含1&12月历史年平均数×(该年最新月份/12)；选择年份筛查时显示当年 M差值 主行，并附 近5年 M差值 行，黄底高亮）`;
+  metaBox.textContent=`统计范围：${period[0][0]} ～ ${period[period.length-1][0]}（共 ${period.length} 期）｜ 类型过滤：${grp} ｜ 已直接展示「${tblTxt}」共 ${pairs.length} 张表（子项合并），每表下方为${winTxt}走势图（每行=一期，每列=组合，圆点=该期开出的组合，连线=一期接一期相连；单一蓝色、不分组合颜色）｜ 窗口口径：「显示最近 N 期」仅在「年份=全部 + 未改期号范围」时生效；选年份或改期号范围后显示该范围全部期数 ｜ 走势图表脚：数据统计（出现次数/当前遗漏/最大遗漏/平均遗漏/最大连出，按筛选后完整范围计算）+ M差值（=某年该组合命中数 − 完整年含1&12月历史年平均数×(该年最新月份/12)；选择年份筛查时显示当年 M差值 主行，并附 近5年 M差值 行，黄底高亮）`;
 }
 
 function query(){

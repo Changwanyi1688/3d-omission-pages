@@ -1982,7 +1982,7 @@ function query1257(){
   let html=table('1257', s1, fy.a1, S1)+table('1368', s2, fy.a2, S2);
   // 汇总 meta：范围、覆盖月份、各出号数合计的 M差值（总 M差值 = 各出号数 M差值之和）
   const yVal=parseInt(ySel.value,10);
-  const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
+  const yearLabel=(yVal>0)?(' ｜ 按年份 '+yVal):'';
   const mHtml='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+period.length+' 期 ｜ 覆盖月份 '+span+' 个'+yearLabel+' ｜ M差值基准=完整年(含1&12月)各出号数均值 ×(覆盖月份/12)（表内 M差值 行及底部各年份 M差值：数值为正=高于历史同期、为负=低于，颜色统一为同色高亮）</div>';
   $('m1257Diff').innerHTML=mHtml;
   $('res1257').innerHTML=html+'<div class="hint" style="flex-basis:100%">出号数 = 开奖号码中属于该组数字的个数（按位计，重复也计）。例：开奖 3-8-8 → 1257组未出现（出号数0）；1368组含 3、8、8（出号数3）。表格：行=指标，列=出号数(0/1/2/3)。『平均遗漏』＝每次遗漏段期数之和 ÷ 出现次数（不含当前进行中遗漏，四舍五入）。『M差值』＝该范围内出号数出现次数 − 完整年同出号数均值 ×(覆盖月份/12)，反映相对历史同期偏多(正值)或偏少(负值)；所有 M差值 行统一用同色高亮，数值正负表示方向。表底另列最近五年的逐年 M差值（年份置前），逐年与完整年基准比较。</div>';
@@ -2204,7 +2204,7 @@ function zhiZuSanQuery(){
     {title:'组三（全部90）',      cands:ZU3_GROUP3,       occ:occ.group3,     top:90,  p:3/1000},
   ];
   const yVal=parseInt(ySel.value,10);
-  const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
+  const yearLabel=(yVal>0)?(' ｜ 按年份 '+yVal):'';
   $('mZu3Diff').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+N+' 期'+yearLabel+' ｜ 点击任意列标题的小三角(▲/▼)可切换升序/降序（默认「最大遗漏」降序，遗漏越大越靠前）｜ 「最大遗漏」已含当前遗漏（若当前遗漏已超过历史最大则取当前）｜ 「当前遗漏」=范围末至最近一次开出所经历的未出期数（从未开出=整段期数）</div>';
   ZU3_DATA={N, s, e, yVal, yearLabel,
     cats:cats.map(cat=>({title:cat.title, top:cat.top, rows:buildRows(cat.cands, cat.occ, cat.p)}))};
@@ -2475,7 +2475,7 @@ function shuQuery(){
   let html='';
   metrics.forEach(m=>{ html+=renderMetric(m); });
   const yVal=parseInt(ySel.value,10);
-  const yearLabel=(yVal!==0)?(' ｜ 按年份 '+yVal):'';
+  const yearLabel=(yVal>0)?(' ｜ 按年份 '+yVal):'';
   $('mShu').innerHTML='<div class="meta">范围：第 '+s+' 期 ~ 第 '+e+' 期，共 '+all.length+' 期 ｜ 显示最近 '+shown.length+' 期'+yearLabel+' ｜ 默认当前50期，可用上方「按年份」与「期号范围(起~止)」筛选</div>';
   $('resShu').innerHTML=html+'<div class="hint">说明：照搬 17500 走势图。每个指标按分类数字的「和值」画走势：命中格为圆球并标出和值，其余格显示当前遗漏；表脚给出出现次数、当前遗漏、平均遗漏、历史最大遗漏、最大连出、欲出几率。两码差/合组合三码：取每期三对数字的绝对差/和值尾，排序成三码后对应 220 个组合走势。</div>';
   setTimeout(drawShuLines, 30);

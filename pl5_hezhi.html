@@ -532,6 +532,33 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root table.qjTable tfoot td.footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:right;padding-right:8px}
 #p5c8root table.qjTable tfoot tr.mrow td{background:#fff7e0;color:#8a5a00;font-weight:700}
 #p5c8root table.qjTable tfoot tr.mrow td.footer-lab{background:#8a5a00;color:#fff}
+/* ===== 跨定胆表（模式十三：每期开奖号跨度 → 对应胆码 → 命中个数 0/1/2/3 四列遗漏） ===== */
+#p5c8root .kddBlock{margin:6px 0 0}
+#p5c8root .kddBlock table.kddTable{border-collapse:collapse;font-size:12px;white-space:nowrap;width:100%;table-layout:fixed}
+#p5c8root .kddBlock table.kddTable th,#p5c8root .kddBlock table.kddTable td{border:1px solid #dfe6ee;text-align:center;padding:2px 4px;overflow:hidden;text-overflow:ellipsis}
+#p5c8root .kddBlock table.kddTable col.c-iss{width:80px}
+#p5c8root .kddBlock table.kddTable col.c-nums{width:100px}
+#p5c8root .kddBlock table.kddTable col.c-span{width:56px}
+#p5c8root .kddBlock table.kddTable col.c-dan{width:112px}
+#p5c8root .kddBlock table.kddTable thead th{background:#eef2f8;color:#34495e;font-weight:600;position:sticky;top:35px;z-index:2}
+#p5c8root .kddBlock table.kddTable thead tr:nth-child(1) th{top:35px}
+#p5c8root .kddBlock table.kddTable thead tr:nth-child(2) th{top:57px}
+#p5c8root .kddBlock table.kddTable thead th.lab-h{background:#2c3e50;color:#fff}
+#p5c8root .kddBlock table.kddTable thead th.kdd-h{background:#e8eef7;color:#31506e;font-weight:700;min-width:52px}
+#p5c8root .kddBlock table.kddTable td.iss{background:#f7f9fc;color:#2c3e50;font-weight:600}
+#p5c8root .kddBlock table.kddTable td.nums{background:#fffaf4;color:#b5530a;font-weight:700;letter-spacing:1px}
+#p5c8root .kddBlock table.kddTable td.kspan{background:#f3f6fb;color:#31506e;font-weight:700}
+#p5c8root .kddBlock table.kddTable td.dan{background:#fef2f2;color:#e11d48;font-weight:700;letter-spacing:2px}
+#p5c8root .kddBlock table.kddTable td.khit{background:#e74c3c;color:#fff;font-weight:700}
+#p5c8root .kddBlock table.kddTable td.kom{background:#fbfcfe;color:#94a3b8}
+#p5c8root .kddBlock table.kddTable tbody tr:hover td{background:#eef4ff}
+#p5c8root .kddBlock table.kddTable tbody tr:hover td.dan{background:#fee2e2}
+#p5c8root .kddBlock table.kddTable tbody tr:hover td.khit{background:#c0392b;color:#fff}
+#p5c8root .kddBlock table.kddTable tfoot td{background:#f0f3f8;font-weight:600;color:#34495e}
+#p5c8root .kddBlock table.kddTable tfoot td.footer-lab{background:#2c3e50;color:#fff;font-weight:600;text-align:right;padding-right:8px}
+#p5c8root #p5ckddLegend{margin:6px 0 0;font-size:11px;color:#6b7785;line-height:1.9}
+#p5c8root #p5ckddLegend span.kddseg{display:inline-block;margin:0 8px 2px 0;padding:1px 6px;border-radius:4px;background:#fef2f2;color:#b91c1c;font-family:Consolas,Menlo,monospace}
+#p5c8root #p5ckddLegend span.kddseg b.kddno{color:#2c3e50;font-weight:700;margin-right:2px}
 /* 区间图例（各区段数值范围） */
 #p5c8root #p5cqjLegend{margin:6px 0 0;font-size:11px;color:#6b7785;line-height:1.9}
 #p5c8root #p5cqjLegend span.qjseg{display:inline-block;margin:0 8px 2px 0;padding:1px 6px;border-radius:4px;background:#f0f3f8;color:#34495e;font-family:Consolas,Menlo,monospace}
@@ -568,6 +595,14 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 #p5c8root #p5cdashTop .grp.plan2 .lab{color:#047857}
 #p5c8root #p5cdashTop .grp.plan2 .snum{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
 #p5c8root #p5cdashTop .grp.plan2 .slab{color:#047857;background:#ecfdf5;border-color:#a7f3d0}
+/* ===== 胆码分析（方案二右侧：上期开奖号跨度 → 下期胆码，排三/3D 同表）===== */
+#p5c8root #p5cdashTop .heroDan{display:flex;align-items:stretch}
+#p5c8root #p5cdashTop .grp.dan{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:1px 10px;min-width:170px}
+#p5c8root #p5cdashTop .grp.dan .lab{color:#b91c1c}
+#p5c8root #p5cdashTop .grp.dan .snum{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+#p5c8root #p5cdashTop .grp.dan .slab{color:#b91c1c;background:#fef2f2;border-color:#fecaca}
+#p5c8root #p5cdashTop .grp.dan .tag.mapTag{white-space:normal;max-width:330px;line-height:1.6;padding-top:1px;padding-bottom:1px}
+#p5c8root #p5cdashTop .grp.dan .map{font-size:10px;color:#9f1239;letter-spacing:.2px}
 #p5c8root #p5cdashTop .num{width:20px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;background:var(--brand)}
 #p5c8root #p5cdashTop .num.s{background:var(--brand2)}
 #p5c8root #p5cdashTop .heroRow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin-top:0}
@@ -690,7 +725,7 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
 </style></head><body><div class="wrap">
 <h1>排列五 · 和值走势图<span class="tag">含7项比例列</span></h1>
 
-<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-09-30 22:34</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026263 期</span>开奖号码</span><div class="balls"><div class="num">1</div><div class="num">7</div><div class="num s">1</div><div class="num">4</div><div class="num">2</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">6</div><div class="snum">8</div><div class="snum">0</div><div class="snum">8</div><div class="snum">0</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">1</div><div class="snum">2</div><div class="snum">3</div><div class="snum">0</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>03641</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">1</div><div class="snum">2</div><div class="snum">3</div><div class="snum">0</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>03641</span><span class="tag"><b>对应码</b>78714</span></div></div></div></div>
+<div class="hero"><div class="topLine"><span class="today" id="hToday"></span><span class="clock" id="hClock"></span><span class="countdown" id="hCountdown"></span><span class="upd">最新更新：2026-10-01 10:04</span></div><script>(function(){var DRAW_HOUR=21,DRAW_MIN=15;function p(n){return String(n).padStart(2,"0");}function tick(){var now=new Date();var wd=["周日","周一","周二","周三","周四","周五","周六"][now.getDay()];var todayStr=now.getFullYear()+"/"+p(now.getMonth()+1)+"/"+p(now.getDate());var ht=document.getElementById("hToday");if(ht)ht.textContent="今天 "+todayStr+" "+wd;var clk=document.getElementById("hClock");if(clk)clk.textContent="实时 "+p(now.getHours())+":"+p(now.getMinutes())+":"+p(now.getSeconds());var draw=new Date(now);draw.setHours(DRAW_HOUR,DRAW_MIN,0,0);var label,target;if(now<draw){label="距今晚开奖";target=draw;}else{target=new Date(now);target.setDate(target.getDate()+1);target.setHours(DRAW_HOUR,DRAW_MIN,0,0);label="距明日开奖";}var d=Math.max(0,target-now);var H=Math.floor(d/3600000),M=Math.floor(d%3600000/60000),S=Math.floor(d%60000/1000);var cd=document.getElementById("hCountdown");if(cd)cd.textContent=label+" 还有 "+p(H)+":"+p(M)+":"+p(S);}tick();setInterval(tick,1000);})();</script><div class="heroRow"><div class="grp open"><span class="lab"><span class="issue">排列五 第 2026263 期</span>开奖号码</span><div class="balls"><div class="num">1</div><div class="num">7</div><div class="num s">1</div><div class="num">4</div><div class="num">2</div></div></div><div class="grp try"><span class="lab">方案一<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">开机号</span><div class="balls"><div class="snum">7</div><div class="snum">9</div><div class="snum">8</div><div class="snum">6</div><div class="snum">9</div></div></div><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">1</div><div class="snum">2</div><div class="snum">3</div><div class="snum">0</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>03641</span></div></div><div class="grp plan2"><span class="lab">方案二<i>（模拟号.非官方）</i></span><div class="subline"><span class="slab">试机号</span><div class="balls"><div class="snum">1</div><div class="snum">2</div><div class="snum">3</div><div class="snum">0</div><div class="snum">6</div></div></div><div class="extras"><span class="tag"><b>金码</b>2</span><span class="tag"><b>关注码</b>03641</span><span class="tag"><b>对应码</b>78714</span></div></div></div></div>
 
 
 <div class="pl5oc" id="pl5oc">
@@ -763,6 +798,7 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
       <div class="cat-btn" id="p5cmode2348">2345678</div>
       <div class="cat-btn" id="p5cmodePianyi">偏移走势图</div>
       <div class="cat-btn" id="p5cmodeQujian">区间走势图</div>
+      <div class="cat-btn" id="p5cmodeKdd">跨定胆</div>
     </div>
   </div>
   <div class="panel" id="p5chezhiCtl" style="display:none">
@@ -870,6 +906,29 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
     <div id="p5cqjGrids"></div>
   </div>
 
+  <!-- 模式十三：跨定胆（每期开奖号跨度 → 对应胆码 → 命中 0/1/2/3 四列各自遗漏期数） -->
+  <div class="panel" id="p5ckddCtl" style="display:none">
+    <div class="row">
+      <span class="lab">期号范围</span>
+      <input type="number" id="p5ckddFrom" style="width:90px" placeholder="起期">
+      <span>—</span>
+      <input type="number" id="p5ckddTo" style="width:90px" placeholder="止期">
+      <button class="btn sec" id="p5ckddSearchBtn" title="放大镜：按范围筛查">&#128269; 筛查</button>
+      <span class="lab">显示最近</span>
+      <input type="number" id="p5ckddWin" style="width:90px" value="30">
+      <span>期（仅默认窗口；改期号后显示全部）</span>
+      <button class="btn go" id="p5ckddQueryBtn">查 询</button>
+      <span class="hint">跨定胆：逐期取开奖号<b>跨度</b>（最大位−最小位）查出<b>对应胆码</b>，右侧四列为<b>命中 0/1/2/3</b> 个数字的分布——<b>红格</b>表示本期实际命中个数，其余格子显示该「命中个数」截至本期的<b>遗漏期数</b>（全史口径，与区间走势图一致），表脚五行为当前范围的统计。</span>
+    </div>
+    <div class="meta" id="p5ckddMetaBox"></div>
+    <div class="warn" id="p5ckddWarnBox"></div>
+  </div>
+
+  <div class="panel scroller" id="p5ckddPanel" style="display:none">
+    <div class="resTitle" id="p5ckddTitle">跨定胆</div>
+    <div id="p5ckddGrids"></div>
+  </div>
+
   <div class="panel" id="p5cdualPanel" style="display:none">
     <!-- 模式一补充：属性类别（大小/奇偶/质合/阴阳/012路/大中小）组选+直选双表、其他组合（号码类型/号码形态）双表 + 各自折线走势图
          （整块置于「号码结果表 resPanel」之前 = 图表在号码表上方，紧接查询条件栏） -->
@@ -973,6 +1032,29 @@ table.hzcat td.mk.metric{background:#fdf6e3;color:#b45309;font-weight:700}
   <div class="panel scroller" id="p5cqjPanel" style="display:none">
     <div class="resTitle" id="p5cqjTitle">区间走势图</div>
     <div id="p5cqjGrids"></div>
+  </div>
+
+  <!-- 模式十三：跨定胆（每期开奖号跨度 → 对应胆码 → 命中 0/1/2/3 四列各自遗漏期数） -->
+  <div class="panel" id="p5ckddCtl" style="display:none">
+    <div class="row">
+      <span class="lab">期号范围</span>
+      <input type="number" id="p5ckddFrom" style="width:90px" placeholder="起期">
+      <span>—</span>
+      <input type="number" id="p5ckddTo" style="width:90px" placeholder="止期">
+      <button class="btn sec" id="p5ckddSearchBtn" title="放大镜：按范围筛查">&#128269; 筛查</button>
+      <span class="lab">显示最近</span>
+      <input type="number" id="p5ckddWin" style="width:90px" value="30">
+      <span>期（仅默认窗口；改期号后显示全部）</span>
+      <button class="btn go" id="p5ckddQueryBtn">查 询</button>
+      <span class="hint">跨定胆：逐期取开奖号<b>跨度</b>（最大位−最小位）查出<b>对应胆码</b>，右侧四列为<b>命中 0/1/2/3</b> 个数字的分布——<b>红格</b>表示本期实际命中个数，其余格子显示该「命中个数」截至本期的<b>遗漏期数</b>（全史口径，与区间走势图一致），表脚五行为当前范围的统计。</span>
+    </div>
+    <div class="meta" id="p5ckddMetaBox"></div>
+    <div class="warn" id="p5ckddWarnBox"></div>
+  </div>
+
+  <div class="panel scroller" id="p5ckddPanel" style="display:none">
+    <div class="resTitle" id="p5ckddTitle">跨定胆</div>
+    <div id="p5ckddGrids"></div>
   </div>
 
   <div class="panel scroller" id="p5czstPanel" style="display:none;position:relative">
@@ -2704,6 +2786,12 @@ const lmFrom=$('lmFrom'),lmTo=$('lmTo'),lmYearSel=$('lmYearSel'),
       lmWin=$('lmWin'),lmMetaBox=$('lmMetaBox'),lmWarnBox=$('lmWarnBox');
 let curCat='多码任意组合',curSub='全',curGrp='全';
 let mode='omission', hezhiGrp='全';
+/* ===== P1 切换即时化：数据版本 + 面板渲染缓存 =====
+   DATA_VER：数据版本标识，切彩种/重建数据后 +1（用于让所有已缓存面板失效）。
+   RENDERED：mode -> 该面板「已渲染时」的 DATA_VER；若与当前 DATA_VER 相同则跳过重渲染（切回变为纯显隐，即时响应）。 */
+let DATA_VER=1;
+const RENDERED={};
+const IS_NODE_ENV=(typeof process!=='undefined');   // Node 校验环境：保持同步渲染，确保 verify 稳定
 let lastRows=[],headCols=[],sortKey=null,sortDir='asc'; const headTh={};
 const SIZE_CN=['','单码','两码','三码','四码','五码','六码','七码'];
 
@@ -3197,6 +3285,7 @@ function setMode(m){
   $('mode2348').classList.toggle('on', m==='2348');
   $('modePianyi').classList.toggle('on', m==='pianyi');
   $('modeQujian').classList.toggle('on', m==='qujian');
+  $('modeKdd').classList.toggle('on', m==='kdd');
   /* 直选两码/组选两码 已合并为 直/组两码遗漏(modeZxZu) */
   $('hezhiCtl').style.display     = (m==='hezhi')?'':'none';
   $('zstPanel').style.display     = (m==='hezhi')?'':'none';
@@ -3213,16 +3302,17 @@ function setMode(m){
   $('pyPanel').style.display        = (m==='pianyi')?'':'none';
   $('qjCtl').style.display          = (m==='qujian')?'':'none';
   $('qjPanel').style.display        = (m==='qujian')?'':'none';
-  if(m==='hezhi'){ hezhiQuery(); renderHst(); }
-  if(m==='lm'){ lmQuery(); }
-  if(m==='zxlm'){ zxLmQuery(); }
-  if(m==='zxzu'){ zxDirectQuery(); zxGroupQuery(); }
-  if(m==='1257'){ query1257(); }
-  if(m==='zu3'){ zhiZuSanQuery(); }
-  if(m==='shu'){ shuQuery(); }
-  if(m==='2348'){ query2348(); }
-  if(m==='pianyi'){ pyQuery(); }
-  if(m==='qujian'){ qjQuery(); }
+  $('kddCtl').style.display         = (m==='kdd')?'':'none';
+  $('kddPanel').style.display       = (m==='kdd')?'':'none';
+  /* ===== P1 切换即时化 =====
+     旧逻辑：切到哪个模式就无条件重跑该模式的全部渲染（哪怕内容没变）。
+     新逻辑：只渲染当前模式面板，且「数据未变 + 已渲染过」时直接跳过（切回 = 纯显隐，瞬时）。
+     另外在浏览器环境把渲染推到下一帧，让 tab 高亮与面板显隐先立即生效，消除点击后的卡顿感。 */
+  if(!IS_NODE_ENV && typeof requestAnimationFrame==='function'){
+    requestAnimationFrame(()=>renderMode(m));
+  }else{
+    renderMode(m);
+  }
 }
 
 /* ===== 模式四：直选定位两码（每位置100种） ===== */
@@ -4813,6 +4903,148 @@ function qjDrawLines(){
   gridEl.appendChild(svg);
 }
 
+/* ===== 模式十三：跨定胆（每期开奖号跨度 → 对应胆码 → 命中个数 0/1/2/3 四列遗漏） =====
+   口径：
+     · 跨度      = 本期开奖号「最大位 − 最小位」（0..9）
+     · 对应胆码  = KDD_MAP[跨度]（排列三/3D 通用「跨度对应胆码表」：
+                   0→019  1→168  2→1236  3→1458  4→247  5→039  6→0378  7→2346  8→459  9→256）
+     · 命中个数  = 胆码中「出现在本期开奖号里」的不同数字个数（0..3，按数字去重）
+     · 表格右侧四列 = 命中 0 / 1 / 2 / 3：
+         红格 = 本期实际命中个数（显示 0/1/2/3）；
+         其余格 = 该「命中个数」截至本期的**遗漏期数**（全史口径，与区间走势图一致）。
+   例：开奖 3-7-3 → 跨度 4 → 胆码 247 → 命中个数 1（仅 7）→ 「命中1」列标红，其余三列显示各自遗漏期数
+       开奖 7-7-3 → 跨度 4 → 胆码 247 → 命中个数 1（去重后仍为 1）→ 同上 */
+const KDD_MAP=['019','168','1236','1458','247','039','0378','2346','459','256'];
+const KDD_DEF_WIN=30;                 // 默认窗口：最近 30 期（与区间走势图默认一致）
+function kddHitOf(a,b,c){
+  const span=Math.max(a,b,c)-Math.min(a,b,c);
+  const dan=KDD_MAP[span]||'';
+  const dset=new Set(dan.split('').map(Number));
+  return new Set([a,b,c].filter(x=>dset.has(x))).size;   // 0..3
+}
+function kddCtlInit(){
+  const n=D.length; if(!n) return;
+  const F=$('kddFrom'), T=$('kddTo'), W=$('kddWin');
+  if(F && !F.value) F.value=D[Math.max(0,n-KDD_DEF_WIN)][0];
+  if(T && !T.value) T.value=D[n-1][0];
+  if(W && !W.value) W.value=KDD_DEF_WIN;
+}
+function kddQuery(){ renderKdd(); }
+function renderKdd(){
+  kddCtlInit();
+  const gridEl=$('kddGrids'); if(!gridEl) return;
+  const metaEl=$('kddMetaBox'), warnEl=$('kddWarnBox');
+  metaEl.textContent=''; warnEl.textContent='';
+  const f=parseInt($('kddFrom').value||FIRST,10), t=parseInt($('kddTo').value||LAST,10);
+  const period=D.filter(d=>d[0]>=f&&d[0]<=t);
+  if(period.length===0){ warnEl.textContent='该期号范围内无数据，请扩大范围。'; gridEl.innerHTML=''; return; }
+  // 「显示最近N期」仅为默认初始窗口：一旦修改期号范围，则显示该范围内全部期数
+  const n=D.length, defF=D[Math.max(0,n-KDD_DEF_WIN)][0], defT=D[n-1][0];
+  const userFiltered = ($('kddFrom').value!==String(defF)) || ($('kddTo').value!==String(defT));
+  const W = userFiltered ? 999999 : (parseInt($('kddWin').value||KDD_DEF_WIN,10)||KDD_DEF_WIN);
+  const shown=(period.length>W)?period.slice(period.length-W):period;
+  // ===== 全史遗漏：omByIssue[期号] = 四个「命中个数」各自的遗漏期数（口径同区间走势图：真实历史遗漏） =====
+  const omByIssue=new Map();
+  {
+    const g=[0,0,0,0];
+    D.forEach(d=>{
+      const hit=kddHitOf(d[1],d[2],d[3]);
+      for(let v=0;v<4;v++){ if(v===hit) g[v]=0; else g[v]++; }
+      omByIssue.set(d[0], g.slice());
+    });
+  }
+  const rows=shown.map(d=>{
+    const a=d[1],b=d[2],c=d[3];
+    const span=Math.max(a,b,c)-Math.min(a,b,c);
+    return {issue:d[0],a,b,c,span,dan:KDD_MAP[span]||'',hit:kddHitOf(a,b,c)};
+  });
+  // ===== 表脚统计（基于当前显示范围 shown；口径同区间走势图表脚） =====
+  const appear=[0,0,0,0], gapsArr=[[],[],[],[]], curGap=[0,0,0,0], curRun=[0,0,0,0], maxRun=[0,0,0,0];
+  {
+    const g=[0,0,0,0];
+    rows.forEach(r=>{      // 注意：必须遍历 rows（带 hit 字段），不能遍历 shown（原始数组没有 hit）
+      for(let v=0;v<4;v++){
+        if(v===r.hit){ gapsArr[v].push(g[v]); g[v]=0; curRun[v]++; if(curRun[v]>maxRun[v])maxRun[v]=curRun[v]; appear[v]++; }
+        else { g[v]++; curRun[v]=0; }
+      }
+    });
+    for(let v=0;v<4;v++) curGap[v]=g[v];
+  }
+  const maxGap=[0,0,0,0], avgGap=[0,0,0,0];
+  for(let v=0;v<4;v++){
+    maxGap[v]= gapsArr[v].length? Math.max(Math.max(...gapsArr[v]),curGap[v]) : curGap[v];
+    avgGap[v]= gapsArr[v].length? Math.round(gapsArr[v].reduce((x,z)=>x+z,0)/gapsArr[v].length) : 0;
+  }
+  let html='<div class="kddBlock"><table class="kddTable">'
+    +'<colgroup><col class="c-iss"><col class="c-nums"><col class="c-span"><col class="c-dan"><col><col><col><col></colgroup>'
+    +'<thead><tr><th class="lab-h" rowspan="2">期号</th><th class="lab-h" rowspan="2">开奖号</th>'
+    +'<th class="lab-h" rowspan="2">跨度</th><th class="lab-h" rowspan="2">对应胆码</th>'
+    +'<th class="kdd-h" colspan="4">命中个数（0/1/2/3）</th></tr><tr>'
+    +'<th class="kdd-h">命中0</th><th class="kdd-h">命中1</th><th class="kdd-h">命中2</th><th class="kdd-h">命中3</th>'
+    +'</tr></thead><tbody>';
+  rows.forEach(r=>{
+    const om=omByIssue.get(r.issue)||[0,0,0,0];
+    html+='<tr><td class="iss">'+r.issue+'</td><td class="nums">'+r.a+' '+r.b+' '+r.c+'</td>'
+      +'<td class="kspan">'+r.span+'</td><td class="dan">'+r.dan.split('').join(' ')+'</td>';
+    for(let v=0;v<4;v++){
+      if(v===r.hit) html+='<td class="khit">'+v+'</td>';
+      else html+='<td class="kom">'+om[v]+'</td>';
+    }
+    html+='</tr>';
+  });
+  html+='</tbody><tfoot>';
+  [['出现次数',appear],['最大遗漏期',maxGap],['最大连初期',maxRun],['平均遗漏期',avgGap],['当前遗漏期',curGap]].forEach(([lab,arr])=>{
+    html+='<tr><td class="footer-lab" colspan="4">'+lab+'</td>';
+    for(let v=0;v<4;v++) html+='<td>'+arr[v]+'</td>';
+    html+='</tr>';
+  });
+  html+='</tfoot></table></div>';
+  html+='<div id="kddLegend"><b>跨度→胆码：</b>';
+  KDD_MAP.forEach((v,i)=>{ html+='<span class="kddseg"><b class="kddno">'+i+'</b>'+v+'</span>'; });
+  html+='</div>';
+  gridEl.innerHTML=html;
+  const ttl=$('kddTitle'); if(ttl) ttl.textContent='跨定胆（跨度 → 胆码 · 命中个数遗漏）';
+  metaEl.textContent='跨定胆 ｜ 统计范围：'+rows[0].issue+' ～ '+rows[rows.length-1].issue
+    +'（'+rows.length+' 期，表脚 5 行按此范围统计）｜ 红格＝本期命中个数，其余＝该命中个数的遗漏期数';
+}
+
+const MODE_RENDER={
+  omission:()=>{ fillCat(); fillSub(); fillGrp(); fillYear(); buildHead();
+    if(typeof fromIss!=='undefined'&&fromIss) fromIss.value=FIRST;
+    if(typeof toIss!=='undefined'&&toIss) toIss.value=LAST;
+    if(typeof yearSel!=='undefined'&&yearSel) yearSel.value='0';
+    query(); },
+  hezhi:()=>{ fillHzGrp(); fillHzYear();
+    if(typeof hzFrom!=='undefined'&&hzFrom) hzFrom.value=FIRST;
+    if(typeof hzTo!=='undefined'&&hzTo) hzTo.value=LAST;
+    if(typeof hzWin!=='undefined'&&hzWin) hzWin.value=200;
+    if(typeof hzYearSel!=='undefined'&&hzYearSel) hzYearSel.value='0';
+    hezhiQuery(); renderHst(); },
+  lm:()=>{ fillLmYear();
+    if(typeof lmFrom!=='undefined'&&lmFrom) lmFrom.value=FIRST;
+    if(typeof lmTo!=='undefined'&&lmTo) lmTo.value=LAST;
+    if(typeof lmWin!=='undefined'&&lmWin) lmWin.value=50;
+    if(typeof lmYearSel!=='undefined'&&lmYearSel) lmYearSel.value='0';
+    lmQuery(); },
+  zxlm:  ()=>{ zxLmQuery(); },
+  zxzu:  ()=>{ zxDirectQuery(); zxGroupQuery(); },
+  '1257':()=>{ query1257(); },
+  zu3:   ()=>{ zhiZuSanQuery(); },          // 注意：完整查询是 zhiZuSanQuery（内部再调 renderZu3），旧 renderAll 只调 renderZu3 会渲染上一彩种的陈旧数据
+  shu:   ()=>{ shuQuery(); },
+  '2348':()=>{ query2348(); },
+  pianyi:()=>{ pyQuery(); },
+  qujian:()=>{ qjQuery(); },
+  kdd:   ()=>{ kddQuery(); }
+};
+function renderMode(m, force){
+  const fn=MODE_RENDER[m];
+  if(!fn) return;
+  if(!force && RENDERED[m]===DATA_VER) return;   // 数据未变且已渲染过 → 跳过（切回瞬间完成）
+  fn();
+  RENDERED[m]=DATA_VER;
+}
+function invalidateRendered(){ for(const k in RENDERED) delete RENDERED[k]; }
+
   // ===== 切片切换 + 模式切换 + 初始化 =====
   function refreshMode(){
     fillHzYear(); fillHzGrp(); fillLmYear();
@@ -4826,9 +5058,12 @@ function qjDrawLines(){
     else if(mode==='2348'){ query2348(); }
     else if(mode==='pianyi'){ pyQuery(); }
     else if(mode==='qujian'){ qjQuery(); }
+    else if(mode==='kdd'){ kddQuery(); }
     refreshPyIfActive();   // 切片切换后偏移走势图同步刷新
     refreshQjIfActive();   // 切片切换后区间走势图同步刷新
+    refreshKddIfActive();  // 切片切换后跨定胆同步刷新
   }
+  function refreshKddIfActive(){ if(mode==='kdd') kddQuery(); }
   function setSlice(s){
     curSlice=s;
     $('SlBack').classList.toggle('on', s==='back');
@@ -4842,6 +5077,9 @@ function qjDrawLines(){
     // 区间走势图沿用「默认窗口 30 期」语义
     if($('qjFrom')) $('qjFrom').value=FIRST;
     if($('qjTo'))   $('qjTo').value=LAST;
+    // 跨定胆：清空期号框，交由 kddCtlInit 按新切片重填「最近 30 期」起点（否则会残留上一切片期号）
+    if($('kddFrom')) $('kddFrom').value='';
+    if($('kddTo'))   $('kddTo').value='';
     refreshMode();
   }
   $('SlBack').onclick=()=>setSlice('back');
@@ -4856,6 +5094,9 @@ function qjDrawLines(){
   $('mode2348').onclick=()=>setMode('2348');
   $('modePianyi').onclick=()=>setMode('pianyi');
   $('modeQujian').onclick=()=>setMode('qujian');
+  $('modeKdd').onclick=()=>setMode('kdd');
+  $('kddSearchBtn').onclick=kddQuery;
+  $('kddQueryBtn').onclick=kddQuery;
   $('qjSearchBtn').onclick=qjQuery;
   $('qjQueryBtn').onclick=qjQuery;
   $('qjYearSel').onchange=qjQuery;

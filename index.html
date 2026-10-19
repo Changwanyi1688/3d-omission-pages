@@ -3793,22 +3793,35 @@ function renderPy(reset){
   const curGap=Array(N).fill(0);              // 当前遗漏
   const curRun=Array(N).fill(0), maxRun=Array(N).fill(0); // 连出
   // 逐期遗漏记录（供表格体显示；基于全史 ALLREC）
+  // ★ 2026-10-19 口径统一：同时产出「全史口径」的当前遗漏／历史最大遗漏，供表脚直接引用。
+  //   效果：① 表脚「当前遗漏期」与表格末行格子恒等（真实值，含豹子、自全史起算）
+  //        ② 不再出现「某类型在窗口内 0 次出现 → 当前/最大遗漏被填成窗口长度」的哨兵值
   const omitByIssue=new Map();
+  const allGaps=Array.from({length:N},()=>[]);   // 全史各次闭合间隔
+  const curGapAll=Array(N).fill(0);              // 全史当前遗漏（真实值）
   {
     const g=Array(N).fill(0);
     ALLREC.forEach(r=>{
       const idx=PY_HEADS.indexOf(r.type);
       for(let v=0;v<N;v++){
-        if(v===idx){ g[v]=0; }
+        if(v===idx){ allGaps[v].push(g[v]); g[v]=0; }
         else { g[v]++; }
       }
       omitByIssue.set(r.issue, g.slice());
     });
+    for(let v=0;v<N;v++) curGapAll[v]=g[v];
   }
-  // 表脚统计：只在 period（当前筛选范围）内累加
+  const maxGapAll=Array(N).fill(0);
+  for(let v=0;v<N;v++){
+    let mx=curGapAll[v];
+    for(let z=0;z<allGaps[v].length;z++) if(allGaps[v][z]>mx) mx=allGaps[v][z];
+    maxGapAll[v]=mx;
+  }
+  // 表脚统计：★ 2026-10-19 改为在 shown（表格实际显示范围）内累加
+  //   —— 统计范围 = 表格显示范围，切换期号/年份/窗口时与表格同步变化
   {
     const g=Array(N).fill(0);
-    period.forEach(r=>{
+    shown.forEach(r=>{
       const idx=PY_HEADS.indexOf(r.type);
       for(let v=0;v<N;v++){
         if(v===idx){ gapsArr[v].push(g[v]); g[v]=0; curRun[v]++; if(curRun[v]>maxRun[v])maxRun[v]=curRun[v]; appear[v]++; }
@@ -3817,11 +3830,12 @@ function renderPy(reset){
     });
     for(let v=0;v<N;v++) curGap[v]=g[v];
   }
-  const maxGap=Array(N).fill(0), avgGap=Array(N).fill(0);
+  const avgGap=Array(N).fill(0);
   for(let v=0;v<N;v++){
-    maxGap[v]= gapsArr[v].length? Math.max(Math.max(...gapsArr[v]),curGap[v]) : curGap[v];
     avgGap[v]= gapsArr[v].length? Math.round(gapsArr[v].reduce((x,z)=>x+z,0)/gapsArr[v].length) : 0;
   }
+  // 历史最大遗漏 / 当前遗漏 改用全史口径（真实值），恒满足 最大遗漏 ≥ 当前遗漏
+  const maxGap=maxGapAll;
   // ===== M差值：口径与「两码走势」完全一致 =====
   // M差值(v) = 该年命中次数(v) − 完整年平均数(v) × (该年最新月份 / 12)，四舍五入
   //   ⚠ 聚合源仍用全史 ALLREC：M差值是「年度」指标，其基准=各完整年的年平均数，
@@ -3868,7 +3882,7 @@ function renderPy(reset){
   });
   tbody+='</tbody>';
   // 表脚 7 行（与用户指定一致）
-  const rows=[['出现次数',appear],['最大遗漏期',maxGap],['最大连初期',maxRun],['平均遗漏期',avgGap],['当前遗漏期',curGap]];
+  const rows=[['出现次数',appear],['最大遗漏期',maxGap],['最大连初期',maxRun],['平均遗漏期',avgGap],['当前遗漏期',curGapAll]];
   let tfoot='<tfoot>';
   rows.forEach(([lab,arr])=>{
     tfoot+='<tr><td class="footer-lab" colspan="3">'+lab+'</td>';
@@ -3887,8 +3901,10 @@ function renderPy(reset){
   html+=thead+tbody+tfoot+'</table></div>';
   gridEl.innerHTML=html;
   const grpTxt=(PY_GRP_SEL.size===0||PY_GRP_SEL.size===3)?'全形态':[...PY_GRP_SEL].join('+');
-  metaEl.textContent='偏移走势图（27 类）｜ 统计范围：'+period[0].issue+' ～ '+period[period.length-1].issue
-    +'（'+period.length+' 期，表脚 7 行按此范围统计）｜ 形态：'+grpTxt+' ｜ 明细显示 '+shown.length+' 期';
+  metaEl.textContent='偏移走势图（27 类）｜ 明细与频次统计范围：'+shown[0].issue+' ～ '+shown[shown.length-1].issue
+    +'（'+shown.length+' 期；出现次数·最大连初·平均遗漏 按此范围，随筛选同步变化）'
+    +'｜ 当前遗漏·最大遗漏 按全史（截至最新一期真实值，与末行格子一致）｜ 形态：'+grpTxt
+    +(shown.length<period.length?(' ｜ 筛选命中 '+period.length+' 期，仅显示最近 '+shown.length+' 期'):'');
 }
 
 /* ---------- 模式十二：区间走势图（000-999 均分为 4/5/8/10/20/25/40 个区段） ----------
@@ -3999,19 +4015,30 @@ function renderQj(reset){
   const curGap=Array(N).fill(0);
   const curRun=Array(N).fill(0), maxRun=Array(N).fill(0);
   const omitByIssue=new Map();   // issue -> 各区遗漏数组（全史口径）
+  // ★ 2026-10-19 口径统一：全史口径的当前遗漏／历史最大遗漏（真实值，供表脚引用）
+  const allGapsQ=Array.from({length:N},()=>[]);
+  const curGapAll=Array(N).fill(0);
+  const maxGapAll=Array(N).fill(0);
   {
     const g=Array(N).fill(0);
     ALLREC.forEach(r=>{
       const idx=qjIndexOf(r.num,k)-1;
       for(let v=0;v<N;v++){
-        if(v===idx){ g[v]=0; } else { g[v]++; }
+        if(v===idx){ allGapsQ[v].push(g[v]); g[v]=0; } else { g[v]++; }
       }
       omitByIssue.set(r.issue, g.slice());
     });
+    for(let v=0;v<N;v++){
+      curGapAll[v]=g[v];
+      let mx=g[v];
+      for(let z=0;z<allGapsQ[v].length;z++) if(allGapsQ[v][z]>mx) mx=allGapsQ[v][z];
+      maxGapAll[v]=mx;
+    }
   }
+  // ★ 2026-10-19：频次类统计改在 shown（表格实际显示范围）内累加 —— 统计范围 = 表格显示范围
   {
     const g=Array(N).fill(0);
-    period.forEach(r=>{
+    shown.forEach(r=>{
       const idx=qjIndexOf(r.num,k)-1;
       for(let v=0;v<N;v++){
         if(v===idx){ gapsArr[v].push(g[v]); g[v]=0; curRun[v]++; if(curRun[v]>maxRun[v])maxRun[v]=curRun[v]; appear[v]++; }
@@ -4020,11 +4047,11 @@ function renderQj(reset){
     });
     for(let v=0;v<N;v++) curGap[v]=g[v];
   }
-  const maxGap=Array(N).fill(0), avgGap=Array(N).fill(0);
+  const avgGap=Array(N).fill(0);
   for(let v=0;v<N;v++){
-    maxGap[v]= gapsArr[v].length? Math.max(Math.max(...gapsArr[v]),curGap[v]) : curGap[v];
     avgGap[v]= gapsArr[v].length? Math.round(gapsArr[v].reduce((x,z)=>x+z,0)/gapsArr[v].length) : 0;
   }
+  const maxGap=maxGapAll;   // 历史最大遗漏改用全史口径（真实值，恒 ≥ 当前遗漏）
   // ===== M差值：口径与「偏移走势图 / 两码走势」一致（聚合基于全史，年度指标）=====
   const qjAggYear={}; const qjYearMonths={};
   ALLREC.forEach(r=>{
@@ -4075,7 +4102,7 @@ function renderQj(reset){
   });
   tbody+='</tbody>';
   // 表脚 7 行
-  const rows=[['出现次数',appear],['最大遗漏期',maxGap],['最大连初期',maxRun],['平均遗漏期',avgGap],['当前遗漏期',curGap]];
+  const rows=[['出现次数',appear],['最大遗漏期',maxGap],['最大连初期',maxRun],['平均遗漏期',avgGap],['当前遗漏期',curGapAll]];
   let tfoot='<tfoot>';
   rows.forEach(([lab,arr])=>{
     tfoot+='<tr><td class="footer-lab" colspan="3">'+lab+'</td>';
@@ -4099,8 +4126,10 @@ function renderQj(reset){
   gridEl.innerHTML=html;
   const grpTxt=(QJ_SHAPE_SEL.size===0||QJ_SHAPE_SEL.size===3)?'全形态':[...QJ_SHAPE_SEL].join('+');
   const ttl=$('qjTitle'); if(ttl) ttl.textContent='区间走势图（区间'+k+'，'+N+' 区）';
-  metaEl.textContent='区间走势图（区间'+k+'，'+N+' 区）｜ 统计范围：'+period[0].issue+' ～ '+period[period.length-1].issue
-    +'（'+period.length+' 期，表脚 7 行按此范围统计）｜ 形态：'+grpTxt+' ｜ 明细显示 '+shown.length+' 期';
+  metaEl.textContent='区间走势图（区间'+k+'，'+N+' 区）｜ 明细与频次统计范围：'+shown[0].issue+' ～ '+shown[shown.length-1].issue
+    +'（'+shown.length+' 期；出现次数·最大连初·平均遗漏 按此范围，随筛选同步变化）'
+    +'｜ 当前遗漏·最大遗漏 按全史（截至最新一期真实值，与末行格子一致）｜ 形态：'+grpTxt
+    +(shown.length<period.length?(' ｜ 筛选命中 '+period.length+' 期，仅显示最近 '+shown.length+' 期'):'');
   qjDrawLines();
 }
 // 折线连线（命中格中心相连），与站内其他走势图一致

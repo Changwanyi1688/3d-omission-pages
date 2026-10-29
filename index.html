@@ -232,6 +232,27 @@
   #zstTable tr.mrow td,#lmGrids tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
   #zstTable tr.mrow td:first-child,#lmGrids tr.mrow td:first-child{color:#a0670f}
   .mdcell{background:#fdf6e3;font-weight:700}  /* M差值 单元格统一高亮（所有类目一致），数值正负表示方向 */
+  /* ===== 万能码走势（组选四码 30 注 / 组选两码 31 注；属性列 + 走势列并排全铺，照彩经网固定组合） ===== */
+  .wnmBlock{margin-bottom:10px}
+  .wnmBlock > .resTitle{position:sticky;top:0;background:#2c3e50;color:#fff;font-size:13px;font-weight:600;padding:8px 12px;z-index:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wnmScroll{overflow-x:auto;overflow-y:auto;max-height:640px;background:#fff;border:1px solid #d8e0ea;border-radius:0 0 8px 8px}
+  .wnmScroll table{margin:0;border-collapse:collapse;width:max-content;min-width:100%}
+  .wnmScroll th,.wnmScroll td{border:1px solid #e3e7ee;padding:4px 6px;text-align:center;white-space:nowrap;font-size:12px}
+  .wnmScroll thead th{position:sticky;top:0;z-index:2;background:#34495e;color:#fff}
+  .wnmScroll thead th.lab-h{background:#2c3e50;color:#fff;font-weight:600}
+  .wnmScroll thead th.attr-h{background:#3d5872;color:#dfe9f3;font-weight:600;font-size:11px}
+  .wnmScroll thead th.grp-sep{border-left:3px solid #e74c3c}
+  .wnmScroll td.omission{color:#9aa0a6;font-size:11px}
+  .wnmScroll td.wnm-hit{color:#fff;font-weight:700}
+  .wnmScroll td.attr-v{background:#f4f7fa;color:#42566b;font-size:11px}
+  .wnmScroll td.grp-sep{border-left:3px solid #e74c3c}
+  .wnmScroll td.issue{color:#2c3e50;font-weight:600}
+  .wnmScroll td.draw{color:#1a5490;font-weight:700;letter-spacing:1px}
+  .wnmScroll tbody tr:hover td{background:#eef4fb}
+  .wnmScroll tfoot td{background:#f7f9fc;font-weight:600;color:#2c3e50}
+  .wnmScroll td.footer-lab{text-align:left;padding-left:10px;background:#eef1f5;font-weight:700;white-space:nowrap}
+  .wnmScroll tr.mrow td{background:#fdf6e3;font-weight:700;border-top:2px solid #e0c97a}
+  .wnmScroll tr.mrow td:first-child{color:#a0670f}
   /* 百位走势图：表格下方独立折线图 */
   .bwScroll{overflow-x:auto;width:100%}
   .bwChartWrap{width:100%;overflow-x:auto;margin-top:10px;border-top:1px dashed #cdd5df;padding-top:8px}
@@ -639,6 +660,7 @@
       <div class="cat-btn" id="modePianyi">偏移走势图</div>
       <div class="cat-btn" id="modeQujian">区间走势图</div>
       <div class="cat-btn" id="modeKdd">跨定胆</div>
+      <div class="cat-btn" id="modeWnm">万能码走势</div>
     </div>
   </div>
 
@@ -798,6 +820,50 @@
   <div class="panel scroller" id="kddPanel" style="display:none">
     <div class="resTitle" id="kddTitle">跨定胆</div>
     <div id="kddGrids"></div>
+  </div>
+
+  
+  <div class="panel" id="wnmCtl" style="display:none">
+    <div class="row">
+      <span class="lab">显示最近</span>
+      <input type="number" id="wnmWin" style="width:90px" value="100">
+      <span>期（两表共享，默认 100）</span>
+      <span class="lab">按年份</span>
+      <select id="wnmYearSel"></select>
+      <button class="btn go" id="wnmQueryBtn">查 询</button>
+      <span class="hint">万能码＝用固定组合的若干数字「包住」当期开奖号：命中＝开奖号 3 个数字的<b>集合</b> ⊆ 组合数字集（四码 4 数字、两码 2 数字，含对子按出现次数判定）。命中格显示<b>奖号本身</b>并着色，未命中格显示该组合截至本期的<b>遗漏期数</b>（基于完整范围计算）。表脚 5 项＝出现次数/最大遗漏/最大连出/平均遗漏/当前遗漏；M差值＝当年出现次数 − 完整年年均 × (当年已开月份/12)，四舍五入（选单年时显示当年主行，并始终附近 5 个完整年行）。</span>
+    </div>
+    <div class="meta" id="wnmMetaBox"></div>
+    <div class="warn" id="wnmWarnBox"></div>
+  </div>
+
+  <div class="panel scroller" id="wnmPanel" style="display:none">
+    <div class="row" style="align-items:center;flex-wrap:wrap;gap:6px">
+      <span class="lab" style="color:#c0392b;font-weight:700">组选四码</span>
+      <span class="lab">形态</span>
+      <select id="wnmShape4">
+        <option value="all">全部</option>
+        <option value="z3">组三</option>
+        <option value="z6">组六</option>
+      </select>
+      <span style="display:inline-block;width:18px"></span>
+      <span class="lab" style="color:#2471a3;font-weight:700">组选两码</span>
+      <span class="lab">形态</span>
+      <select id="wnmShape2">
+        <option value="all">全部</option>
+        <option value="z3">组三</option>
+        <option value="z6">组六</option>
+      </select>
+      <span class="hint">形态＝只统计所选形态的开奖期（组三/组六），用于分别观察不同形态下的万能码表现；遗漏与表脚统计均在该形态期序列上计算。</span>
+    </div>
+    <div class="wnmBlock">
+      <div class="resTitle" id="wnmTitle4">组选四码走势（30 注）</div>
+      <div class="wnmScroll" id="wnmGrids4"></div>
+    </div>
+    <div class="wnmBlock">
+      <div class="resTitle" id="wnmTitle2">组选两码走势（31 注）</div>
+      <div class="wnmScroll" id="wnmGrids2"></div>
+    </div>
   </div>
 
   <div class="panel" id="dualPanel" style="display:none">
@@ -990,7 +1056,7 @@ const REF_N = 8796;             // 抓取 ref 时的总期数，用于理论次�
             // [[issue,a,b,c,date(YYYY-MM-DD)],...] 升序（福彩3D）
         // 排三(P3) 同结构数据集（桌面 pl3.xls 导入 pl3_data）
 let D = D3;                      // 当前生效数据集，由 setLottery() 切换
-const PL3_LAST_UPDATE = "2026-10-29 22:19:07";   // 排三开奖最近一次自动更新时间（看板页脚展示）
+const PL3_LAST_UPDATE = "2026-10-29 22:32:48";   // 排三开奖最近一次自动更新时间（看板页脚展示）
 const SIM_TOP = {"tryLatest": {"issue": 2026288, "a": 9, "b": 4, "c": 8, "focus": "0 8", "gold": "6", "kill": "1"}, "openLatest": {"issue": 2026288, "a": 8, "b": 4, "c": 0}, "plan2Latest": {"issue": 2026288, "open": [9, 3, 0], "try": [5, 8, 1], "gold": 4, "focus": [1, 5, 9], "dy": [3, 8, 0]}, "plan1_p3Latest": {"issue": 2026288, "open": [0, 7, 0], "try": [7, 1, 9], "focus": "8 3 4", "gold": "8", "kill": "0"}, "plan2_p3Latest": {"issue": 2026288, "open": [5, 5, 9], "try": [0, 9, 8], "gold": 4, "focus": [5, 8, 9], "dy": [9, 2, 0]}};      // 模拟号最新一期（试机/开机/方案二），供顶部概览块
 const MATCH = {"gen": "2026-10-29 22:26", "3d": {"cross": [{"rank": 1, "kind": "z3c3", "label": "368三码", "combo": "368", "O": 388, "z": 5.6, "mzr": 1.82, "composite": 6.65, "p": 1.8}, {"rank": 2, "kind": "z3c3", "label": "356三码", "combo": "356", "O": 281, "z": 3.6, "mzr": 2.17, "composite": 4.86, "p": 1.67}, {"rank": 3, "kind": "z3c3", "label": "348三码", "combo": "348", "O": 218, "z": 3.3, "mzr": 1.74, "composite": 4.39, "p": 1.83}, {"rank": 4, "kind": "z4", "label": "0146四码", "combo": "0146", "O": 224, "z": 4.2, "mzr": 0.3, "composite": 4.35, "p": 2.36}, {"rank": 5, "kind": "z4", "label": "4679四码", "combo": "4679", "O": 229, "z": 3.9, "mzr": 0.36, "composite": 4.16, "p": 2.4}, {"rank": 6, "kind": "z3c3", "label": "479三码", "combo": "479", "O": 232, "z": 3.2, "mzr": 0.87, "composite": 3.72, "p": 1.73}, {"rank": 7, "kind": "zl", "label": "128", "combo": "128", "O": 783, "z": 3.8, "mzr": -0.69, "composite": 3.34, "p": 0.64}, {"rank": 8, "kind": "z3", "label": "组三(6,5)", "combo": "65", "O": 1073, "z": 3.3, "mzr": 0.07, "composite": 3.34, "p": 0.34}, {"rank": 9, "kind": "zl", "label": "579", "combo": "579", "O": 684, "z": 3.2, "mzr": 0.13, "composite": 3.32, "p": 0.59}, {"rank": 10, "kind": "z3c3", "label": "134三码", "combo": "134", "O": 171, "z": 2.3, "mzr": 1.46, "composite": 3.16, "p": 1.98}, {"rank": 11, "kind": "zl", "label": "247", "combo": "247", "O": 738, "z": 2.5, "mzr": 0.94, "composite": 3.11, "p": 0.53}, {"rank": 12, "kind": "zm", "label": "24", "combo": "24", "O": 82, "z": 2.9, "mzr": 0.14, "composite": 3.02, "p": 4.58}], "top1": {"zm": {"label": "24", "composite": 3.02}, "zl": {"label": "128", "composite": 3.34}, "z4": {"label": "0146四码", "composite": 4.35}, "z3": {"label": "组三(6,5)", "composite": 3.34}, "z3c3": {"label": "368三码", "composite": 6.65}}}, "p3": {"cross": [{"rank": 1, "kind": "z4", "label": "2457四码", "combo": "2457", "O": 251, "z": 5.6, "mzr": 0.6, "composite": 6.0, "p": 2.43}, {"rank": 2, "kind": "zl", "label": "238", "combo": "238", "O": 1058, "z": 5.4, "mzr": -0.44, "composite": 5.16, "p": 0.68}, {"rank": 3, "kind": "z4", "label": "0245四码", "combo": "0245", "O": 237, "z": 4.2, "mzr": 0.68, "composite": 4.56, "p": 2.29}, {"rank": 4, "kind": "z3c3", "label": "258三码", "combo": "258", "O": 266, "z": 3.7, "mzr": 1.07, "composite": 4.37, "p": 1.65}, {"rank": 5, "kind": "z4", "label": "3567四码", "combo": "3567", "O": 233, "z": 3.9, "mzr": 0.5, "composite": 4.21, "p": 2.2}, {"rank": 6, "kind": "z4", "label": "0239四码", "combo": "0239", "O": 205, "z": 3.9, "mzr": 0.26, "composite": 4.05, "p": 2.2}, {"rank": 7, "kind": "z3", "label": "组三(9,2)", "combo": "92", "O": 1206, "z": 3.7, "mzr": 0.3, "composite": 3.85, "p": 0.39}, {"rank": 8, "kind": "z3c3", "label": "089三码", "combo": "089", "O": 179, "z": 3.1, "mzr": 0.33, "composite": 3.32, "p": 2.13}, {"rank": 9, "kind": "z3c3", "label": "014三码", "combo": "014", "O": 167, "z": 2.4, "mzr": 1.54, "composite": 3.29, "p": 1.79}, {"rank": 10, "kind": "z4", "label": "0257四码", "combo": "0257", "O": 188, "z": 3.0, "mzr": 0.26, "composite": 3.15, "p": 2.11}, {"rank": 11, "kind": "zl", "label": "239", "combo": "239", "O": 607, "z": 3.2, "mzr": -0.11, "composite": 3.14, "p": 0.61}, {"rank": 12, "kind": "z4", "label": "4789四码", "combo": "4789", "O": 190, "z": 3.0, "mzr": 0.11, "composite": 3.11, "p": 2.31}], "top1": {"zm": {"label": "24", "composite": 1.78}, "zl": {"label": "238", "composite": 5.16}, "z4": {"label": "2457四码", "composite": 6.0}, "z3": {"label": "组三(9,2)", "composite": 3.85}, "z3c3": {"label": "258三码", "composite": 4.37}}}};      // 关联匹配综合重点号单（predict_match_model 导出 match_summary.json），供顶部嵌入
           // 两码走势命中(17500 规则抓取)：格式 [issue, g0,g1,g2,g3]，g* 为组内命中列下标列表
@@ -1454,6 +1520,178 @@ function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
   metaEl.textContent='组（六、三）两码走势｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（完整 '+all.length+' 期；连线显示最近 '+shown.length+' 期）';
   warnEl.textContent='';   // 用户要求：删除橙色「提示」及后面的说明文字
 }
+
+/* ==================== 模式十四：万能码走势（组选四码 30 注 / 组选两码 31 注）====================
+   照彩经网 pl3_wannengma-wannengsm / -wannengtwom 固定组合；
+   命中判定 = 开奖号 3 位数字的【集合】 ⊆ 组合数字集：
+     · 四码（4 数字串）→ hitOf 的 k>=3 子集分支：开奖号每位都属于该 4 数字集
+     · 两码（2 数字串，含对子 00/22…）→ hitOf 的 k=2 多重集分支：按出现次数
+   每期一行：期号 + 奖号 + 属性列(和值/和尾/跨度/大小/奇偶/质合/阴阳/012路/大中小/号码类型/号码形态)
+              + 走势列(命中显奖号着色 / 未命中显截至本期遗漏，基于完整范围 all 计算)
+   表脚 5 项：出现次数/最大连出/平均遗漏 = shown(显示窗口)；当前遗漏/最大遗漏 = all(全史)。
+   M差值 = 当年出现次数 − 完整年年均 × (当年已开月份/12)，四舍五入（选单年显示主行，并始终附近5个完整年行）。
+   ============================================================================================ */
+const WNM4 = ('0126 0134 0159 0178 0239 0247 0258 0357 0368 0456 0489 0679 '
+            + '1237 1245 1289 1358 1369 1468 1479 1567 2348 2356 2469 2579 2678 '
+            + '3459 3467 3789 4578 5689').split(' ');
+const WNM2 = ('02 04 05 07 09 24 25 27 29 45 47 49 57 59 79 '
+            + '00 22 44 55 77 99 13 16 18 36 38 68 11 33 66 88').split(' ');
+// 属性列（组选口径）：和值/和尾/跨度 + 站内全部属性类别
+const WNM_ATTR = [
+  {t:'和值',   f:(a,b,c)=>a+b+c},
+  {t:'和尾',   f:(a,b,c)=>(a+b+c)%10},
+  {t:'跨度',   f:(a,b,c)=>Math.max(a,b,c)-Math.min(a,b,c)},
+  {t:'大小',   f:(a,b,c)=>attrCombo('大小','大小组选',a,b,c)},
+  {t:'奇偶',   f:(a,b,c)=>attrCombo('奇偶','奇偶组选',a,b,c)},
+  {t:'质合',   f:(a,b,c)=>attrCombo('质合','质合组选',a,b,c)},
+  {t:'阴阳',   f:(a,b,c)=>attrCombo('阴阳','阴阳组选',a,b,c)},
+  {t:'012路',  f:(a,b,c)=>attrCombo('012路','012路组选',a,b,c)},
+  {t:'大中小', f:(a,b,c)=>attrCombo('大中小','大中小组选',a,b,c)},
+  {t:'号类',   f:(a,b,c)=>typeFull(a,b,c)},
+  {t:'号形',   f:(a,b,c)=>formFull(a,b,c)}
+];
+// 命中：把组合串拆成数字数组交给 hitOf（两码=多重集含对子；四码=集合包含）
+function wnmHit(comboStr, d){
+  const codes = comboStr.split('').map(Number);
+  return hitOf(codes, d);
+}
+// 逐期遗漏序列（基于完整 all）：omitByIssue.get(issue)[v] = 该期第 v 组合的当前遗漏
+function wnmOmitByIssue(combos, all){
+  const n=combos.length, gap=Array(n).fill(0), map=new Map();
+  all.forEach(d=>{
+    for(let v=0;v<n;v++){ gap[v] = wnmHit(combos[v],d) ? 0 : gap[v]+1; }
+    map.set(d[0], gap.slice());
+  });
+  return map;
+}
+// 表脚统计：appear=出现次数 gaps=各次遗漏间隔 curGap=当前遗漏 maxGap=最大遗漏 avgGap=平均遗漏 maxCon=最大连出
+function wnmStats(combos, seq){
+  const n=combos.length;
+  const appear=Array(n).fill(0), gaps=Array.from({length:n},()=>[]);
+  const curGap=Array(n).fill(0), curCon=Array(n).fill(0), maxCon=Array(n).fill(0);
+  seq.forEach(d=>{
+    for(let v=0;v<n;v++){
+      if(wnmHit(combos[v],d)){ appear[v]++; gaps[v].push(curGap[v]); curGap[v]=0; curCon[v]++; if(curCon[v]>maxCon[v])maxCon[v]=curCon[v]; }
+      else { curGap[v]++; curCon[v]=0; }
+    }
+  });
+  const maxGap=Array(n).fill(0), avgGap=Array(n).fill(0);
+  for(let v=0;v<n;v++){
+    maxGap[v]= gaps[v].length? Math.max(...gaps[v],curGap[v]) : curGap[v];
+    avgGap[v]= gaps[v].length? Math.round(gaps[v].reduce((x,y)=>x+y,0)/gaps[v].length) : 0;
+  }
+  return {appear,curGap,maxGap,avgGap,maxCon};
+}
+// M差值：Y 年出现次数 − 完整年(含1&12月)年均 × (Y 年最新月份/12)，四舍五入
+function wnmYearMDiff(combos, Y){
+  const agg={}, months={};
+  D.forEach(d=>{
+    const yy=Math.floor(d[0]/1000);
+    const arr=agg[yy]||(agg[yy]=Array(combos.length).fill(0));
+    for(let v=0;v<combos.length;v++){ if(wnmHit(combos[v],d)) arr[v]++; }
+    (months[yy]||(months[yy]=new Set())).add(issueMonthOf(d[4]).month);
+  });
+  let mx=0, rec=null;
+  D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){ mx=d[0]; rec=d; } });
+  const M = rec? issueMonthOf(rec[4]).month : 12;
+  const isFull = yy=> months[yy] && months[yy].has(1) && months[yy].has(12);
+  const fullYears = Object.keys(agg).map(Number).filter(yy=> yy!==Y && isFull(yy));
+  const mean=Array(combos.length).fill(0);
+  fullYears.forEach(yy=>{ const o=agg[yy]; for(let v=0;v<combos.length;v++) mean[v]+=o[v]; });
+  for(let v=0;v<combos.length;v++) mean[v]= fullYears.length? mean[v]/fullYears.length : 0;
+  const cur=agg[Y]||Array(combos.length).fill(0);
+  return cur.map((cnt,i)=> Math.round(cnt - mean[i]*(M/12)));
+}
+function fillWnmYear(){
+  const sel=$('wnmYearSel'); if(!sel) return;
+  sel.innerHTML='<option value="0">全部年份</option>';
+  YEARS.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y+'年'; sel.appendChild(o); });
+}
+// 单张万能码走势表渲染
+function renderWnmTable(combos, isFour, all, shown, shapeSel, mDiff, yearRows, metaEl, warnEl, gridEl){
+  const n=combos.length;
+  const color = isFour? '#c0392b' : '#2471a3';
+  const shapeVal = shapeSel? shapeSel.value : 'all';
+  // 形态过滤：仅显示/统计该形态的开奖期（组三/组六）
+  const shapeOk = d=> shapeVal==='all' || typeOf(d[1],d[2],d[3])===(shapeVal==='z3'?'组三':'组六');
+  const allF = all.filter(shapeOk);
+  const shownF = shown.filter(shapeOk);
+  // 逐期遗漏与表脚统计统一基于「形态过滤后的全史」，保证格子遗漏与表脚当前/最大遗漏口径一致
+  const omitByIssue=wnmOmitByIssue(combos, allF);
+  const stAllF = wnmStats(combos, allF);
+  const stShownF = wnmStats(combos, shownF);
+  let html='<table><thead><tr>';
+  html+='<th class="lab-h">期号</th><th class="lab-h">奖号</th>';
+  WNM_ATTR.forEach(col=>{ html+='<th class="attr-h">'+col.t+'</th>'; });
+  combos.forEach((h,v)=>{ html+='<th'+(v===0?' class="grp-sep"':'')+'>'+h+'</th>'; });
+  html+='</tr></thead><tbody>';
+  shownF.forEach(d=>{
+    const a=d[1],b=d[2],c=d[3];
+    html+='<tr><td class="issue">'+d[0]+'</td><td class="draw">'+a+' '+b+' '+c+'</td>';
+    WNM_ATTR.forEach(col=>{ html+='<td class="attr-v">'+col.f(a,b,c)+'</td>'; });
+    const om=omitByIssue.get(d[0]);
+    for(let v=0;v<n;v++){
+      const sep=(v===0?' grp-sep':'');
+      if(wnmHit(combos[v],d)) html+='<td class="wnm-hit'+sep+'" style="background:'+color+'">'+a+b+c+'</td>';
+      else html+='<td class="omission'+sep+'">'+om[v]+'</td>';
+    }
+    html+='</tr>';
+  });
+  html+='</tbody><tfoot>';
+  // 表脚 5 项：出现次数/最大连出/平均遗漏=shown；当前/最大遗漏=全史(all)。形态过滤后两口径分别用 F 版本
+  const labColspan = 2+WNM_ATTR.length;
+  function footRow(label, arr){
+    let h='<tr><td class="footer-lab" colspan="'+labColspan+'">'+label+'</td>';
+    combos.forEach((_,v)=>{ h+='<td'+(v===0?' class="grp-sep"':'')+'>'+arr[v]+'</td>'; });
+    return h+'</tr>';
+  }
+  html+=footRow('出现次数(近'+shownF.length+'期)', stShownF.appear);
+  html+=footRow('最大连出(近'+shownF.length+'期)', stShownF.maxCon);
+  html+=footRow('平均遗漏(近'+shownF.length+'期)', stShownF.avgGap);
+  html+=footRow('最大遗漏(全史)', stAllF.maxGap);
+  html+=footRow('当前遗漏(全史)', stAllF.curGap);
+  // M差值 行：主行(选单年) + 近五年(不含当年)，统一 .mrow 高亮
+  function mRow(label, arr){
+    if(!arr) return '';
+    let h='<tr class="mrow"><td class="footer-lab" colspan="'+labColspan+'">'+label+'</td>';
+    combos.forEach((_,v)=>{ const x=(arr[v]!==null&&arr[v]!==undefined)?arr[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>'; });
+    return h+'</tr>';
+  }
+  if(mDiff) html+=mRow('M差值', mDiff);
+  (yearRows||[]).forEach(r=>{ html+=mRow(r.year+' M差值', r.vals); });
+  html+='</tfoot></table>';
+  gridEl.innerHTML=html;
+  const shapeTxt = shapeVal==='all'?'全部':(shapeVal==='z3'?'组三':'组六');
+  const title = gridEl.id==='wnmGrids4' ? '组选四码走势（30 注 · 形态：'+shapeTxt+'）' : '组选两码走势（31 注 · 形态：'+shapeTxt+'）';
+  const tEl = gridEl.id==='wnmGrids4' ? $('wnmTitle4') : $('wnmTitle2');
+  if(tEl) tEl.textContent=title;
+  return {shapeTxt, shownN:shownF.length, allN:allF.length};
+}
+function wnmQuery(){
+  const warnEl=$('wnmWarnBox'), metaEl=$('wnmMetaBox');
+  if(warnEl) warnEl.textContent='';
+  const y=parseInt(($('wnmYearSel')||{}).value||'0',10)||0;
+  let W=parseInt(($('wnmWin')||{}).value||'100',10); if(!(W>0))W=100;
+  const all=D.filter(d=> (y===0||Math.floor(d[0]/1000)===y));
+  if(all.length===0){ if(warnEl) warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围。'; $('wnmGrids4').innerHTML=''; $('wnmGrids2').innerHTML=''; if(metaEl) metaEl.textContent=''; return; }
+  const shown=(all.length>W)? all.slice(all.length-W) : all;
+  // M差值：选单年显示当年主行；并始终附近 5 个完整年（不含最新年）行
+  const allYears=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
+  const curYear=allYears[allYears.length-1];
+  const monthsByYear={};
+  D.forEach(d=>{ (monthsByYear[Math.floor(d[0]/1000)]||(monthsByYear[Math.floor(d[0]/1000)]=new Set())).add(issueMonthOf(d[4]).month); });
+  const isFull=yy=> monthsByYear[yy] && monthsByYear[yy].has(1) && monthsByYear[yy].has(12);
+  const last5=allYears.filter(yy=> yy<curYear && isFull(yy)).slice(-5).reverse();
+  const mkYearRows=combos=> last5.filter(yy=> yy!==y).map(yy=>({year:yy, vals:wnmYearMDiff(combos, yy)}));
+  const mDiff4 = y!==0? wnmYearMDiff(WNM4, y) : null;
+  const mDiff2 = y!==0? wnmYearMDiff(WNM2, y) : null;
+  const r4=renderWnmTable(WNM4, true,  all, shown, $('wnmShape4'), mDiff4, mkYearRows(WNM4), metaEl, warnEl, $('wnmGrids4'));
+  const r2=renderWnmTable(WNM2, false, all, shown, $('wnmShape2'), mDiff2, mkYearRows(WNM2), metaEl, warnEl, $('wnmGrids2'));
+  if(metaEl) metaEl.textContent='万能码走势｜ 全史范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（'+all.length+' 期）'
+    +'｜ 走势显示最近 '+shown.length+' 期'
+    +'｜ 四码形态：'+r4.shapeTxt+'（全史 '+r4.allN+' 期 / 显示 '+r4.shownN+' 期）'
+    +'｜ 两码形态：'+r2.shapeTxt+'（全史 '+r2.allN+' 期 / 显示 '+r2.shownN+' 期）';
+}
 /* ---------- 和值×组六/组三×跨度 统计（和值走势面板下方，随 D 切换 3D/排三） ---------- */
 function renderHst(){
   const t=$('hstTable'); if(!t) return;
@@ -1705,6 +1943,7 @@ function setMode(m){
   $('modePianyi').classList.toggle('on', m==='pianyi');
   $('modeQujian').classList.toggle('on', m==='qujian');
   $('modeKdd').classList.toggle('on', m==='kdd');
+  $('modeWnm').classList.toggle('on', m==='wnm');
   /* 直选两码/组选两码 已合并为 直/组两码遗漏(modeZxZu) */
   $('omissionCtl').style.display = (m==='omission')?'':'none';
   $('resPanel').style.display     = (m==='omission')?'':'none';
@@ -1727,6 +1966,8 @@ function setMode(m){
   $('qjPanel').style.display        = (m==='qujian')?'':'none';
   $('kddCtl').style.display         = (m==='kdd')?'':'none';
   $('kddPanel').style.display       = (m==='kdd')?'':'none';
+  $('wnmCtl').style.display         = (m==='wnm')?'':'none';
+  $('wnmPanel').style.display       = (m==='wnm')?'':'none';
   /* ===== P1 切换即时化 =====
      旧逻辑：切到哪个模式就无条件重跑该模式的全部渲染（哪怕内容没变）。
      新逻辑：只渲染当前模式面板，且「数据未变 + 已渲染过」时直接跳过（切回 = 纯显隐，瞬时）。
@@ -3696,6 +3937,16 @@ $('qjYearSel').onchange=qjQuery;
 $('modeKdd').onclick=()=>setMode('kdd');
 $('kddSearchBtn').onclick=kddQuery;
 $('kddQueryBtn').onclick=kddQuery;
+$('modeWnm').onclick=()=>setMode('wnm');
+$('wnmQueryBtn').onclick=wnmQuery;
+$('wnmYearSel').onchange=wnmQuery;
+$('wnmShape4').onchange=wnmQuery;
+$('wnmShape2').onchange=wnmQuery;
+['wnmWin'].forEach(id=>{
+  const el=$(id);
+  el.addEventListener('change', wnmQuery);
+  el.addEventListener('keydown', e=>{ if(e.key==='Enter') wnmQuery(); });
+});
 
 /* ---------- 模式十一：偏移走势图（某位数字相对上期的偏移；三位组合 3^3=27 类） ----------
    偏移规则：某位数字相对「上期同一位」——变小记 /（偏左）、相同记 |（直落）、变大记 \（偏右）。
@@ -4707,7 +4958,12 @@ const MODE_RENDER={
   '2348':()=>{ query2348(); },
   pianyi:()=>{ pyQuery(); },
   qujian:()=>{ qjQuery(); },
-  kdd:   ()=>{ kddQuery(); }
+  kdd:   ()=>{ kddQuery(); },
+  wnm:   ()=>{ fillWnmYear();
+    const _w=$('wnmWin'), _ys=$('wnmYearSel');
+    if(_w) _w.value=100;
+    if(_ys) _ys.value='0';
+    wnmQuery(); }
 };
 function renderMode(m, force){
   const fn=MODE_RENDER[m];

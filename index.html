@@ -235,12 +235,17 @@
   /* ===== 万能码走势（组选四码 30 注 / 组选两码 31 注；属性列 + 走势列并排全铺，照彩经网固定组合） ===== */
   .wnmBlock{margin-bottom:10px}
   .wnmBlock > .resTitle{position:sticky;top:0;background:#2c3e50;color:#fff;font-size:13px;font-weight:600;padding:8px 12px;z-index:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wnmBar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;background:#eef2f7;border:1px solid #d8e0ea;border-top:none;font-size:12px}
+  .wnmBar select{padding:2px 6px;border:1px solid #c8d2de;border-radius:5px;font-size:12px;background:#fff}
+  .wnmBar .wnmNote{color:#5b6b7c;font-size:11.5px}
   .wnmScroll{overflow-x:auto;overflow-y:auto;max-height:640px;background:#fff;border:1px solid #d8e0ea;border-radius:0 0 8px 8px}
   .wnmScroll table{margin:0;border-collapse:collapse;width:max-content;min-width:100%}
   .wnmScroll th,.wnmScroll td{border:1px solid #e3e7ee;padding:4px 6px;text-align:center;white-space:nowrap;font-size:12px}
   .wnmScroll thead th{position:sticky;top:0;z-index:2;background:#34495e;color:#fff}
-  .wnmScroll thead th.lab-h{background:#2c3e50;color:#fff;font-weight:600}
-  .wnmScroll thead th.attr-h{background:#3d5872;color:#dfe9f3;font-weight:600;font-size:11px}
+  /* 五张表最宽 42 列（两码）→ 给固定下限，超出即横向滚动，避免属性列被压成两行 */
+  .wnmScroll thead th{min-width:34px}
+  .wnmScroll thead th.lab-h{min-width:58px;background:#2c3e50;color:#fff;font-weight:600}
+  .wnmScroll thead th.attr-h{min-width:46px;background:#3d5872;color:#dfe9f3;font-weight:600;font-size:11px}
   .wnmScroll thead th.grp-sep{border-left:3px solid #e74c3c}
   .wnmScroll td.omission{color:#9aa0a6;font-size:11px}
   .wnmScroll td.wnm-hit{color:#fff;font-weight:700}
@@ -826,12 +831,12 @@
   <div class="panel" id="wnmCtl" style="display:none">
     <div class="row">
       <span class="lab">显示最近</span>
-      <input type="number" id="wnmWin" style="width:90px" value="100">
-      <span>期（两表共享，默认 100）</span>
+      <input type="number" id="wnmWin" style="width:90px" value="50">
+      <span>期（五表共享，默认 50）</span>
       <span class="lab">按年份</span>
       <select id="wnmYearSel"></select>
       <button class="btn go" id="wnmQueryBtn">查 询</button>
-      <span class="hint">万能码＝用固定组合的若干数字「包住」当期开奖号：命中＝开奖号 3 个数字的<b>集合</b> ⊆ 组合数字集（五码 5 数字、四码 4 数字、两码 2 数字，两码含对子按出现次数判定）。<b>五码 17 注是全覆盖设计</b>（17×C(5,3)=170 组 ≥ 全部 1000 注，实测每注被覆盖 1～10 次、均值 2.125），因此<b>任何一期至少命中一个五码</b>——表内不会出现整行全遗漏。命中格显示<b>奖号本身</b>并着色，未命中格显示该组合截至本期的<b>遗漏期数</b>（基于完整范围计算）。表脚 5 项＝出现次数/最大遗漏/最大连出/平均遗漏/当前遗漏；M差值＝当年出现次数 − 完整年年均 × (当年已开月份/12)，四舍五入（选单年时显示当年主行，并始终附近 5 个完整年行）。</span>
+      <span class="hint">万能码＝用固定组合的若干数字「包住」当期开奖号：命中＝开奖号 3 个数字的<b>集合</b> ⊆ 组合数字集（七码 7 个数字 … 两码 2 个数字，两码含对子按出现次数判定）。<b>五张表全部是全覆盖设计</b>：两码 31 注（含 10 个对子）实测全史无整行全漏；四码 30 注 × C(4,3)=4 组恰好 = 120 个组六组，是组六的<b>精确划分</b>；五码 17×C(5,3)=170 组、六码 10×C(6,3)=200 组、七码 6×C(7,3)=210 组，均 ≥ 120 组，因此<b>任何一期每张表至少命中一格</b>——五张表都不会出现整行全遗漏。命中格显示<b>奖号本身</b>并着色，未命中格显示该组合截至本期的<b>遗漏期数</b>（基于完整范围计算）。表脚 5 项＝出现次数/最大连出/平均遗漏/最大遗漏/当前遗漏；<b>M差值</b>＝当年出现次数 − 完整年年均 × (当年已开月份/12)，四舍五入（默认给当年主行，并附「近 5 个完整年」逐行对照；选单年时主行换为该年）。</span>
     </div>
     <div class="meta" id="wnmMetaBox"></div>
     <div class="warn" id="wnmWarnBox"></div>
@@ -839,42 +844,52 @@
 
   <div class="panel scroller" id="wnmPanel" style="display:none">
     <div class="row" style="align-items:center;flex-wrap:wrap;gap:6px">
-      <span class="lab" style="color:#c0392b;font-weight:700">组选四码</span>
-      <span class="lab">形态</span>
-      <select id="wnmShape4">
-        <option value="all">全部</option>
-        <option value="z3">组三</option>
-        <option value="z6">组六</option>
-      </select>
-      <span style="display:inline-block;width:18px"></span>
-      <span class="lab" style="color:#2471a3;font-weight:700">组选两码</span>
-      <span class="lab">形态</span>
-      <select id="wnmShape2">
-        <option value="all">全部</option>
-        <option value="z3">组三</option>
-        <option value="z6">组六</option>
-      </select>
-      <span style="display:inline-block;width:18px"></span>
-      <span class="lab" style="color:#1e8449;font-weight:700">万能五码</span>
-      <span class="lab">形态</span>
-      <select id="wnmShape5">
-        <option value="all">全部</option>
-        <option value="z3">组三</option>
-        <option value="z6">组六</option>
-      </select>
-      <span class="hint">形态＝只统计所选形态的开奖期（组三/组六），用于分别观察不同形态下的万能码表现；遗漏与表脚统计均在该形态期序列上计算。</span>
+      <span class="hint">五张表自上而下：<b>万能两码 → 万能四码 → 万能五码 → 万能六码 → 万能七码</b>，组合清单与彩经网同源。每张表可单独选形态（全部/组三/组六），该表的命中判定、格内遗漏与表脚统计都只在所选形态的期序列上计算。表格区域可上下左右滚动，表头与标题固定。</span>
     </div>
     <div class="wnmBlock">
-      <div class="resTitle" id="wnmTitle4">组选四码走势（30 注）</div>
-      <div class="wnmScroll" id="wnmGrids4"></div>
-    </div>
-    <div class="wnmBlock">
-      <div class="resTitle" id="wnmTitle2">组选两码走势（31 注）</div>
+      <div class="resTitle" id="wnmTitle2">万能两码走势（31 注）</div>
+      <div class="wnmBar">
+        <span class="lab">形态</span>
+        <select id="wnmShape2"><option value="all">全部</option><option value="z3">组三</option><option value="z6">组六</option></select>
+        <span class="wnmNote" id="wnmNote2"></span>
+      </div>
       <div class="wnmScroll" id="wnmGrids2"></div>
     </div>
     <div class="wnmBlock">
+      <div class="resTitle" id="wnmTitle4">万能四码走势（30 注）</div>
+      <div class="wnmBar">
+        <span class="lab">形态</span>
+        <select id="wnmShape4"><option value="all">全部</option><option value="z3">组三</option><option value="z6">组六</option></select>
+        <span class="wnmNote" id="wnmNote4"></span>
+      </div>
+      <div class="wnmScroll" id="wnmGrids4"></div>
+    </div>
+    <div class="wnmBlock">
       <div class="resTitle" id="wnmTitle5">万能五码走势（17 注）</div>
+      <div class="wnmBar">
+        <span class="lab">形态</span>
+        <select id="wnmShape5"><option value="all">全部</option><option value="z3">组三</option><option value="z6">组六</option></select>
+        <span class="wnmNote" id="wnmNote5"></span>
+      </div>
       <div class="wnmScroll" id="wnmGrids5"></div>
+    </div>
+    <div class="wnmBlock">
+      <div class="resTitle" id="wnmTitle6">万能六码走势（10 注）</div>
+      <div class="wnmBar">
+        <span class="lab">形态</span>
+        <select id="wnmShape6"><option value="all">全部</option><option value="z3">组三</option><option value="z6">组六</option></select>
+        <span class="wnmNote" id="wnmNote6"></span>
+      </div>
+      <div class="wnmScroll" id="wnmGrids6"></div>
+    </div>
+    <div class="wnmBlock">
+      <div class="resTitle" id="wnmTitle7">万能七码走势（6 注）</div>
+      <div class="wnmBar">
+        <span class="lab">形态</span>
+        <select id="wnmShape7"><option value="all">全部</option><option value="z3">组三</option><option value="z6">组六</option></select>
+        <span class="wnmNote" id="wnmNote7"></span>
+      </div>
+      <div class="wnmScroll" id="wnmGrids7"></div>
     </div>
   </div>
 
@@ -1546,18 +1561,33 @@ function renderLm(shown, all, metaEl, warnEl, mDiff, lmYearRows){
 const WNM4 = ('0126 0134 0159 0178 0239 0247 0258 0357 0368 0456 0489 0679 '
             + '1237 1245 1289 1358 1369 1468 1479 1567 2348 2356 2469 2579 2678 '
             + '3459 3467 3789 4578 5689').split(' ');
+// 万能两码（31 注，含 10 个对子）：照彩经网 pl3_wannengma-wannengtwom 固定组合。
+// 命中＝开奖号三位数字都落在该两码集合内（对子按出现次数）⇒ 实测全史无整行全漏。
 const WNM2 = ('02 04 05 07 09 24 25 27 29 45 47 49 57 59 79 '
             + '00 22 44 55 77 99 13 16 18 36 38 68 11 33 66 88').split(' ');
 // 万能五码（17 注）：照彩经网 pl3_wannengma-wannengwm 固定组合，
 // 17 × C(5,3)=10 组选 = 170 组，实测覆盖全部 1000 注（每注 1~10 次，均值 2.125），即任何一期必有命中。
 const WNM5 = ('01249 01268 01346 01467 01569 02357 02458 03789 12359 '
             + '12378 12589 13478 14579 23456 24679 34689 35678').split(' ');
-// 三类万能码的展示元数据（配色 / 名称 / 容器 id），renderWnmTable 依此渲染
+// 万能六码（10 注）：照彩经网 pl3_wannengma-wannenglm 固定组合，10 × C(6,3)=20 组选 = 200 组 ≥ 120 组六，
+// 即任何一期必命中至少一张（全覆盖，无整行全遗漏）。
+const WNM6 = ('012346 012359 012489 013789 026789 '
+            + '045678 123457 156789 234568 345679').split(' ');
+// 万能七码（6 注）：照彩经网 pl3_wannengma-wannengqm 固定组合，6 × C(7,3)=35 组选 = 210 组 ≥ 120 组六，
+// 同样全覆盖；6 × 7^3 = 2058 注覆盖全部 1000 直选。
+const WNM7 = ('0123489 0345679 0156789 1234567 0245678 2356789').split(' ');
+// 五类万能码的展示元数据（配色 / 名称 / 容器 id），renderWnmTable 依此渲染；
+// 面板内展示顺序由 WNM_ORDER 决定（两码 → 四码 → 五码 → 六码 → 七码，与彩经网五张表同序）。
 const WNM_KIND = {
-  '4': {color:'#c0392b', name:'组选四码', grid:'wnmGrids4', title:'wnmTitle4'},
-  '2': {color:'#2471a3', name:'组选两码', grid:'wnmGrids2', title:'wnmTitle2'},
-  '5': {color:'#1e8449', name:'万能五码', grid:'wnmGrids5', title:'wnmTitle5'}
+  '2': {color:'#2471a3', name:'万能两码', grid:'wnmGrids2', title:'wnmTitle2'},
+  '4': {color:'#c0392b', name:'万能四码', grid:'wnmGrids4', title:'wnmTitle4'},
+  '5': {color:'#1e8449', name:'万能五码', grid:'wnmGrids5', title:'wnmTitle5'},
+  '6': {color:'#8e44ad', name:'万能六码', grid:'wnmGrids6', title:'wnmTitle6'},
+  '7': {color:'#b9770e', name:'万能七码', grid:'wnmGrids7', title:'wnmTitle7'}
 };
+// 万能码固定清单：kind → 组合数组（两码 31 / 四码 30 / 五码 17 / 六码 10 / 七码 6）
+const WNM_LIST = {'2':WNM2, '4':WNM4, '5':WNM5, '6':WNM6, '7':WNM7};
+const WNM_ORDER = ['2','4','5','6','7'];
 // 属性列（组选口径）：和值/和尾/跨度 + 站内全部属性类别
 const WNM_ATTR = [
   {t:'和值',   f:(a,b,c)=>a+b+c},
@@ -1573,17 +1603,22 @@ const WNM_ATTR = [
   {t:'号形',   f:(a,b,c)=>formFull(a,b,c)}
 ];
 // 命中：把组合串拆成数字数组交给 hitOf（两码=多重集含对子；四码=集合包含）
+// 组合串→数字数组缓存（五张表共用：31+30+17+10+6 条串只解析一次，避免逐期 split）
+const WNM_CODES = new Map();
 function wnmHit(comboStr, d){
-  const codes = comboStr.split('').map(Number);
+  let codes = WNM_CODES.get(comboStr);
+  if(!codes){ codes = comboStr.split('').map(Number); WNM_CODES.set(comboStr, codes); }
   return hitOf(codes, d);
 }
 // 逐期遗漏序列（基于完整 all）：omitByIssue.get(issue)[v] = 该期第 v 组合的当前遗漏
-function wnmOmitByIssue(combos, all){
+// onlyIssues 传入时只保存这些期号的快照（显示窗口通常 50 期，可省掉全史 8808 份数组的内存）
+function wnmOmitByIssue(combos, all, onlyIssues){
   const n=combos.length, gap=Array(n).fill(0), map=new Map();
-  all.forEach(d=>{
+  for(let i=0;i<all.length;i++){
+    const d=all[i];
     for(let v=0;v<n;v++){ gap[v] = wnmHit(combos[v],d) ? 0 : gap[v]+1; }
-    map.set(d[0], gap.slice());
-  });
+    if(!onlyIssues || onlyIssues.has(d[0])) map.set(d[0], gap.slice());
+  }
   return map;
 }
 // 表脚统计：appear=出现次数 gaps=各次遗漏间隔 curGap=当前遗漏 maxGap=最大遗漏 avgGap=平均遗漏 maxCon=最大连出
@@ -1604,25 +1639,37 @@ function wnmStats(combos, seq){
   }
   return {appear,curGap,maxGap,avgGap,maxCon};
 }
-// M差值：Y 年出现次数 − 完整年(含1&12月)年均 × (Y 年最新月份/12)，四舍五入
-function wnmYearMDiff(combos, Y){
-  const agg={}, months={};
+// ===== 年度出现次数缓存（五张表按 kind 各算一次；D 变更时按签名失效）=====
+let WNM_AGG_CACHE={sig:null, byKind:{}};
+function wnmAggSig(){ return D.length+'|'+(D.length?D[0][0]:'')+'|'+(D.length?D[D.length-1][0]:''); }
+function wnmYearAgg(kind, combos){
+  const sig=wnmAggSig();
+  if(WNM_AGG_CACHE.sig!==sig) WNM_AGG_CACHE={sig:sig, byKind:{}};
+  if(WNM_AGG_CACHE.byKind[kind]) return WNM_AGG_CACHE.byKind[kind];
+  const n=combos.length, agg={}, months={}, lastM={};
   D.forEach(d=>{
-    const yy=Math.floor(d[0]/1000);
-    const arr=agg[yy]||(agg[yy]=Array(combos.length).fill(0));
-    for(let v=0;v<combos.length;v++){ if(wnmHit(combos[v],d)) arr[v]++; }
-    (months[yy]||(months[yy]=new Set())).add(issueMonthOf(d[4]).month);
+    const yy=Math.floor(d[0]/1000), mm=issueMonthOf(d[4]).month;
+    const arr=agg[yy]||(agg[yy]=Array(n).fill(0));
+    for(let v=0;v<n;v++){ if(wnmHit(combos[v],d)) arr[v]++; }
+    (months[yy]||(months[yy]=new Set())).add(mm);
+    lastM[yy]=mm;
   });
-  let mx=0, rec=null;
-  D.forEach(d=>{ if(Math.floor(d[0]/1000)===Y && d[0]>mx){ mx=d[0]; rec=d; } });
-  const M = rec? issueMonthOf(rec[4]).month : 12;
-  const isFull = yy=> months[yy] && months[yy].has(1) && months[yy].has(12);
-  const fullYears = Object.keys(agg).map(Number).filter(yy=> yy!==Y && isFull(yy));
-  const mean=Array(combos.length).fill(0);
-  fullYears.forEach(yy=>{ const o=agg[yy]; for(let v=0;v<combos.length;v++) mean[v]+=o[v]; });
-  for(let v=0;v<combos.length;v++) mean[v]= fullYears.length? mean[v]/fullYears.length : 0;
-  const cur=agg[Y]||Array(combos.length).fill(0);
-  return cur.map((cnt,i)=> Math.round(cnt - mean[i]*(M/12)));
+  const years=Object.keys(agg).map(Number).sort((a,b)=>a-b);
+  const full=years.filter(yy=> months[yy] && months[yy].has(1) && months[yy].has(12));
+  const res={agg, months, lastM, years, full};
+  WNM_AGG_CACHE.byKind[kind]=res;
+  return res;
+}
+// M差值行：Y 年出现次数 − 完整年（含 1&12 月、且 ≠Y）年均 × (Y 年已开月份/12)，四舍五入
+function wnmMDiff(kind, combos, Y){
+  const A=wnmYearAgg(kind, combos), n=combos.length;
+  const fullYrs=A.full.filter(yy=>yy!==Y);
+  const mean=Array(n).fill(0);
+  fullYrs.forEach(yy=>{ const o=A.agg[yy]; for(let v=0;v<n;v++) mean[v]+=o[v]; });
+  for(let v=0;v<n;v++) mean[v]= fullYrs.length? mean[v]/fullYrs.length : 0;
+  const M = A.lastM[Y] || 12;
+  const cur = A.agg[Y] || Array(n).fill(0);
+  return cur.map((c,i)=> Math.round(c - mean[i]*(M/12)));
 }
 function fillWnmYear(){
   const sel=$('wnmYearSel'); if(!sel) return;
@@ -1630,7 +1677,7 @@ function fillWnmYear(){
   YEARS.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y+'年'; sel.appendChild(o); });
 }
 // 单张万能码走势表渲染
-function renderWnmTable(combos, kind, all, shown, shapeSel, mDiff, yearRows, metaEl, warnEl, gridEl){
+function renderWnmTable(combos, kind, all, shown, shapeSel, mDiff, yearRows, mYear, metaEl, warnEl, gridEl){
   const n=combos.length;
   const K = WNM_KIND[kind] || WNM_KIND['4'];
   const color = K.color;
@@ -1640,24 +1687,28 @@ function renderWnmTable(combos, kind, all, shown, shapeSel, mDiff, yearRows, met
   const allF = all.filter(shapeOk);
   const shownF = shown.filter(shapeOk);
   // 逐期遗漏与表脚统计统一基于「形态过滤后的全史」，保证格子遗漏与表脚当前/最大遗漏口径一致
-  const omitByIssue=wnmOmitByIssue(combos, allF);
+  const omitByIssue=wnmOmitByIssue(combos, allF, new Set(shownF.map(d=>d[0])));
   const stAllF = wnmStats(combos, allF);
   const stShownF = wnmStats(combos, shownF);
+  let hitSum=0, lastHit=0, minHit=99, rowsAllMiss=0;
   let html='<table><thead><tr>';
   html+='<th class="lab-h">期号</th><th class="lab-h">奖号</th>';
   WNM_ATTR.forEach(col=>{ html+='<th class="attr-h">'+col.t+'</th>'; });
   combos.forEach((h,v)=>{ html+='<th'+(v===0?' class="grp-sep"':'')+'>'+h+'</th>'; });
   html+='</tr></thead><tbody>';
-  shownF.forEach(d=>{
+  shownF.forEach((d,ri)=>{
     const a=d[1],b=d[2],c=d[3];
     html+='<tr><td class="issue">'+d[0]+'</td><td class="draw">'+a+' '+b+' '+c+'</td>';
     WNM_ATTR.forEach(col=>{ html+='<td class="attr-v">'+col.f(a,b,c)+'</td>'; });
     const om=omitByIssue.get(d[0]);
+    let k=0;
     for(let v=0;v<n;v++){
       const sep=(v===0?' grp-sep':'');
-      if(wnmHit(combos[v],d)) html+='<td class="wnm-hit'+sep+'" style="background:'+color+'">'+a+b+c+'</td>';
+      if(wnmHit(combos[v],d)){ k++; html+='<td class="wnm-hit'+sep+'" style="background:'+color+'">'+a+b+c+'</td>'; }
       else html+='<td class="omission'+sep+'">'+om[v]+'</td>';
     }
+    hitSum+=k; if(k<minHit) minHit=k; if(k===0) rowsAllMiss++;
+    if(ri===shownF.length-1) lastHit=k;
     html+='</tr>';
   });
   html+='</tbody><tfoot>';
@@ -1673,50 +1724,57 @@ function renderWnmTable(combos, kind, all, shown, shapeSel, mDiff, yearRows, met
   html+=footRow('平均遗漏(近'+shownF.length+'期)', stShownF.avgGap);
   html+=footRow('最大遗漏(全史)', stAllF.maxGap);
   html+=footRow('当前遗漏(全史)', stAllF.curGap);
-  // M差值 行：主行(选单年) + 近五年(不含当年)，统一 .mrow 高亮
+  // M差值 行：主行(所选年，未选年则取最新年) + 近 5 个完整年对照行，统一 .mrow 高亮
   function mRow(label, arr){
     if(!arr) return '';
     let h='<tr class="mrow"><td class="footer-lab" colspan="'+labColspan+'">'+label+'</td>';
     combos.forEach((_,v)=>{ const x=(arr[v]!==null&&arr[v]!==undefined)?arr[v]:'—'; h+='<td'+(v===0?' class="grp-sep"':'')+'>'+x+'</td>'; });
     return h+'</tr>';
   }
-  if(mDiff) html+=mRow('M差值', mDiff);
+  if(mDiff) html+=mRow('M差值（'+(mYear||'')+'年 已开'+(wnmYearAgg(kind,combos).lastM[mYear]||12)+'月）', mDiff);
   (yearRows||[]).forEach(r=>{ html+=mRow(r.year+' M差值', r.vals); });
   html+='</tfoot></table>';
   gridEl.innerHTML=html;
   const shapeTxt = shapeVal==='all'?'全部':(shapeVal==='z3'?'组三':'组六');
-  const title = K.name+'走势（'+n+' 注 · 形态：'+shapeTxt+'）';
+  const title = K.name+'走势（'+n+' 注 · 形态：'+shapeTxt+' · '+allF.length+' 期）';
   const tEl = $(K.title);
   if(tEl) tEl.textContent=title;
-  return {shapeTxt, shownN:shownF.length, allN:allF.length};
+  // 每表下方状态条：本期命中格数 / 显示窗口均值 / 全漏行数，直接暴露该码的疏密
+  const noteEl = $('wnmNote'+kind);
+  if(noteEl) noteEl.textContent='本期命中 '+lastHit+' 格｜近'+shownF.length+'期命中均值 '+(shownF.length?(hitSum/shownF.length).toFixed(2):'—')
+    +' 格/期（最少 '+minHit+' 格）｜整行全漏 '+rowsAllMiss+' 期';
+  return {shapeTxt, shownN:shownF.length, allN:allF.length, lastHit, avgHit: shownF.length? hitSum/shownF.length : 0};
 }
 function wnmQuery(){
   const warnEl=$('wnmWarnBox'), metaEl=$('wnmMetaBox');
   if(warnEl) warnEl.textContent='';
   const y=parseInt(($('wnmYearSel')||{}).value||'0',10)||0;
-  let W=parseInt(($('wnmWin')||{}).value||'100',10); if(!(W>0))W=100;
+  let W=parseInt(($('wnmWin')||{}).value||'50',10); if(!(W>0))W=50;
   const all=D.filter(d=> (y===0||Math.floor(d[0]/1000)===y));
-  if(all.length===0){ if(warnEl) warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围。'; $('wnmGrids4').innerHTML=''; $('wnmGrids2').innerHTML=''; if($('wnmGrids5'))$('wnmGrids5').innerHTML=''; if(metaEl) metaEl.textContent=''; return; }
+  if(all.length===0){
+    if(warnEl) warnEl.textContent='该筛选条件下无数据，请扩大期号/年份范围。';
+    WNM_ORDER.forEach(k=>{ const g=$('wnmGrids'+k); if(g) g.innerHTML=''; });
+    if(metaEl) metaEl.textContent=''; return;
+  }
   const shown=(all.length>W)? all.slice(all.length-W) : all;
-  // M差值：选单年显示当年主行；并始终附近 5 个完整年（不含最新年）行
+  // M差值主行：选单年取该年，全部年份取最新年；对照行=近 5 个完整年（剔除与主行同年）
   const allYears=[...new Set(D.map(d=>Math.floor(d[0]/1000)))].sort((a,b)=>a-b);
   const curYear=allYears[allYears.length-1];
+  const mYear = y!==0? y : curYear;
   const monthsByYear={};
   D.forEach(d=>{ (monthsByYear[Math.floor(d[0]/1000)]||(monthsByYear[Math.floor(d[0]/1000)]=new Set())).add(issueMonthOf(d[4]).month); });
   const isFull=yy=> monthsByYear[yy] && monthsByYear[yy].has(1) && monthsByYear[yy].has(12);
   const last5=allYears.filter(yy=> yy<curYear && isFull(yy)).slice(-5).reverse();
-  const mkYearRows=combos=> last5.filter(yy=> yy!==y).map(yy=>({year:yy, vals:wnmYearMDiff(combos, yy)}));
-  const mDiff4 = y!==0? wnmYearMDiff(WNM4, y) : null;
-  const mDiff2 = y!==0? wnmYearMDiff(WNM2, y) : null;
-  const mDiff5 = y!==0? wnmYearMDiff(WNM5, y) : null;
-  const r4=renderWnmTable(WNM4, '4', all, shown, $('wnmShape4'), mDiff4, mkYearRows(WNM4), metaEl, warnEl, $('wnmGrids4'));
-  const r2=renderWnmTable(WNM2, '2', all, shown, $('wnmShape2'), mDiff2, mkYearRows(WNM2), metaEl, warnEl, $('wnmGrids2'));
-  const r5=renderWnmTable(WNM5, '5', all, shown, $('wnmShape5'), mDiff5, mkYearRows(WNM5), metaEl, warnEl, $('wnmGrids5'));
-  if(metaEl) metaEl.textContent='万能码走势｜ 全史范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（'+all.length+' 期）'
-    +'｜ 走势显示最近 '+shown.length+' 期'
-    +'｜ 四码形态：'+r4.shapeTxt+'（全史 '+r4.allN+' 期 / 显示 '+r4.shownN+' 期）'
-    +'｜ 两码形态：'+r2.shapeTxt+'（全史 '+r2.allN+' 期 / 显示 '+r2.shownN+' 期）'
-    +'｜ 五码形态：'+r5.shapeTxt+'（全史 '+r5.allN+' 期 / 显示 '+r5.shownN+' 期）';
+  const summary=[];
+  WNM_ORDER.forEach(kind=>{
+    const combos=WNM_LIST[kind], K=WNM_KIND[kind];
+    const mDiff=wnmMDiff(kind, combos, mYear);
+    const yrRows=last5.filter(yy=> yy!==mYear).map(yy=>({year:yy, vals:wnmMDiff(kind, combos, yy)}));
+    const r=renderWnmTable(combos, kind, all, shown, $('wnmShape'+kind), mDiff, yrRows, mYear, metaEl, warnEl, $('wnmGrids'+kind));
+    if(r) summary.push(K.name+'（'+r.allN+' 期/'+r.shownN+' 期，本期 '+r.lastHit+' 格）');
+  });
+  if(metaEl) metaEl.textContent='万能码走势（5 张表）｜ 范围：'+all[0][0]+' ～ '+all[all.length-1][0]+'（'+all.length+' 期）'
+    +'｜ 显示最近 '+shown.length+' 期 ｜ 每表形态：'+summary.join('；');
 }
 /* ---------- 和值×组六/组三×跨度 统计（和值走势面板下方，随 D 切换 3D/排三） ---------- */
 function renderHst(){
@@ -3966,9 +4024,7 @@ $('kddQueryBtn').onclick=kddQuery;
 $('modeWnm').onclick=()=>setMode('wnm');
 $('wnmQueryBtn').onclick=wnmQuery;
 $('wnmYearSel').onchange=wnmQuery;
-$('wnmShape4').onchange=wnmQuery;
-$('wnmShape2').onchange=wnmQuery;
-$('wnmShape5').onchange=wnmQuery;
+['2','4','5','6','7'].forEach(k=>{ const el=$('wnmShape'+k); if(el) el.onchange=wnmQuery; });
 ['wnmWin'].forEach(id=>{
   const el=$(id);
   el.addEventListener('change', wnmQuery);
@@ -4988,7 +5044,7 @@ const MODE_RENDER={
   kdd:   ()=>{ kddQuery(); },
   wnm:   ()=>{ fillWnmYear();
     const _w=$('wnmWin'), _ys=$('wnmYearSel');
-    if(_w) _w.value=100;
+    if(_w) _w.value=50;
     if(_ys) _ys.value='0';
     wnmQuery(); }
 };
